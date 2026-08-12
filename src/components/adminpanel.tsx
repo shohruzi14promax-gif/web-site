@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Users, Image as ImageIcon, Video, Bell, Cake, Trophy, 
-  MessageSquare, Trash2, Plus, LogOut, ShieldCheck, X, Upload, Rocket, BarChart3, HeartHandshake 
+  MessageSquare, Trash2, Plus, LogOut, ShieldCheck, X, Upload, Rocket, BarChart3, HeartHandshake, Lock 
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -9,6 +9,12 @@ interface AdminPanelProps {
 }
 
 export default function AdminPanel({ onClose }: AdminPanelProps) {
+  // Parol holati (Parolni shu yerda o'zingiz xohlagancha o'zgartirishingiz mumkin, masalan: '2026')
+  const ADMIN_PASSWORD = '2026';
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
   const [activeTab, setActiveTab] = useState('school_stats');
 
   const [teachers, setTeachers] = useState<any[]>([]);
@@ -21,7 +27,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
   const [gpaList, setGpaList] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
 
-  // 1. Ijtimoiy aksiyalar statistikasi
   const [socialStats, setSocialStats] = useState([
     { value: 200100, suffix: "+", label: "Aksiya qatnashchilari" },
     { value: 15, suffix: " ta", label: "Maxsus loyihalar" },
@@ -30,7 +35,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
   ]);
   const [awardText, setAwardText] = useState('"Yilning eng faol maktabi" — Jizzax viloyati, 2026');
 
-  // 2. Maktab o'quvchilari statistikasi
   const [schoolStats, setSchoolStats] = useState([
     { value: 450, suffix: "+", label: "O'quvchilar" },
     { value: 48, suffix: "", label: "O'qituvchilar" },
@@ -41,6 +45,8 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
   ]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     setTeachers(JSON.parse(localStorage.getItem('teachers') || '[]'));
     setAdministration(JSON.parse(localStorage.getItem('administration') || '[]'));
     setProjects(JSON.parse(localStorage.getItem('projects') || '[]'));
@@ -71,8 +77,61 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
 
     const loadedMessages = JSON.parse(localStorage.getItem('student_proposals') || '[]');
     setMessages(loadedMessages);
-  }, []);
+  }, [isAuthenticated]);
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      setErrorMsg('');
+    } else {
+      setErrorMsg('Parol noto‘g‘ri! Qaytadan urinib ko‘ring.');
+    }
+  };
+
+  // --- Agar parol kiritilmagan bo'lsa, faqat Parol oynasini ko'rsatish ---
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100 relative">
+          <button onClick={onClose} className="absolute top-5 right-5 p-2 text-gray-400 hover:text-gray-600 rounded-full transition cursor-pointer">
+            <X className="h-5 w-5" />
+          </button>
+          
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="h-14 w-14 rounded-2xl bg-blue-50 text-[#0071e3] flex items-center justify-center mb-3 shadow-inner">
+              <Lock className="h-7 w-7" />
+            </div>
+            <h2 className="text-xl font-bold text-[#1d1d1f]">Admin Panel</h2>
+            <p className="text-xs text-gray-500 mt-1">Davom etish uchun maxfiy parolni kiriting</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input 
+                type="password" 
+                placeholder="Parolni kiriting..." 
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className="w-full px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0071e3] transition"
+                autoFocus
+              />
+              {errorMsg && <p className="text-xs text-red-500 mt-1.5 font-medium">{errorMsg}</p>}
+            </div>
+
+            <button 
+              type="submit" 
+              className="w-full py-3 bg-[#0071e3] text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/25 cursor-pointer"
+            >
+              Kirish
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Parol to'g'ri bo'lsa ochiladigan asosiy Admin Panel kodi ---
   const saveData = (key: string, data: any[], setter: Function) => {
     setter(data);
     localStorage.setItem(key, JSON.stringify(data));
@@ -96,7 +155,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
     return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
   };
 
-  // Maktab statistikasi uchun
   const handleSchoolStatChange = (index: number, field: string, value: any) => {
     const updated = [...schoolStats];
     updated[index] = {
@@ -125,7 +183,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
     window.dispatchEvent(new Event('schoolStatsUpdated'));
   };
 
-  // Ijtimoiy aksiyalar statistikasi uchun
   const handleSocialStatChange = (index: number, field: string, value: any) => {
     const updated = [...socialStats];
     updated[index] = {
@@ -143,7 +200,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
     window.dispatchEvent(new Event('storage'));
   };
 
-  // Forms states & handlers
   const [newTeacher, setNewTeacher] = useState({ name: '', role: '', image: '' });
   const handleAddTeacher = (e: React.FormEvent) => {
     e.preventDefault();
@@ -280,9 +336,9 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
         </div>
 
         <div className="p-4 border-t border-gray-100">
-          <button onClick={onClose} className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition cursor-pointer">
+          <button onClick={() => setIsAuthenticated(false)} className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl text-sm font-medium transition cursor-pointer">
             <LogOut className="h-5 w-5" />
-            <span>Chiqish</span>
+            <span>Chiqish (Qulflash)</span>
           </button>
         </div>
       </aside>
@@ -290,10 +346,9 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
       <main className="flex-1 p-8 overflow-y-auto max-h-screen relative">
         <div className="flex md:hidden justify-between items-center mb-6 bg-white p-4 rounded-2xl shadow-sm">
           <h1 className="font-bold text-[#1d1d1f]">Admin Panel</h1>
-          <button onClick={onClose} className="text-red-600 text-sm font-medium cursor-pointer">Chiqish</button>
+          <button onClick={() => setIsAuthenticated(false)} className="text-red-600 text-sm font-medium cursor-pointer">Chiqish</button>
         </div>
 
-        {/* 1. MAKTAB O'QUVCHILARI STATISTIKASI */}
         {activeTab === 'school_stats' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -356,7 +411,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 2. IJTIMOIY AKSIYALAR */}
         {activeTab === 'social_stats' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Ijtimoiy Aksiyalar va Yutuq</h2>
@@ -408,7 +462,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 3. O'QITUVCHILAR */}
         {activeTab === 'teachers' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">O'qituvchilar</h2>
@@ -439,7 +492,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 4. MA'MURIYAT */}
         {activeTab === 'administration' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Ma'muriyat</h2>
@@ -472,7 +524,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 5. INNOVATSIYA */}
         {activeTab === 'projects' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Innovatsiya va Loyihalar</h2>
@@ -496,7 +547,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 6. GALEREYA */}
         {activeTab === 'gallery' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Galereya</h2>
@@ -520,7 +570,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 7. VIDEO DARSLAR */}
         {activeTab === 'videos' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Video Darslar</h2>
@@ -544,7 +593,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 8. E'LONLAR */}
         {activeTab === 'announcements' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">E'lonlar</h2>
@@ -568,7 +616,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 9. TUG'ILGAN KUNLAR */}
         {activeTab === 'birthdays' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Tug'ilgan kunlar</h2>
@@ -592,7 +639,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 10. GPA REYTINGI */}
         {activeTab === 'gpa' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">GPA Reytingi</h2>
@@ -616,7 +662,6 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
           </div>
         )}
 
-        {/* 11. MUROJAATLAR */}
         {activeTab === 'messages' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-[#1d1d1f]">Murojaatlar ({messages.length})</h2>
