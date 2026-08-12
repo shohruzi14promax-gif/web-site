@@ -1,17 +1,45 @@
-import { MapPin, Phone, Mail, Send, Instagram, Facebook, ExternalLink } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useState } from 'react';
+import { MapPin, Phone, Send, Instagram, Facebook, ExternalLink, MessageSquare } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export default function Contact() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+  
+  const [senderName, setSenderName] = useState('');
+  const [senderMessage, setSenderMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!senderMessage.trim()) return;
+
+    // Mavjud xabarlarni olish
+    const existingMessages = JSON.parse(localStorage.getItem('admin_messages') || '[]');
+    
+    // Yangi taklif/xabarni qo'shish
+    const newMessage = {
+      id: Date.now(),
+      name: senderName.trim() || "Anonim foydalanuvchi",
+      message: senderMessage.trim(),
+      date: new Date().toLocaleString()
+    };
+
+    localStorage.setItem('admin_messages', JSON.stringify([newMessage, ...existingMessages]));
+
+    setSenderName('');
+    setSenderMessage('');
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 4000);
+  };
 
   return (
     <section id="contact" className="apple-section bg-white/50">
       <div className="apple-container">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="apple-eyebrow mb-4">Aloqa va Manzil</p>
+          <p className="apple-eyebrow mb-4">Aloqa va Takliflar</p>
           <h2 className="apple-heading">Biz bilan bog'laning</h2>
           <p className="apple-subheading mt-4">
-            Prezident ta'lim muassasalari agentligi tizimidagi Jizzax shahar 1-son ixtisoslashtirilgan MI rasmiy kanallari
+            Prezident ta'lim muassasalari agentligi tizimidagi Jizzax shahar 1-son ixtisoslashtirilgan MI rasmiy kanallari va takliflar oynasi
           </p>
         </div>
 
@@ -53,6 +81,58 @@ export default function Contact() {
                   <p className="text-sm text-[#6e6e73]">+998 72 223-86-14</p>
                 </div>
               </div>
+            </div>
+
+            {/* Taklif yuborish forma qismi */}
+            <div className="apple-card">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
+                  <MessageSquare className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-semibold text-[#1d1d1f]">Taklif va Murojaatlar</h3>
+              </div>
+              <p className="text-xs text-[#6e6e73] mb-4">
+                Fikr va takliflaringiz to'g'ridan-to'g'ri maktab ma'muriyatiga (admin panelga) yuboriladi.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div>
+                  <label htmlFor="senderNameInput" className="sr-only">Ismingiz</label>
+                  <input
+                    id="senderNameInput"
+                    name="senderName"
+                    type="text"
+                    placeholder="Ismingiz (ixtiyoriy)"
+                    value={senderName}
+                    onChange={(e) => setSenderName(e.target.value)}
+                    className="w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="senderMessageInput" className="sr-only">Taklif yoki murojaat</label>
+                  <textarea
+                    id="senderMessageInput"
+                    name="senderMessage"
+                    placeholder="Taklif yoki murojaatingizni yozing..."
+                    rows={3}
+                    value={senderMessage}
+                    onChange={(e) => setSenderMessage(e.target.value)}
+                    className="w-full px-4 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-[#0071e3] text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition"
+                >
+                  Yuborish
+                </button>
+                {submitted && (
+                  <p className="text-xs text-green-600 font-medium text-center mt-1">
+                    Taklifingiz muvaffaqiyatli yuborildi!
+                  </p>
+                )}
+              </form>
             </div>
 
             <div className="apple-card">
@@ -108,7 +188,7 @@ export default function Contact() {
               width="100%"
               height="100%"
               style={{ minHeight: '500px', border: 0 }}
-              loading="lazy"
+              loading="eager"
               referrerPolicy="no-referrer-when-downgrade"
               title="Maktab manzili xaritada"
             />

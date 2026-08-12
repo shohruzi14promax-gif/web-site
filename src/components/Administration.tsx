@@ -1,9 +1,26 @@
+import { useState, useEffect } from 'react';
 import { Phone, Clock, User } from 'lucide-react';
-import { administration } from '@/lib/data';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { administration as staticAdministration } from '../lib/data';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export default function Administration() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+  const [administrationData, setAdministrationData] = useState<any[]>([]);
+
+  useEffect(() => {
+    // localStorage'dan ma'lumotni o'qiymiz, agar u bo'sh bo'lsa static ma'lumotni olamiz
+    const saved = localStorage.getItem('administration');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setAdministrationData(parsed.length > 0 ? parsed : staticAdministration);
+      } catch (e) {
+        setAdministrationData(staticAdministration);
+      }
+    } else {
+      setAdministrationData(staticAdministration);
+    }
+  }, []);
 
   return (
     <section id="administration" className="apple-section bg-white/50">
@@ -17,38 +34,42 @@ export default function Administration() {
         </div>
 
         <div ref={ref} className="grid gap-6 sm:grid-cols-2">
-          {administration.map((person, index) => (
+          {administrationData.map((person: any, index: number) => (
             <div
-              key={index}
-              className={`apple-card flex gap-5 transition-all duration-700 ease-out ${
+              key={person.id || index}
+              className={`apple-card flex flex-col sm:flex-row items-center sm:items-start gap-5 transition-all duration-700 ease-out ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ transitionDelay: `${index * 120}ms` }}
             >
               <div className="flex-shrink-0">
-                <div className="h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-br from-[#0071e3]/10 to-[#42a5f5]/10 sm:h-24 sm:w-24">
+                <div className="h-24 w-24 sm:h-28 sm:w-28 overflow-hidden rounded-2xl bg-gradient-to-br from-[#0071e3]/10 to-[#42a5f5]/10 shadow-sm">
                   <img
-                    src={person.photo}
+                    src={person.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}
                     alt={person.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover object-center"
                     loading="lazy"
                   />
                 </div>
               </div>
 
-              <div className="flex flex-1 flex-col">
+              <div className="flex flex-1 flex-col text-center sm:text-left">
                 <h3 className="text-lg font-semibold text-[#1d1d1f]">{person.name}</h3>
-                <p className="mt-0.5 text-sm font-medium text-[#0071e3]">{person.position}</p>
+                <p className="mt-0.5 text-sm font-medium text-[#0071e3]">{person.role || person.position}</p>
 
                 <div className="mt-3 space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-[#6e6e73]">
-                    <Clock className="h-4 w-4 flex-shrink-0 text-[#0071e3]" />
-                    <span>{person.reception}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-[#6e6e73]">
-                    <Phone className="h-4 w-4 flex-shrink-0 text-[#0071e3]" />
-                    <span>{person.phone}</span>
-                  </div>
+                  {person.reception && (
+                    <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-[#6e6e73]">
+                      <Clock className="h-4 w-4 flex-shrink-0 text-[#0071e3]" />
+                      <span>{person.reception}</span>
+                    </div>
+                  )}
+                  {person.phone && (
+                    <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-[#6e6e73]">
+                      <Phone className="h-4 w-4 flex-shrink-0 text-[#0071e3]" />
+                      <span>{person.phone}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

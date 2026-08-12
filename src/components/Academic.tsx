@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Calculator, Atom, Code2, FlaskConical, Dna, Languages, Landmark, BookOpen,
   Award, TrendingUp, Users, GraduationCap,
 } from 'lucide-react';
-import { teachers, subjects, gpaRankings } from '@/lib/data';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { subjects, gpaRankings as defaultGpa } from '../lib/data';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const iconMap: Record<string, typeof Calculator> = {
   Calculator,
@@ -36,6 +36,72 @@ type Tab = 'teachers' | 'subjects' | 'gpa';
 export default function Academic() {
   const [tab, setTab] = useState<Tab>('teachers');
   const { ref: subjectsRef, isVisible: subjectsVisible } = useScrollAnimation<HTMLDivElement>();
+
+  // Faqat admin paneldan kiritilgan ma'lumotlarni o'qish (standart bazasiz)
+  const loadTeachers = () => {
+    const saved = 
+      localStorage.getItem("teachers") || 
+      localStorage.getItem("admin_teachers") || 
+      localStorage.getItem("school_teachers");
+      
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((t: any) => ({
+            name: t.name || t.fullName || "O'qituvchi",
+            subject: t.subject || t.role || t.fan || "Fan o'qituvchisi",
+            classes: t.classes || t.sinf || "5-11 sinflar",
+            experience: t.experience || t.staj || "5+ yil",
+            category: t.category || t.toifa || "Oliy toifa",
+            image: t.image || t.avatar || t.photo || ""
+          }));
+        }
+      } catch (e) {}
+    }
+    return []; // Hech narsa qo'shilmagan bo'lsa bo'sh qaytaradi
+  };
+
+  const loadGpa = () => {
+    const saved = 
+      localStorage.getItem("gpaList") || 
+      localStorage.getItem("gpaRankings") || 
+      localStorage.getItem("admin_gpa");
+
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((g: any, idx: number) => ({
+            rank: g.rank || idx + 1,
+            name: g.name || g.fullName || "O'quvchi",
+            class: g.class || g.className || "11-A",
+            gpa: parseFloat(g.gpa) || 4.90,
+            achievements: g.achievements || g.yutuq || 5
+          }));
+        }
+      } catch (e) {}
+    }
+    return defaultGpa;
+  };
+
+  const [teachersList, setTeachersList] = useState(loadTeachers);
+  const [gpaList, setGpaList] = useState(loadGpa);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setTeachersList(loadTeachers());
+      setGpaList(loadGpa());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    const interval = setInterval(handleStorageChange, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <section id="academic" className="apple-section">
@@ -72,30 +138,50 @@ export default function Academic() {
         </div>
 
         {tab === 'teachers' && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in">
-            {teachers.map((teacher, index) => (
-              <div key={index} className="apple-card group !p-6">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0071e3]/10 transition-transform group-hover:scale-110">
-                  <Users className="h-7 w-7 text-[#0071e3]" />
-                </div>
-                <h3 className="text-base font-semibold leading-snug text-[#1d1d1f]">{teacher.name}</h3>
-                <p className="mt-1 text-sm font-medium text-[#0071e3]">{teacher.subject}</p>
-                <div className="mt-4 space-y-1.5 border-t border-black/5 pt-3">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#6e6e73]">Sinflar</span>
-                    <span className="font-medium text-[#1d1d1f]">{teacher.grade}</span>
+          <div>
+            {teachersList.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in">
+                {teachersList.map((teacher: any, index: number) => (
+                  <div key={index} className="apple-card group !p-6 flex flex-col justify-between">
+                    <div>
+                      <div className="mb-4 h-36 w-full overflow-hidden rounded-2xl bg-[#0071e3]/10 flex items-center justify-center transition-transform group-hover:scale-[1.02]">
+                        {teacher.image ? (
+                          <img 
+                            src={teacher.image} 
+                            alt={teacher.name} 
+                            className="h-full w-full object-cover" 
+                          />
+                        ) : (
+                          <Users className="h-10 w-10 text-[#0071e3]" />
+                        )}
+                      </div>
+                      <h3 className="text-base font-semibold leading-snug text-[#1d1d1f]">{teacher.name}</h3>
+                      <p className="mt-1 text-sm font-medium text-[#0071e3]">{teacher.subject}</p>
+                    </div>
+
+                    <div className="mt-4 space-y-1.5 border-t border-black/5 pt-3">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-[#6e6e73]">Sinflar</span>
+                        <span className="font-medium text-[#1d1d1f]">{teacher.classes}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-[#6e6e73]">Staj</span>
+                        <span className="font-medium text-[#1d1d1f]">{teacher.experience}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-[#6e6e73]">Toifa</span>
+                        <span className="font-medium text-[#1d1d1f]">{teacher.category}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#6e6e73]">Staj</span>
-                    <span className="font-medium text-[#1d1d1f]">{teacher.experience} yil</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#6e6e73]">Toifa</span>
-                    <span className="font-medium text-[#1d1d1f]">{teacher.qualification}</span>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="py-16 text-center">
+                <Users className="mx-auto h-12 w-12 text-[#6e6e73]/40" />
+                <p className="mt-4 text-sm font-medium text-[#6e6e73]">Hozircha admin paneldan o'qituvchilar qo'shilmagan.</p>
+              </div>
+            )}
           </div>
         )}
 
@@ -143,11 +229,11 @@ export default function Academic() {
                 <div className="col-span-2 text-center">GPA</div>
                 <div className="col-span-1 text-center">Yutuq</div>
               </div>
-              {gpaRankings.map((student, index) => (
+              {gpaList.map((student: any, index: number) => (
                 <div
                   key={index}
                   className={`grid grid-cols-12 items-center gap-2 px-6 py-4 text-sm transition-colors hover:bg-[#f5f5f7]/50 ${
-                    index !== gpaRankings.length - 1 ? 'border-b border-black/5' : ''
+                    index !== gpaList.length - 1 ? 'border-b border-black/5' : ''
                   }`}
                 >
                   <div className="col-span-2 text-center">
@@ -164,7 +250,9 @@ export default function Academic() {
                   <div className="col-span-5 font-medium text-[#1d1d1f]">{student.name}</div>
                   <div className="col-span-2 text-center text-[#6e6e73]">{student.class}</div>
                   <div className="col-span-2 text-center">
-                    <span className="font-bold text-[#0071e3]">{student.gpa.toFixed(2)}</span>
+                    <span className="font-bold text-[#0071e3]">
+                      {typeof student.gpa === 'number' ? student.gpa.toFixed(2) : student.gpa}
+                    </span>
                   </div>
                   <div className="col-span-1 text-center">
                     <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[#6e6e73]">
@@ -176,7 +264,7 @@ export default function Academic() {
               ))}
             </div>
             <p className="mt-4 text-center text-sm text-[#6e6e73]">
-              Reyting 2024-2025 o'quv yili 1-chorak natijalariga asosan tuzilgan
+              Reyting natijalari admin panel orqali boshqariladi
             </p>
           </div>
         )}

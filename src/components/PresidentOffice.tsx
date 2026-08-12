@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   GraduationCap, Trophy, Leaf, Palette, Rocket, MessageCircle, Wallet,
   Send, CheckCircle, Loader2, Crown, Lightbulb, ArrowUpRight,
 } from 'lucide-react';
-import { ministries, schoolPresident } from '@/lib/data';
-import { supabase, type StudentProposal } from '@/lib/supabase';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ministries, schoolPresident } from '../lib/data';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const iconMap: Record<string, typeof GraduationCap> = {
   GraduationCap,
@@ -27,10 +26,8 @@ const colorMap: Record<string, { bg: string; text: string; border: string }> = {
 export default function PresidentOffice() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
   const [selectedMinistry, setSelectedMinistry] = useState<string>("Ta'lim Vazirligi");
-  const [proposals, setProposals] = useState<StudentProposal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState({
@@ -40,48 +37,41 @@ export default function PresidentOffice() {
     description: '',
   });
 
-  useEffect(() => {
-    loadProposals();
-  }, []);
-
-  const loadProposals = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('student_proposals')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(12);
-
-    if (error) {
-      setError('Takliflarni yuklashda xatolik yuz berdi');
-    } else if (data) {
-      setProposals(data as StudentProposal[]);
-    }
-    setLoading(false);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
 
-    const { error } = await supabase.from('student_proposals').insert({
-      ministry: selectedMinistry,
-      full_name: form.full_name,
-      class: form.class,
-      title: form.title,
-      description: form.description,
-    });
+    try {
+      const newProposal = {
+        id: Date.now(),
+        ...form,
+        ministry: selectedMinistry,
+        date: new Date().toISOString(),
+      };
+      
+      // Barcha mumkin bo'lgan kalit nomlariga bir vaqtning o'zida saqlaymiz
+      const existingProposals = JSON.parse(
+        localStorage.getItem('student_proposals') || 
+        localStorage.getItem('admin_proposals') || 
+        localStorage.getItem('proposals') || 
+        '[]'
+      );
+      
+      const updatedProposals = [newProposal, ...existingProposals];
 
-    if (error) {
-      setError("Taklifni yuborishda xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
-    } else {
+      localStorage.setItem('student_proposals', JSON.stringify(updatedProposals));
+      localStorage.setItem('admin_proposals', JSON.stringify(updatedProposals));
+      localStorage.setItem('proposals', JSON.stringify(updatedProposals));
+
       setSubmitted(true);
       setForm({ full_name: '', class: '', title: '', description: '' });
-      await loadProposals();
       setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      setError("Taklifni yuborishda xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   return (
@@ -94,7 +84,7 @@ export default function PresidentOffice() {
           </div>
           <h2 className="apple-heading">O'zini-o'zi boshqarish tizimi</h2>
           <p className="apple-subheading mt-4">
-            Maktab Prezidenti va 7 ta vazirlik — o'quvchilar maktab hayonini birga boshqaradi
+            Maktab Prezidenti va 7 ta vazirlik — o'quvchilar maktab hayotini birga boshqaradi
           </p>
         </div>
 
@@ -140,7 +130,7 @@ export default function PresidentOffice() {
 
         {/* Ministries Grid */}
         <div ref={ref} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {ministries.map((ministry, index) => {
+          {ministries.map((ministry, index: number) => {
             const Icon = iconMap[ministry.icon] ?? GraduationCap;
             const colors = colorMap[ministry.color] ?? colorMap.blue;
             return (
@@ -170,7 +160,7 @@ export default function PresidentOffice() {
                 </p>
 
                 <div className="space-y-1.5 border-t border-black/5 pt-3">
-                  {ministry.initiatives.map((init, i) => (
+                  {ministry.initiatives.map((init: string, i: number) => (
                     <div key={i} className="flex items-center gap-2 text-xs text-[#6e6e73]">
                       <Lightbulb className={`h-3.5 w-3.5 ${colors.text}`} />
                       {init}
@@ -209,145 +199,117 @@ export default function PresidentOffice() {
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              {submitted ? (
-                <div className="flex h-full flex-col items-center justify-center text-center animate-scale-in">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#34c759]/10">
-                    <CheckCircle className="h-8 w-8 text-[#34c759]" />
-                  </div>
-                  <h4 className="text-xl font-semibold text-[#1d1d1f]">Taklifingiz qabul qilindi!</h4>
-                  <p className="mt-2 text-sm text-[#6e6e73]">
-                    Vazirlik ko'rib chiqadi va tez orada javob beradi. Rahmat!
-                  </p>
+          <div className="mx-auto max-w-2xl rounded-3xl bg-white p-8 shadow-sm sm:p-10">
+            {submitted ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center animate-scale-in">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#34c759]/10">
+                  <CheckCircle className="h-8 w-8 text-[#34c759]" />
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-[#1d1d1f]">Vazirlik</label>
-                    <select
-                      value={selectedMinistry}
-                      onChange={(e) => setSelectedMinistry(e.target.value)}
-                      className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors focus:border-[#0071e3] focus:bg-white"
-                    >
-                      {ministries.map((m) => (
-                        <option key={m.name} value={m.name}>{m.name}</option>
-                      ))}
-                    </select>
-                  </div>
+                <h4 className="text-xl font-semibold text-[#1d1d1f]">Taklifingiz qabul qilindi!</h4>
+                <p className="mt-2 text-sm text-[#6e6e73]">
+                  Vazirlik uni ko'rib chiqadi. Faoliyatingiz uchun rahmat!
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="ministry-select" className="mb-2 block text-sm font-medium text-[#1d1d1f]">Vazirlik</label>
+                  <select
+                    id="ministry-select"
+                    name="ministry"
+                    value={selectedMinistry}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedMinistry(e.target.value)}
+                    className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors focus:border-[#0071e3] focus:bg-white"
+                  >
+                    {ministries.map((m) => (
+                      <option key={m.name} value={m.name}>{m.name}</option>
+                    ))}
+                  </select>
+                </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-[#1d1d1f]">F.I.O</label>
-                      <input
-                        type="text"
-                        required
-                        value={form.full_name}
-                        onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                        placeholder="Familiya Ism Sharif"
-                        className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-[#1d1d1f]">Sinf</label>
-                      <input
-                        type="text"
-                        required
-                        value={form.class}
-                        onChange={(e) => setForm({ ...form, class: e.target.value })}
-                        placeholder="Masalan: 10-A"
-                        className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
-                      />
-                    </div>
-                  </div>
-
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[#1d1d1f]">Taklif sarlavhasi</label>
+                    <label htmlFor="full-name-input" className="mb-2 block text-sm font-medium text-[#1d1d1f]">F.I.O</label>
                     <input
                       type="text"
+                      id="full-name-input"
+                      name="full_name"
                       required
-                      value={form.title}
-                      onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      placeholder="Qisqacha sarlavha"
+                      value={form.full_name}
+                      onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                      placeholder="Familiya Ism Sharif"
                       className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
                     />
                   </div>
-
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[#1d1d1f]">Batafsil tavsif</label>
-                    <textarea
+                    <label htmlFor="class-input" className="mb-2 block text-sm font-medium text-[#1d1d1f]">Sinf</label>
+                    <input
+                      type="text"
+                      id="class-input"
+                      name="class"
                       required
-                      rows={4}
-                      value={form.description}
-                      onChange={(e) => setForm({ ...form, description: e.target.value })}
-                      placeholder="Taklifingizni batafsil yoriting..."
-                      className="w-full resize-none rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
+                      value={form.class}
+                      onChange={(e) => setForm({ ...form, class: e.target.value })}
+                      placeholder="Masalan: 10-A"
+                      className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
                     />
                   </div>
+                </div>
 
-                  {error && (
-                    <p className="rounded-xl bg-[#ff3b30]/10 px-4 py-3 text-sm text-[#ff3b30]">{error}</p>
+                <div>
+                  <label htmlFor="title-input" className="mb-2 block text-sm font-medium text-[#1d1d1f]">Taklif sarlavhasi</label>
+                  <input
+                    type="text"
+                    id="title-input"
+                    name="title"
+                    required
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="Qisqacha sarlavha"
+                    className="w-full rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="description-textarea" className="mb-2 block text-sm font-medium text-[#1d1d1f]">Batafsil tavsif</label>
+                  <textarea
+                    id="description-textarea"
+                    name="description"
+                    required
+                    rows={4}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Taklifingizni batafsil yoriting..."
+                    className="w-full resize-none rounded-xl border border-black/10 bg-[#f5f5f7] px-4 py-3 text-sm text-[#1d1d1f] outline-none transition-colors placeholder:text-[#aeaeb2] focus:border-[#0071e3] focus:bg-white"
+                  />
+                </div>
+
+                {error && (
+                  <p className="rounded-xl bg-[#ff3b30]/10 px-4 py-3 text-sm text-[#ff3b30]">{error}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="apple-button w-full disabled:opacity-60"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Yuborilmoqda...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Taklifni yuborish
+                    </>
                   )}
-
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="apple-button w-full disabled:opacity-60"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Yuborilmoqda...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Taklifni yuborish
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
-
-            <div className="rounded-3xl bg-[#f5f5f7] p-8">
-              <h4 className="mb-5 text-lg font-semibold text-[#1d1d1f]">So'nggi takliflar</h4>
-              {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-6 w-6 animate-spin text-[#0071e3]" />
-                </div>
-              ) : proposals.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Lightbulb className="mb-3 h-10 w-10 text-[#aeaeb2]" />
-                  <p className="text-sm text-[#6e6e73]">Hozircha takliflar yo'q. Birinchi bo'ling!</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[440px] overflow-y-auto pr-1">
-                  {proposals.map((p) => (
-                    <div key={p.id} className="rounded-2xl bg-white p-4 shadow-sm">
-                      <div className="mb-2 flex items-center justify-between">
-                        <span className="rounded-full bg-[#0071e3]/10 px-2.5 py-1 text-xs font-medium text-[#0071e3]">
-                          {p.ministry}
-                        </span>
-                        <span className="text-xs text-[#aeaeb2]">
-                          {new Date(p.created_at).toLocaleDateString('uz-UZ')}
-                        </span>
-                      </div>
-                      <h5 className="text-sm font-semibold text-[#1d1d1f]">{p.title}</h5>
-                      <p className="mt-1 line-clamp-2 text-xs text-[#6e6e73]">{p.description}</p>
-                      <div className="mt-2 flex items-center gap-2 text-xs text-[#6e6e73]">
-                        <span className="font-medium">{p.full_name}</span>
-                        <span>•</span>
-                        <span>{p.class}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
     </section>
   );
-}
+} 
