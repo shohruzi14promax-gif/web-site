@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, GraduationCap, User, Users, ChevronDown, ChevronUp } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { getSiteData, supabaseConfigured } from '../lib/supabase';
 import { teachers as staticTeachers } from '../lib/data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
@@ -16,6 +16,16 @@ interface Teacher {
   category?: string;
 }
 
+const loadLocalTeachers = (): Teacher[] => {
+  try {
+    const saved = localStorage.getItem('teachers');
+    const parsed = saved ? JSON.parse(saved) : null;
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : staticTeachers as Teacher[];
+  } catch {
+    return staticTeachers as Teacher[];
+  }
+};
+
 export default function Teachers() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -25,31 +35,33 @@ export default function Teachers() {
 
   const loadTeachers = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('teachers')
-      .select('id,name,role,bio,image,subject,classes,experience,category')
-      .order('name', { ascending: true });
-
-    if (error || !data?.length) {
+    try {
+      if (supabaseConfigured) {
+        const cloud = await getSiteData<Teacher[]>('teachers', []);
+        if (cloud.length > 0) {
+          setTeachers(cloud);
+          localStorage.setItem('teachers', JSON.stringify(cloud));
+          setLoading(false);
+          return;
+        }
+      }
+      setTeachers(loadLocalTeachers());
+    } catch (error) {
       console.error('Teachers load error:', error);
-      setTeachers(staticTeachers as Teacher[]);
-    } else {
-      setTeachers(data as Teacher[]);
+      setTeachers(loadLocalTeachers());
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     void loadTeachers();
-    const channel = supabase
-      .channel('teachers-live')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'teachers' }, () => {
-        void loadTeachers();
-      })
-      .subscribe();
-
+    const handleUpdate = () => void loadTeachers();
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('admin_data_updated', handleUpdate);
     return () => {
-      void supabase.removeChannel(channel);
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('admin_data_updated', handleUpdate);
     };
   }, []);
 
@@ -60,14 +72,14 @@ export default function Teachers() {
 
   const filteredTeachers = useMemo(
     () => subject === 'Barchasi' ? teachers : teachers.filter(t => t.subject === subject),
-    [teachers, subject]
+    [teachers, subject],
   );
 
   const visibleTeachers = showAll ? filteredTeachers : filteredTeachers.slice(0, 8);
 
   return (
     <section id="teachers" className="apple-section relative overflow-hidden py-20">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
         <div className="absolute left-[-180px] top-[5%] h-[500px] w-[500px] rounded-full bg-sky-200/20 blur-3xl animate-liquid" />
         <div className="absolute right-[-180px] bottom-[5%] h-[500px] w-[500px] rounded-full bg-indigo-200/20 blur-3xl animate-liquid" style={{ animationDelay: '3s' }} />
       </div>
@@ -98,7 +110,11 @@ export default function Teachers() {
         </div>
 
         {loading ? (
-          <div className="py-16 text-center text-slate-500">O'qituvchilar yuklanmoqda…</div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="O'qituvchilar yuklanmoqda">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="h-64 animate-pulse rounded-[28px] border border-white/80 bg-white/60" />
+            ))}
+          </div>
         ) : (
           <div ref={ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visibleTeachers.map((teacher, index) => (
