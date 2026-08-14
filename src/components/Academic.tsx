@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Award, Calculator, Atom, Code2, FlaskConical, Dna, Languages, Landmark, BookOpen, GraduationCap, TrendingUp, Users } from 'lucide-react';
-import { subjects, gpaRankings as defaultGpa } from '../lib/data';
+import { subjects, teachers as defaultTeachers, gpaRankings as defaultGpa } from '../lib/data';
 
 const iconMap: Record<string, any> = { Calculator, Atom, Code2, FlaskConical, Dna, Languages, Landmark, BookOpen };
 const colorMap: Record<string, string> = {
@@ -12,32 +12,38 @@ const colorMap: Record<string, string> = {
 
 type Tab = 'teachers' | 'subjects' | 'gpa';
 
+const normalizeTeachers = (list: any[]) => list.map((t: any) => ({
+  name: t.name || t.fullName || "O'qituvchi",
+  subject: t.subject || t.role || t.fan || "Fan o'qituvchisi",
+  classes: t.classes || t.sinf || 'Aniqlanmoqda',
+  experience: t.experience || t.staj || 'Aniqlanmoqda',
+  category: t.category || t.toifa || 'Aniqlanmoqda',
+  image: t.image || t.avatar || t.photo || '',
+}));
+
 export default function Academic() {
   const [tab, setTab] = useState<Tab>('subjects');
   const [selectedSubject, setSelectedSubject] = useState(subjects[0]?.name || '');
-  const [teachersList, setTeachersList] = useState<any[]>([]);
+  const [teachersList, setTeachersList] = useState<any[]>(normalizeTeachers(defaultTeachers));
   const [gpaList, setGpaList] = useState<any[]>(defaultGpa);
 
   const loadData = () => {
     try {
       const teacherSaved = localStorage.getItem('teachers') || localStorage.getItem('admin_teachers') || localStorage.getItem('school_teachers');
       const gpaSaved = localStorage.getItem('gpaList') || localStorage.getItem('gpaRankings') || localStorage.getItem('admin_gpa');
+
       if (teacherSaved) {
         const parsed = JSON.parse(teacherSaved);
-        if (Array.isArray(parsed)) setTeachersList(parsed.map((t: any) => ({
-          name: t.name || t.fullName || "O'qituvchi",
-          subject: t.subject || t.role || t.fan || "Fan o'qituvchisi",
-          classes: t.classes || t.sinf || '5-11 sinflar',
-          experience: t.experience || t.staj || '5+ yil',
-          category: t.category || t.toifa || 'Oliy toifa',
-          image: t.image || t.avatar || t.photo || '',
-        })));
+        if (Array.isArray(parsed) && parsed.length) setTeachersList(normalizeTeachers(parsed));
       }
+
       if (gpaSaved) {
         const parsed = JSON.parse(gpaSaved);
         if (Array.isArray(parsed) && parsed.length) setGpaList(parsed);
       }
-    } catch (e) { console.error('Academic data error:', e); }
+    } catch (e) {
+      console.error('Academic data error:', e);
+    }
   };
 
   useEffect(() => {
@@ -49,8 +55,9 @@ export default function Academic() {
   const selected = subjects.find((s) => s.name === selectedSubject) || subjects[0];
   const subjectTeachers = teachersList.filter((t) => {
     if (!selected) return false;
-    const value = String(t.subject || '').toLowerCase();
-    return value.includes(selected.name.toLowerCase()) || selected.name.toLowerCase().includes(value);
+    const value = String(t.subject || '').toLowerCase().trim();
+    const target = selected.name.toLowerCase().trim();
+    return value.includes(target) || target.includes(value);
   });
 
   const tabs = [
@@ -119,14 +126,16 @@ export default function Academic() {
                 </div>
               </div>
 
-              {subjectTeachers.length > 0 && (
-                <div className="mt-8 border-t border-black/5 pt-7">
-                  <h4 className="text-lg font-semibold text-[#1d1d1f]">Shu fan o'qituvchilari</h4>
+              <div className="mt-8 border-t border-black/5 pt-7">
+                <h4 className="text-lg font-semibold text-[#1d1d1f]">Shu fan o'qituvchilari ({subjectTeachers.length})</h4>
+                {subjectTeachers.length ? (
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    {subjectTeachers.slice(0, 6).map((teacher, i) => <div key={i} className="rounded-2xl border border-black/5 bg-white p-4"><div className="font-semibold text-[#1d1d1f]">{teacher.name}</div><div className="mt-1 text-xs text-[#6e6e73]">{teacher.classes} · {teacher.category}</div></div>)}
+                    {subjectTeachers.map((teacher, i) => <div key={`${teacher.name}-${i}`} className="rounded-2xl border border-black/5 bg-white p-4"><div className="font-semibold text-[#1d1d1f]">{teacher.name}</div><div className="mt-1 text-xs text-[#6e6e73]">{teacher.classes} · {teacher.category}</div></div>)}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="mt-4 text-sm text-[#6e6e73]">Bu fan bo‘yicha o‘qituvchilar topilmadi.</p>
+                )}
+              </div>
             </div>
           </div>
         )}
