@@ -16,9 +16,7 @@ import SchoolCoin from './components/SchoolCoin';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
-const siteKeys = ['announcements', 'birthdays', 'teachers', 'projects', 'galleryList', 'videoLessons', 'gpaList'] as const;
-
-type SiteKey = typeof siteKeys[number];
+type NotificationKey = 'announcements' | 'birthdays';
 
 const readArray = <T,>(key: string): T[] => {
   try {
@@ -39,7 +37,7 @@ export default function App() {
   useEffect(() => {
     let alive = true;
 
-    const syncKey = async (key: SiteKey) => {
+    const syncNotificationKey = async (key: NotificationKey) => {
       if (!supabaseConfigured) return;
       const value = await getSiteData(key, []);
       if (!alive) return;
@@ -47,46 +45,49 @@ export default function App() {
       window.dispatchEvent(new Event('admin_data_updated'));
     };
 
-    const syncCloud = async () => {
-      if (!supabaseConfigured) return;
-      await Promise.all(siteKeys.map(syncKey));
-    };
-
-    const loadLocal = () => {
+    const loadNotifications = () => {
       setAnnouncements(readArray('announcements'));
       setBirthdays(readArray('birthdays'));
     };
 
-    loadLocal();
-    void syncCloud().catch(error => console.error('Cloud sync error:', error));
+    loadNotifications();
 
-    let channel: ReturnType<typeof supabase.channel> | null = null;
     if (supabaseConfigured) {
-      channel = supabase
-        .channel('site-data-live')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'site_data' },
-          payload => {
-            const key = (payload.new as { key?: string } | null)?.key || (payload.old as { key?: string } | null)?.key;
-            if (key && siteKeys.includes(key as SiteKey)) {
-              void syncKey(key as SiteKey);
-            } else {
-              void syncCloud();
-            }
-          },
-        )
-        .subscribe();
+      void Promise.all([
+        syncNotificationKey('announcements'),
+        syncNotificationKey('birthdays'),
+      ]).catch(() => {
+        // Components have their own Supabase fallbacks; notifications can use cached data.
+      });
     }
 
-    window.addEventListener('admin_data_updated', loadLocal);
-    window.addEventListener('storage', loadLocal);
+    const channel = supabaseConfigured
+      ? supabase
+          .channel('site-notifications-live')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'site_data' },
+            payload => {
+              const key =
+                (payload.new as { key?: string } | null)?.key ||
+                (payload.old as { key?: string } | null)?.key;
+
+              if (key === 'announcements' || key === 'birthdays') {
+                void syncNotificationKey(key);
+              }
+            },
+          )
+          .subscribe()
+      : null;
+
+    window.addEventListener('admin_data_updated', loadNotifications);
+    window.addEventListener('storage', loadNotifications);
 
     return () => {
       alive = false;
       if (channel) void supabase.removeChannel(channel);
-      window.removeEventListener('admin_data_updated', loadLocal);
-      window.removeEventListener('storage', loadLocal);
+      window.removeEventListener('admin_data_updated', loadNotifications);
+      window.removeEventListener('storage', loadNotifications);
     };
   }, []);
 
@@ -99,7 +100,7 @@ export default function App() {
         backgroundImage: `linear-gradient(to bottom, rgba(248,250,252,.65), rgba(248,250,252,.45)), url('/images/maktab-bg.JPG')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: 'scroll',
         backgroundRepeat: 'no-repeat',
       }}
     >
