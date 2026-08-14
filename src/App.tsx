@@ -10,13 +10,14 @@ import Innovation from './components/Innovation';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import CloudAdminPanel from './components/CloudAdminPanel';
+import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
-import SchoolCoin from './components/SchoolCoin';
+import SchoolCoinSecure from './components/SchoolCoinSecure';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
 type NotificationKey = 'announcements' | 'birthdays';
+type NotificationItem = Record<string, unknown> & { id?: string | number; name?: string; class?: string; title?: string; content?: string; description?: string; message?: string; date?: string };
 
 const readArray = <T,>(key: string): T[] => {
   try {
@@ -30,22 +31,22 @@ const readArray = <T,>(key: string): T[] => {
 export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isSchoolCoinOpen, setIsSchoolCoinOpen] = useState(false);
-  const [announcements, setAnnouncements] = useState<any[]>([]);
-  const [birthdays, setBirthdays] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<NotificationItem[]>([]);
+  const [birthdays, setBirthdays] = useState<NotificationItem[]>([]);
   const [showNotifModal, setShowNotifModal] = useState(false);
 
   useEffect(() => {
     let alive = true;
     const syncNotificationKey = async (key: NotificationKey) => {
       if (!supabaseConfigured) return;
-      const value = await getSiteData(key, []);
+      const value = await getSiteData<NotificationItem[]>(key, []);
       if (!alive) return;
       localStorage.setItem(key, JSON.stringify(value));
       window.dispatchEvent(new Event('admin_data_updated'));
     };
     const loadNotifications = () => {
-      setAnnouncements(readArray('announcements'));
-      setBirthdays(readArray('birthdays'));
+      setAnnouncements(readArray<NotificationItem>('announcements'));
+      setBirthdays(readArray<NotificationItem>('birthdays'));
     };
     loadNotifications();
     if (supabaseConfigured) {
@@ -133,8 +134,8 @@ export default function App() {
         </div>
       )}
 
-      {isAdminOpen && <CloudAdminPanel onClose={() => setIsAdminOpen(false)} />}
-      {isSchoolCoinOpen && <SchoolCoin onClose={() => setIsSchoolCoinOpen(false)} />}
+      {isAdminOpen && <CloudAdminPanelPro onClose={() => setIsAdminOpen(false)} />}
+      {isSchoolCoinOpen && <SchoolCoinSecure onClose={() => setIsSchoolCoinOpen(false)} initialMode="student" />}
     </div>
   );
 }
