@@ -33,13 +33,11 @@ export type SiteDataKey =
 export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> {
   if (!supabaseConfigured) return fallback;
   try {
-    const result = await Promise.race([
-      supabase.from('site_data').select('data').eq('key', key).maybeSingle(),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Supabase request timeout')), 5000)),
-    ]);
-    const { data, error } = result as Awaited<ReturnType<typeof supabase.from>>;
-    if (error || !data) return fallback;
-    return (data.data as T) ?? fallback;
+    const request = supabase.from('site_data').select('data').eq('key', key).maybeSingle();
+    const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Supabase request timeout')), 5000));
+    const result = await Promise.race([request, timeout]);
+    if (result.error || !result.data) return fallback;
+    return (result.data.data as T) ?? fallback;
   } catch (error) {
     console.error(`Supabase getSiteData(${key}) failed:`, error);
     return fallback;
