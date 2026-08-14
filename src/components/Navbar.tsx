@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import Navbar from './Navbar';
 import { GraduationCap, Menu, X } from 'lucide-react';
 import { navLinks } from '../lib/data';
 
 const menuLinks = [...navLinks, { href: '#school-life', label: 'Maktab hayoti' }];
 
-export default function SiteNavbar() {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
