@@ -11,14 +11,13 @@ permissions:
 
 jobs:
   verify:
-    if: !contains(github.event.head_commit.message, '[skip-hardening]') || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Apply production hardening patch
-        if: github.ref == 'refs/heads/agent/production-hardening'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/production-hardening'
         shell: python
         run: |
           from pathlib import Path
@@ -91,7 +90,7 @@ jobs:
         run: npm run build
 
       - name: Commit verified hardening patch
-        if: github.ref == 'refs/heads/agent/production-hardening'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/production-hardening'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
