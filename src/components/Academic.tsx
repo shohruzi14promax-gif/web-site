@@ -4,21 +4,15 @@ import { subjects, teachers as defaultTeachers, gpaRankings as defaultGpa } from
 
 const iconMap: Record<string, any> = { Calculator, Atom, Code2, FlaskConical, Dna, Languages, Landmark, BookOpen };
 const colorMap: Record<string, string> = {
-  blue: 'bg-[#0071e3]/10 text-[#0071e3]',
-  green: 'bg-[#34c759]/10 text-[#34c759]',
-  orange: 'bg-[#ff9500]/10 text-[#ff9500]',
-  red: 'bg-[#ff3b30]/10 text-[#ff3b30]',
+  blue: 'bg-[#0071e3]/10 text-[#0071e3]', green: 'bg-[#34c759]/10 text-[#34c759]',
+  orange: 'bg-[#ff9500]/10 text-[#ff9500]', red: 'bg-[#ff3b30]/10 text-[#ff3b30]',
 };
-
 type Tab = 'teachers' | 'subjects' | 'gpa';
 
 const normalizeTeachers = (list: any[]) => list.map((t: any) => ({
-  name: t.name || t.fullName || "O'qituvchi",
-  subject: t.subject || t.role || t.fan || "Fan o'qituvchisi",
-  classes: t.classes || t.sinf || 'Aniqlanmoqda',
-  experience: t.experience || t.staj || 'Aniqlanmoqda',
-  category: t.category || t.toifa || 'Aniqlanmoqda',
-  image: t.image || t.avatar || t.photo || '',
+  name: t.name || t.fullName || "O'qituvchi", subject: t.subject || t.role || t.fan || "Fan o'qituvchisi",
+  classes: t.classes || t.sinf || 'Aniqlanmoqda', experience: t.experience || t.staj || 'Aniqlanmoqda',
+  category: t.category || t.toifa || 'Aniqlanmoqda', image: t.image || t.avatar || t.photo || '',
 }));
 
 export default function Academic() {
@@ -28,29 +22,23 @@ export default function Academic() {
   const [gpaList, setGpaList] = useState<any[]>(defaultGpa);
   const [showAllTeachers, setShowAllTeachers] = useState(false);
 
-  const loadData = () => {
+  useEffect(() => {
+    // Load optional browser-cached admin data once. No polling loop: repeated localStorage
+    // reads every 1.5s could keep the Academic tree updating indefinitely.
     try {
       const teacherSaved = localStorage.getItem('teachers') || localStorage.getItem('admin_teachers') || localStorage.getItem('school_teachers');
       const gpaSaved = localStorage.getItem('gpaList') || localStorage.getItem('gpaRankings') || localStorage.getItem('admin_gpa');
-
       if (teacherSaved) {
         const parsed = JSON.parse(teacherSaved);
         if (Array.isArray(parsed) && parsed.length) setTeachersList(normalizeTeachers(parsed));
       }
-
       if (gpaSaved) {
         const parsed = JSON.parse(gpaSaved);
         if (Array.isArray(parsed) && parsed.length) setGpaList(parsed);
       }
     } catch (e) {
-      console.error('Academic data error:', e);
+      console.error('Academic cached data error:', e);
     }
-  };
-
-  useEffect(() => {
-    loadData();
-    const interval = setInterval(loadData, 1500);
-    return () => clearInterval(interval);
   }, []);
 
   const selected = subjects.find((s) => s.name === selectedSubject) || subjects[0];
@@ -60,9 +48,7 @@ export default function Academic() {
     const target = selected.name.toLowerCase().trim();
     return value.includes(target) || target.includes(value);
   });
-
   const visibleTeachers = showAllTeachers ? teachersList : teachersList.slice(0, 8);
-
   const tabs = [
     { key: 'teachers' as Tab, label: "O'qituvchilar", icon: Users },
     { key: 'subjects' as Tab, label: 'Fanlar', icon: GraduationCap },
@@ -70,83 +56,15 @@ export default function Academic() {
   ];
 
   return (
-    <section id="academic" className="apple-section relative overflow-hidden">
-      <div className="apple-container">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
-          <p className="apple-eyebrow mb-4">Akademik Portal</p>
-          <h2 className="apple-heading">O'qituvchilar, fanlar va reytinglar</h2>
-          <p className="apple-subheading mt-4">Chuqurlashtirilgan ta'lim dasturi, professional pedagoglar va GPA reytingi</p>
-        </div>
+    <section id="academic" className="apple-section relative overflow-hidden"><div className="apple-container">
+      <div className="mx-auto mb-12 max-w-3xl text-center"><p className="apple-eyebrow mb-4">Akademik Portal</p><h2 className="apple-heading">O'qituvchilar, fanlar va reytinglar</h2><p className="apple-subheading mt-4">Chuqurlashtirilgan ta'lim dasturi, professional pedagoglar va GPA reytingi</p></div>
+      <div className="mb-10 flex justify-center"><div className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/70 bg-white/60 p-1.5 shadow-lg backdrop-blur-2xl">{tabs.map(({ key, label, icon: Icon }) => <button key={key} onClick={() => setTab(key)} className={`flex shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${tab === key ? 'bg-white text-[#0071e3] shadow-md' : 'text-[#6e6e73] hover:bg-white/60'}`}><Icon className="h-4 w-4" />{label}</button>)}</div></div>
 
-        <div className="mb-10 flex justify-center">
-          <div className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/70 bg-white/60 p-1.5 shadow-lg backdrop-blur-2xl">
-            {tabs.map(({ key, label, icon: Icon }) => (
-              <button key={key} onClick={() => setTab(key)} className={`flex shrink-0 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${tab === key ? 'bg-white text-[#0071e3] shadow-md' : 'text-[#6e6e73] hover:bg-white/60'}`}>
-                <Icon className="h-4 w-4" />{label}
-              </button>
-            ))}
-          </div>
-        </div>
+      {tab === 'subjects' && selected && <div className="grid gap-6 lg:grid-cols-[300px_1fr]"><div className="space-y-3">{subjects.map((subject) => { const Icon = iconMap[subject.icon] || Calculator; const active = subject.name === selectedSubject; return <button key={subject.name} onClick={() => setSelectedSubject(subject.name)} className={`w-full rounded-2xl border p-4 text-left transition-all ${active ? 'border-[#0071e3] bg-[#0071e3]/5 shadow-md' : 'border-black/5 bg-white/70 hover:border-[#0071e3]/40 hover:shadow-md'}`}><div className="flex items-center gap-3"><span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${colorMap[subject.color] || colorMap.blue}`}><Icon className="h-5 w-5" /></span><div><div className="font-semibold text-[#1d1d1f]">{subject.name}</div><div className="text-xs text-[#6e6e73]">Batafsil ma'lumot</div></div></div></button>; })}</div><div className="rounded-[28px] border border-white/70 bg-white/80 p-7 shadow-xl backdrop-blur-xl sm:p-9"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-semibold uppercase tracking-wider text-[#0071e3]">Tanlangan fan</p><h3 className="mt-2 text-3xl font-bold text-[#1d1d1f]">{selected.name}</h3></div><span className={`rounded-full px-4 py-2 text-xs font-semibold ${colorMap[selected.color] || colorMap.blue}`}>Chuqurlashtirilgan</span></div><p className="mt-5 max-w-3xl text-base leading-7 text-[#6e6e73]">{selected.desc}</p><div className="mt-8 grid gap-4 sm:grid-cols-3"><div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Yo'nalish</div><div className="mt-2 font-semibold text-[#1d1d1f]">Nazariya va amaliyot</div></div><div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Dastur</div><div className="mt-2 font-semibold text-[#1d1d1f]">Chuqurlashtirilgan ta'lim</div></div><div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Maqsad</div><div className="mt-2 font-semibold text-[#1d1d1f]">Olimpiada va OTMga tayyorgarlik</div></div></div><div className="mt-8 border-t border-black/5 pt-7"><h4 className="text-lg font-semibold text-[#1d1d1f]">{selected.name} bo'yicha imkoniyatlar</h4><div className="mt-4 grid gap-3 sm:grid-cols-2">{['Amaliy mashg‘ulotlar', 'Fan olimpiadalariga tayyorgarlik', 'Loyiha va tadqiqot ishlari', 'Qo‘shimcha o‘quv materiallari'].map((item) => <div key={item} className="rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#6e6e73]">✓ {item}</div>)}</div></div><div className="mt-8 border-t border-black/5 pt-7"><h4 className="text-lg font-semibold text-[#1d1d1f]">Shu fan o'qituvchilari ({subjectTeachers.length})</h4>{subjectTeachers.length ? <div className="mt-4 grid gap-3 sm:grid-cols-2">{subjectTeachers.map((teacher, i) => <div key={`${teacher.name}-${i}`} className="rounded-2xl border border-black/5 bg-white p-4"><div className="font-semibold text-[#1d1d1f]">{teacher.name}</div><div className="mt-1 text-xs text-[#6e6e73]">{teacher.classes} · {teacher.category}</div></div>)}</div> : <p className="mt-4 text-sm text-[#6e6e73]">Bu fan bo‘yicha o‘qituvchilar topilmadi.</p>}</div></div></div>}
 
-        {tab === 'subjects' && selected && (
-          <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-            <div className="space-y-3">
-              {subjects.map((subject) => {
-                const Icon = iconMap[subject.icon] || Calculator;
-                const active = subject.name === selectedSubject;
-                return (
-                  <button key={subject.name} onClick={() => setSelectedSubject(subject.name)} className={`w-full rounded-2xl border p-4 text-left transition-all ${active ? 'border-[#0071e3] bg-[#0071e3]/5 shadow-md' : 'border-black/5 bg-white/70 hover:border-[#0071e3]/40 hover:shadow-md'}`}>
-                    <div className="flex items-center gap-3">
-                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${colorMap[subject.color] || colorMap.blue}`}><Icon className="h-5 w-5" /></span>
-                      <div><div className="font-semibold text-[#1d1d1f]">{subject.name}</div><div className="text-xs text-[#6e6e73]">Batafsil ma'lumot</div></div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+      {tab === 'teachers' && (teachersList.length ? <><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{visibleTeachers.map((teacher, i) => <div key={`${teacher.name}-${i}`} className="apple-card !p-6"><div className="mb-5 h-40 overflow-hidden rounded-2xl bg-slate-100">{teacher.image ? <img src={teacher.image} alt={teacher.name} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center"><Users className="h-12 w-12 text-[#0071e3]/50" /></div>}</div><h3 className="font-semibold text-[#1d1d1f]">{teacher.name}</h3><p className="mt-1 text-sm font-medium text-[#0071e3]">{teacher.subject}</p><div className="mt-5 space-y-2 border-t border-black/5 pt-4 text-xs"><div className="flex justify-between"><span className="text-[#6e6e73]">Sinflar</span><span>{teacher.classes}</span></div><div className="flex justify-between"><span className="text-[#6e6e73]">Staj</span><span>{teacher.experience}</span></div><div className="flex justify-between"><span className="text-[#6e6e73]">Toifa</span><span>{teacher.category}</span></div></div></div>)}</div>{teachersList.length > 8 && <div className="mt-8 flex justify-center"><button type="button" onClick={() => setShowAllTeachers((prev) => !prev)} className="rounded-full border border-[#0071e3]/20 bg-white/80 px-6 py-3 text-sm font-semibold text-[#0071e3] shadow-md transition-all hover:bg-white hover:shadow-lg">{showAllTeachers ? 'Kamroq ko‘rsatish' : `Ko‘proq ko‘rish (${teachersList.length - 8} ta)`}</button></div>}</>) : <div className="rounded-3xl bg-white/70 p-16 text-center text-[#6e6e73]">Hozircha o'qituvchilar ma'lumoti mavjud emas.</div>)}
 
-            <div className="rounded-[28px] border border-white/70 bg-white/80 p-7 shadow-xl backdrop-blur-xl sm:p-9">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-[#0071e3]">Tanlangan fan</p>
-                  <h3 className="mt-2 text-3xl font-bold text-[#1d1d1f]">{selected.name}</h3>
-                </div>
-                <span className={`rounded-full px-4 py-2 text-xs font-semibold ${colorMap[selected.color] || colorMap.blue}`}>Chuqurlashtirilgan</span>
-              </div>
-              <p className="mt-5 max-w-3xl text-base leading-7 text-[#6e6e73]">{selected.desc}</p>
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Yo'nalish</div><div className="mt-2 font-semibold text-[#1d1d1f]">Nazariya va amaliyot</div></div>
-                <div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Dastur</div><div className="mt-2 font-semibold text-[#1d1d1f]">Chuqurlashtirilgan ta'lim</div></div>
-                <div className="rounded-2xl bg-[#f5f5f7] p-5"><div className="text-xs uppercase tracking-wide text-[#6e6e73]">Maqsad</div><div className="mt-2 font-semibold text-[#1d1d1f]">Olimpiada va OTMga tayyorgarlik</div></div>
-              </div>
-              <div className="mt-8 border-t border-black/5 pt-7">
-                <h4 className="text-lg font-semibold text-[#1d1d1f]">{selected.name} bo'yicha imkoniyatlar</h4>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">{['Amaliy mashg‘ulotlar', 'Fan olimpiadalariga tayyorgarlik', 'Loyiha va tadqiqot ishlari', 'Qo‘shimcha o‘quv materiallari'].map((item) => <div key={item} className="rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#6e6e73]">✓ {item}</div>)}</div>
-              </div>
-              <div className="mt-8 border-t border-black/5 pt-7">
-                <h4 className="text-lg font-semibold text-[#1d1d1f]">Shu fan o'qituvchilari ({subjectTeachers.length})</h4>
-                {subjectTeachers.length ? <div className="mt-4 grid gap-3 sm:grid-cols-2">{subjectTeachers.map((teacher, i) => <div key={`${teacher.name}-${i}`} className="rounded-2xl border border-black/5 bg-white p-4"><div className="font-semibold text-[#1d1d1f]">{teacher.name}</div><div className="mt-1 text-xs text-[#6e6e73]">{teacher.classes} · {teacher.category}</div></div>)}</div> : <p className="mt-4 text-sm text-[#6e6e73]">Bu fan bo‘yicha o‘qituvchilar topilmadi.</p>}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {tab === 'teachers' && (
-          teachersList.length ? <>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {visibleTeachers.map((teacher, i) => <div key={i} className="apple-card !p-6"><div className="mb-5 h-40 overflow-hidden rounded-2xl bg-slate-100">{teacher.image ? <img src={teacher.image} alt={teacher.name} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center"><Users className="h-12 w-12 text-[#0071e3]/50" /></div>}</div><h3 className="font-semibold text-[#1d1d1f]">{teacher.name}</h3><p className="mt-1 text-sm font-medium text-[#0071e3]">{teacher.subject}</p><div className="mt-5 space-y-2 border-t border-black/5 pt-4 text-xs"><div className="flex justify-between"><span className="text-[#6e6e73]">Sinflar</span><span>{teacher.classes}</span></div><div className="flex justify-between"><span className="text-[#6e6e73]">Staj</span><span>{teacher.experience}</span></div><div className="flex justify-between"><span className="text-[#6e6e73]">Toifa</span><span>{teacher.category}</span></div></div></div>)}
-            </div>
-            {teachersList.length > 8 && <div className="mt-8 flex justify-center"><button type="button" onClick={() => setShowAllTeachers((prev) => !prev)} className="rounded-full border border-[#0071e3]/20 bg-white/80 px-6 py-3 text-sm font-semibold text-[#0071e3] shadow-md transition-all hover:bg-white hover:shadow-lg">{showAllTeachers ? 'Kamroq ko‘rsatish' : `Ko‘proq ko‘rish (${teachersList.length - 8} ta)`}</button></div>}
-          </> : <div className="rounded-3xl bg-white/70 p-16 text-center text-[#6e6e73]">Hozircha o'qituvchilar ma'lumoti mavjud emas.</div>
-        )}
-
-        {tab === 'gpa' && (
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-[28px] border border-white/70 bg-white/80 shadow-xl backdrop-blur-xl">
-            <div className="grid grid-cols-12 gap-2 border-b border-black/5 px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#6e6e73]"><div className="col-span-2 text-center">Reyting</div><div className="col-span-5">O'quvchi</div><div className="col-span-2 text-center">Sinf</div><div className="col-span-2 text-center">GPA</div><div className="col-span-1 text-center">Yutuq</div></div>
-            {gpaList.map((student: any, i) => <div key={i} className="grid grid-cols-12 items-center gap-2 border-b border-black/5 px-6 py-4 text-sm last:border-0"><div className="col-span-2 text-center"><span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#0071e3] text-xs font-bold text-white">{student.rank || i + 1}</span></div><div className="col-span-5 font-medium text-[#1d1d1f]">{student.name}</div><div className="col-span-2 text-center text-[#6e6e73]">{student.class}</div><div className="col-span-2 text-center font-bold text-[#0071e3]">{typeof student.gpa === 'number' ? student.gpa.toFixed(2) : student.gpa}</div><div className="col-span-1 flex justify-center text-xs text-[#6e6e73]"><Award className="mr-1 h-3.5 w-3.5 text-[#ff9500]" />{student.achievements}</div></div>)}
-          </div>
-        )}
-      </div>
-    </section>
+      {tab === 'gpa' && <div className="mx-auto max-w-3xl overflow-hidden rounded-[28px] border border-white/70 bg-white/80 shadow-xl backdrop-blur-xl"><div className="grid grid-cols-12 gap-2 border-b border-black/5 px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#6e6e73]"><div className="col-span-2 text-center">Reyting</div><div className="col-span-5">O'quvchi</div><div className="col-span-2 text-center">Sinf</div><div className="col-span-2 text-center">GPA</div><div className="col-span-1 text-center">Yutuq</div></div>{gpaList.map((student: any, i) => <div key={i} className="grid grid-cols-12 items-center gap-2 border-b border-black/5 px-6 py-4 text-sm last:border-0"><div className="col-span-2 text-center"><span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#0071e3] text-xs font-bold text-white">{student.rank || i + 1}</span></div><div className="col-span-5 font-medium text-[#1d1d1f]">{student.name}</div><div className="col-span-2 text-center text-[#6e6e73]">{student.class}</div><div className="col-span-2 text-center font-bold text-[#0071e3]">{typeof student.gpa === 'number' ? student.gpa.toFixed(2) : student.gpa}</div><div className="col-span-1 flex justify-center text-xs text-[#6e6e73]"><Award className="mr-1 h-3.5 w-3.5 text-[#ff9500]" />{student.achievements}</div></div>)}</div>}
+    </div></section>
   );
 }
