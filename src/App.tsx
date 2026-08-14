@@ -25,13 +25,17 @@ export default function App() {
 
   useEffect(() => {
     let alive = true;
+    const syncKey = async (key: typeof siteKeys[number]) => {
+      if (!supabaseConfigured) return;
+      const value = await getSiteData(key, []);
+      if (alive) {
+        localStorage.setItem(key, JSON.stringify(value));
+        window.dispatchEvent(new Event('admin_data_updated'));
+      }
+    };
     const syncCloud = async () => {
       if (!supabaseConfigured) return;
-      await Promise.all(siteKeys.map(async (key) => {
-        const value = await getSiteData(key, []);
-        if (alive) localStorage.setItem(key, JSON.stringify(value));
-      }));
-      if (alive) window.dispatchEvent(new Event('admin_data_updated'));
+      await Promise.all(siteKeys.map(key => syncKey(key)));
     };
 
     syncCloud().catch(error => console.error('Cloud sync error:', error));
@@ -39,7 +43,14 @@ export default function App() {
     let channel: ReturnType<typeof supabase.channel> | null = null;
     if (supabaseConfigured) {
       channel = supabase.channel('site-data-live')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'site_data' }, () => { void syncCloud(); })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'site_data' }, payload => {
+          const key = (payload.new as { key?: string } | null)?.key || (payload.old as { key?: string } | null)?.key;
+          if (key && siteKeys.includes(key as typeof siteKeys[number])) {
+            void syncKey(key as typeof siteKeys[number]);
+          } else {
+            void syncCloud();
+          }
+        })
         .subscribe();
     }
 
