@@ -1,0 +1,37 @@
+/* Premium motion safeguards: preserve luxury visuals while reducing expensive effects. */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Keep glass premium, but reduce compositor pressure on phones. */
+  .apple-card,
+  .navbar-glass,
+  .admin-sidebar {
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  .apple-card {
+    transition-property: transform, box-shadow, background-color;
+  }
+}
+
+@media (hover: none) {
+  .apple-card:hover {
+    transform: none;
+  }
+
+  .image-hover:hover img {
+    transform: none;
+    filter: none;
+  }
+}
