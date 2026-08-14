@@ -4,7 +4,6 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Academic from './components/Academic';
 import Administration from './components/Administration';
-import Teachers from './components/Teachers';
 import VideoLessons from './components/VideoLessons';
 import PresidentOffice from './components/PresidentOffice';
 import Innovation from './components/Innovation';
@@ -116,7 +115,6 @@ export default function App() {
         <About />
         <Academic />
         <Administration />
-        <Teachers />
         <VideoLessons />
         <PresidentOffice />
         <Innovation />
