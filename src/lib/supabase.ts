@@ -1,16 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim();
 
-export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+// The project URL is not a secret and keeping a fallback prevents the public
+// SchoolCoin client from silently pointing at the placeholder host when a
+// Netlify build is missing the URL environment variable.
+const PROJECT_SUPABASE_URL = 'https://tljecpmgfwpwajwkkock.supabase.co';
+const resolvedSupabaseUrl = supabaseUrl || PROJECT_SUPABASE_URL;
 
-if (!supabaseConfigured) {
-  console.error('Supabase env variables are missing: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+export const supabaseConfigured = Boolean(supabaseAnonKey);
+
+if (!supabaseAnonKey) {
+  console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY');
 }
 
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
+  resolvedSupabaseUrl,
   supabaseAnonKey || 'placeholder-anon-key',
   { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
 );
@@ -45,7 +51,7 @@ export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> 
 }
 
 export async function saveSiteData<T>(key: SiteDataKey, value: T) {
-  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Vercel environment variablesni tekshiring.');
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Netlify environment variablesni tekshiring.');
   const { error } = await supabase.from('site_data').upsert({ key, data: value, updated_at: new Date().toISOString() });
   if (error) throw error;
 }
