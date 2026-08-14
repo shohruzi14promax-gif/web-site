@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpen, GraduationCap, User, Users } from 'lucide-react';
+import { BookOpen, GraduationCap, User, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { teachers as staticTeachers } from '../lib/data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -21,6 +21,7 @@ export default function Teachers() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState('Barchasi');
+  const [showAll, setShowAll] = useState(false);
 
   const loadTeachers = async () => {
     setLoading(true);
@@ -62,6 +63,8 @@ export default function Teachers() {
     [teachers, subject]
   );
 
+  const visibleTeachers = showAll ? filteredTeachers : filteredTeachers.slice(0, 8);
+
   return (
     <section id="teachers" className="apple-section relative overflow-hidden py-20">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -86,7 +89,7 @@ export default function Teachers() {
           {subjects.map(item => (
             <button
               key={item}
-              onClick={() => setSubject(item)}
+              onClick={() => { setSubject(item); setShowAll(false); }}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${subject === item ? 'bg-[#0071e3] text-white shadow-lg' : 'border border-slate-200 bg-white/70 text-slate-600 hover:bg-white'}`}
             >
               {item}
@@ -98,7 +101,7 @@ export default function Teachers() {
           <div className="py-16 text-center text-slate-500">O'qituvchilar yuklanmoqda…</div>
         ) : (
           <div ref={ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredTeachers.map((teacher, index) => (
+            {visibleTeachers.map((teacher, index) => (
               <article
                 key={teacher.id}
                 className={`group relative overflow-hidden rounded-[28px] border border-white/80 bg-white/70 p-5 shadow-[0_10px_40px_rgba(15,23,42,0.06)] backdrop-blur-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
@@ -130,6 +133,18 @@ export default function Teachers() {
                 {teacher.category && <div className="mt-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-[#0071e3]">{teacher.category}</div>}
               </article>
             ))}
+          </div>
+        )}
+
+        {!loading && filteredTeachers.length > 8 && (
+          <div className="mt-10 flex justify-center">
+            <button
+              onClick={() => setShowAll(value => !value)}
+              className="inline-flex items-center gap-2 rounded-full bg-[#0071e3] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700"
+            >
+              {showAll ? 'Kamroq ko‘rsatish' : `Ko‘proq ustozlarni ko‘rish (${filteredTeachers.length - 8})`}
+              {showAll ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
           </div>
         )}
 
