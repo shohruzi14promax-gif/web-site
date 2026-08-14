@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { GraduationCap, Menu, X } from 'lucide-react';
 import { navLinks } from '../lib/data';
 
-const menuLinks = [
-  ...navLinks.slice(0, 3),
-  { label: "O'qituvchilar", href: "#teachers" },
-  ...navLinks.slice(3),
-];
+const menuLinks = navLinks;
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
