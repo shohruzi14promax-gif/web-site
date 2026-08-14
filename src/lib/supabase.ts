@@ -9,10 +9,11 @@ export const supabaseConfigured = Boolean(supabaseAnonKey);
 
 if (!supabaseAnonKey) console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY');
 
-export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey || 'placeholder-anon-key', { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey || 'placeholder-anon-key', {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+});
 
 export interface StudentProposal { id: string; ministry: string; full_name: string; class: string; title: string; description: string; status: string; created_at: string; }
-
 export type SiteDataKey = 'teachers' | 'projects' | 'galleryList' | 'videoLessons' | 'announcements' | 'birthdays' | 'gpaList' | 'schoolLife';
 
 export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> {
@@ -30,9 +31,10 @@ export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> 
 }
 
 export async function saveSiteData<T>(key: SiteDataKey, value: T) {
-  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Netlify environment variablesni tekshiring.');
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Environment variablesni tekshiring.');
   const { error } = await supabase.from('site_data').upsert({ key, data: value, updated_at: new Date().toISOString() });
   if (error) throw error;
+  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('admin_data_updated', { detail: { key } }));
 }
 
 export async function signInAdmin(email: string, password: string) {
