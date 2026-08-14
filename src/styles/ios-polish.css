@@ -1,0 +1,77 @@
+/* iOS-inspired motion polish: compositor-friendly, subtle, touch-first. */
+:root {
+  --ios-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.apple-card,
+.apple-button,
+.navbar-glass,
+section [class*="rounded-3xl"],
+section [class*="rounded-[28px]"],
+section [class*="rounded-[30px]"] {
+  transition-timing-function: var(--ios-ease);
+}
+
+.apple-card,
+.apple-button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.apple-card {
+  transition-property: transform, opacity, box-shadow;
+  transition-duration: 420ms;
+}
+
+.apple-card:hover {
+  transform: translateY(-4px);
+}
+
+.apple-button {
+  transition-property: transform, opacity, box-shadow, background-color;
+  transition-duration: 220ms;
+}
+
+.apple-button:hover {
+  transform: translateY(-1px);
+}
+
+.apple-button:active {
+  transform: scale(0.975);
+}
+
+/* Keep scroll-driven entrances light: only compositor-friendly properties. */
+@keyframes iosFadeUp {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.ios-fade-up {
+  animation: iosFadeUp 560ms var(--ios-ease) both;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .apple-card:hover,
+  .apple-button:hover { transform: none; }
+
+  .apple-card:active {
+    transform: scale(0.99);
+  }
+}
+
+@media (max-width: 640px) {
+  .ios-fade-up { animation-duration: 460ms; }
+
+  /* Avoid heavy visual work on smaller screens while keeping the motion. */
+  .backdrop-blur-2xl,
+  .backdrop-blur-xl {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-fade-up { animation: none !important; }
+  .apple-card,
+  .apple-button { transition-duration: 0.01ms !important; }
+}
