@@ -12,7 +12,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CloudAdminPanel from './components/CloudAdminPanel';
 import { Settings, Bell, X, Cake, Megaphone } from 'lucide-react';
-import { supabase, getSiteData } from './lib/supabase';
+import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
 const siteKeys = ['announcements','birthdays','teachers','projects','galleryList','videoLessons','gpaList'] as const;
 const readArray = <T,>(key: string): T[] => { try { const parsed = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(parsed) ? parsed : []; } catch { return []; } };
@@ -26,22 +26,33 @@ export default function App() {
   useEffect(() => {
     let alive = true;
     const syncCloud = async () => {
-      try {
-        await Promise.all(siteKeys.map(async (key) => {
-          const value = await getSiteData(key, []);
-          if (!alive) return;
-          localStorage.setItem(key, JSON.stringify(value));
-        }));
-        if (alive) window.dispatchEvent(new Event('admin_data_updated'));
-      } catch (error) { console.error('Cloud sync error:', error); }
+      if (!supabaseConfigured) return;
+      await Promise.all(siteKeys.map(async (key) => {
+        const value = await getSiteData(key, []);
+        if (alive) localStorage.setItem(key, JSON.stringify(value));
+      }));
+      if (alive) window.dispatchEvent(new Event('admin_data_updated'));
     };
-    syncCloud();
-    const channel = supabase.channel('site-data-live').on('postgres_changes', { event: '*', schema: 'public', table: 'site_data' }, () => syncCloud()).subscribe();
+
+    syncCloud().catch(error => console.error('Cloud sync error:', error));
+
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    if (supabaseConfigured) {
+      channel = supabase.channel('site-data-live')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'site_data' }, () => { void syncCloud(); })
+        .subscribe();
+    }
+
     const loadLocal = () => { setAnnouncements(readArray('announcements')); setBirthdays(readArray('birthdays')); };
     loadLocal();
     window.addEventListener('admin_data_updated', loadLocal);
     window.addEventListener('storage', loadLocal);
-    return () => { alive = false; supabase.removeChannel(channel); window.removeEventListener('admin_data_updated', loadLocal); window.removeEventListener('storage', loadLocal); };
+    return () => {
+      alive = false;
+      if (channel) void supabase.removeChannel(channel);
+      window.removeEventListener('admin_data_updated', loadLocal);
+      window.removeEventListener('storage', loadLocal);
+    };
   }, []);
 
   const totalNotifications = announcements.length + birthdays.length;
