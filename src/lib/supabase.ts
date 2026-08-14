@@ -3,13 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase env variables are missing. Cloud data/auth is disabled.');
+export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+if (!supabaseConfigured) {
+  console.error('Supabase env variables are missing: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
 }
 
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-anon-key'
+  supabaseAnonKey || 'placeholder-anon-key',
+  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
 );
 
 export interface StudentProposal {
@@ -24,35 +27,33 @@ export interface StudentProposal {
 }
 
 export type SiteDataKey =
-  | 'teachers'
-  | 'projects'
-  | 'galleryList'
-  | 'videoLessons'
-  | 'announcements'
-  | 'birthdays'
-  | 'gpaList';
+  | 'teachers' | 'projects' | 'galleryList' | 'videoLessons'
+  | 'announcements' | 'birthdays' | 'gpaList';
 
 export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> {
-  const { data, error } = await supabase
-    .from('site_data')
-    .select('data')
-    .eq('key', key)
-    .maybeSingle();
-
-  if (error || !data) return fallback;
-  return (data.data as T) ?? fallback;
+  if (!supabaseConfigured) return fallback;
+  try {
+    const result = await Promise.race([
+      supabase.from('site_data').select('data').eq('key', key).maybeSingle(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Supabase request timeout')), 5000)),
+    ]);
+    const { data, error } = result as Awaited<ReturnType<typeof supabase.from>>;
+    if (error || !data) return fallback;
+    return (data.data as T) ?? fallback;
+  } catch (error) {
+    console.error(`Supabase getSiteData(${key}) failed:`, error);
+    return fallback;
+  }
 }
 
 export async function saveSiteData<T>(key: SiteDataKey, value: T) {
-  const { error } = await supabase.from('site_data').upsert({
-    key,
-    data: value,
-    updated_at: new Date().toISOString(),
-  });
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Vercel environment variablesni tekshiring.');
+  const { error } = await supabase.from('site_data').upsert({ key, data: value, updated_at: new Date().toISOString() });
   if (error) throw error;
 }
 
 export async function signInAdmin(email: string, password: string) {
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan.');
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   if (data.user?.app_metadata?.role !== 'admin') {
