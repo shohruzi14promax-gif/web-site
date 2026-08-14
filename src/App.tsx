@@ -4,7 +4,6 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Academic from './components/Academic';
 import Administration from './components/Administration';
-import SchoolLife from './components/SchoolLife';
 import VideoLessons from './components/VideoLessons';
 import PresidentOffice from './components/PresidentOffice';
 import Innovation from './components/Innovation';
@@ -12,6 +11,7 @@ import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CloudAdminPanel from './components/CloudAdminPanel';
+import SchoolLife from './components/SchoolLife';
 import SchoolLifeAdmin from './components/SchoolLifeAdmin';
 import SchoolCoin from './components/SchoolCoin';
 import { Settings, Bell, X, Cake, Megaphone, Coins, BedDouble } from 'lucide-react';
@@ -78,32 +78,15 @@ export default function App() {
         <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-purple-500/25 to-pink-500/20 blur-3xl animate-liquid [animation-delay:3s]" />
         <div className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] rounded-full bg-gradient-to-r from-sky-400/20 to-teal-400/20 blur-3xl [animation-delay:6s]" />
       </div>
-
       <Navbar />
       <main className="relative z-10 space-y-8 pb-16">
-        <Hero />
-        <About />
-        <Academic />
-        <SchoolLife />
-        <Administration />
-        <VideoLessons />
-        <PresidentOffice />
-        <Innovation />
-        <Gallery />
-        <Contact />
+        <Hero /><About /><Academic /><SchoolLife /><Administration /><VideoLessons /><PresidentOffice /><Innovation /><Gallery /><Contact />
       </main>
       <Footer />
 
-      <button onClick={() => setIsSchoolLifeAdminOpen(true)} className="fixed bottom-24 left-1/2 z-50 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/30 bg-white/80 px-4 py-2 text-xs font-semibold text-slate-800 shadow-xl backdrop-blur-xl transition-all duration-300 hover:scale-105 md:flex" title="Maktab hayotini boshqarish">
-        <BedDouble className="h-4 w-4 text-[#0071e3]" /> Maktab hayoti
-      </button>
-
-      <button onClick={() => setIsSchoolCoinOpen(true)} className="fixed bottom-24 right-6 z-50 flex items-center gap-2 rounded-full bg-amber-500 px-5 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-amber-600 hover:scale-105 active:scale-95 cursor-pointer" title="SchoolCoin" aria-label="SchoolCoin">
-        <Coins className="h-5 w-5" /><span className="text-sm font-bold">SchoolCoin</span>
-      </button>
-      <button onClick={() => setIsAdminOpen(true)} className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-slate-900/90 backdrop-blur-xl border border-white/20 px-5 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-black hover:scale-105 active:scale-95 cursor-pointer" title="Admin Panel" aria-label="Admin Panel">
-        <Settings className="h-5 w-5" /><span className="text-sm font-semibold">Admin Panel</span>
-      </button>
+      <button onClick={() => setIsSchoolCoinOpen(true)} className="fixed bottom-24 right-6 z-50 flex items-center gap-2 rounded-full bg-amber-500 px-5 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-amber-600 hover:scale-105 active:scale-95 cursor-pointer" title="SchoolCoin" aria-label="SchoolCoin"><Coins className="h-5 w-5" /><span className="text-sm font-bold">SchoolCoin</span></button>
+      <button onClick={() => setIsSchoolLifeAdminOpen(true)} className="fixed bottom-24 left-6 z-40 flex items-center gap-2 rounded-full border border-white/30 bg-white/85 px-4 py-3 text-slate-900 shadow-xl backdrop-blur-xl transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 cursor-pointer" title="Maktab hayotini boshqarish" aria-label="Maktab hayotini boshqarish"><BedDouble className="h-5 w-5 text-[#0071e3]" /><span className="hidden text-sm font-semibold sm:inline">Maktab hayoti</span></button>
+      <button onClick={() => setIsAdminOpen(true)} className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-slate-900/90 backdrop-blur-xl border border-white/20 px-5 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-black hover:scale-105 active:scale-95 cursor-pointer" title="Admin Panel" aria-label="Admin Panel"><Settings className="h-5 w-5" /><span className="text-sm font-semibold">Admin Panel</span></button>
 
       {totalNotifications > 0 && <button onClick={() => setShowNotifModal(true)} className="fixed bottom-6 left-6 z-40 flex items-center gap-2.5 rounded-full bg-[#0071e3] px-5 py-3 text-white shadow-xl transition-all duration-300 hover:bg-[#0077ed] hover:scale-105 active:scale-95 cursor-pointer" aria-label={`Yangi bildirishnomalar: ${totalNotifications}`}><Bell className="h-5 w-5" /><span className="text-xs font-bold bg-white text-[#0071e3] px-2 py-0.5 rounded-full">{totalNotifications}</span><span className="text-sm font-medium hidden sm:inline">E'lonlar va Tadbirlar</span></button>}
 
