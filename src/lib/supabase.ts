@@ -58,15 +58,18 @@ export async function signInSchoolCoinStudent(studentCode: string, pin: string) 
     if (anonymous.error) throw anonymous.error;
   }
 
+  const current = await supabase.rpc('schoolcoin_current_student');
+  if (!current.error && current.data) return current.data;
+
   const binding = await supabase.rpc('schoolcoin_bind_student', {
     p_code: studentCode.trim(),
     p_pin: pin,
   });
   if (binding.error) throw binding.error;
 
-  const current = await supabase.rpc('schoolcoin_current_student');
-  if (current.error) throw current.error;
-  return current.data;
+  const bound = await supabase.rpc('schoolcoin_current_student');
+  if (bound.error) throw bound.error;
+  return bound.data;
 }
 
 export async function getCurrentSchoolCoinStudent() {
