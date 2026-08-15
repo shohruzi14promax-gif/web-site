@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://web-site-hh82.vercel.app/sitemap.xml
+Sitemap: https://stellular-toffee-9deb57.netlify.app/sitemap.xml
