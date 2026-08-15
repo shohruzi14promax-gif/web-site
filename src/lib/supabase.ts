@@ -45,6 +45,12 @@ export async function signInAdmin(email: string, password: string) {
 
 export async function signOutAdmin() { await supabase.auth.signOut(); }
 
+export async function getCurrentSchoolCoinStudent() {
+  const { data, error } = await supabase.rpc('schoolcoin_current_student');
+  if (error) throw error;
+  return data;
+}
+
 export async function signInSchoolCoinStudent(studentCode: string, pin: string) {
   if (!supabaseConfigured) throw new Error('Supabase sozlanmagan.');
 
@@ -59,7 +65,9 @@ export async function signInSchoolCoinStudent(studentCode: string, pin: string) 
   }
 
   const current = await supabase.rpc('schoolcoin_current_student');
-  if (!current.error && current.data) return current.data;
+  if (!current.error && current.data) {
+    throw new Error('Bu qurilmada SchoolCoin sessiyasi allaqachon faol. Avval Chiqish tugmasini bosing.');
+  }
 
   const binding = await supabase.rpc('schoolcoin_bind_student', {
     p_code: studentCode.trim(),
