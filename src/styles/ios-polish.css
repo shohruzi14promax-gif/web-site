@@ -20,16 +20,16 @@ section [class*="rounded-[30px]"] {
 
 .apple-card {
   transition-property: transform, opacity, box-shadow;
-  transition-duration: 420ms;
+  transition-duration: 220ms;
 }
 
 .apple-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
 .apple-button {
   transition-property: transform, opacity, box-shadow, background-color;
-  transition-duration: 220ms;
+  transition-duration: 160ms;
 }
 
 .apple-button:hover {
@@ -42,12 +42,12 @@ section [class*="rounded-[30px]"] {
 
 /* Keep scroll-driven entrances light: only compositor-friendly properties. */
 @keyframes iosFadeUp {
-  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 .ios-fade-up {
-  animation: iosFadeUp 560ms var(--ios-ease) both;
+  animation: iosFadeUp 320ms var(--ios-ease) both;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -60,18 +60,28 @@ section [class*="rounded-[30px]"] {
 }
 
 @media (max-width: 640px) {
-  .ios-fade-up { animation-duration: 460ms; }
+  .ios-fade-up { animation-duration: 280ms; }
 
-  /* Avoid heavy visual work on smaller screens while keeping the motion. */
+  /* Keep blur restrained on smaller screens. */
   .backdrop-blur-2xl,
   .backdrop-blur-xl {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .ios-fade-up { animation: none !important; }
-  .apple-card,
-  .apple-button { transition-duration: 0.01ms !important; }
+  .apple-card:hover,
+  .apple-button:hover,
+  .apple-button:active { transform: none !important; }
 }

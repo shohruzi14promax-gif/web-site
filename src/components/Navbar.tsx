@@ -30,7 +30,8 @@ export default function Navbar() {
     const element = document.querySelector(href);
     if (!element) return;
     const y = element.getBoundingClientRect().top + window.pageYOffset - 80;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: y, behavior: reducedMotion ? 'auto' : 'smooth' });
   };
 
   return (
