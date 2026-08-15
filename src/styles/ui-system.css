@@ -1,0 +1,97 @@
+/* Unified Apple/iOS visual system. Keep this layer semantic and reusable. */
+:root {
+  --ui-bg: #f5f5f7;
+  --ui-surface: rgba(255,255,255,.78);
+  --ui-surface-solid: #fff;
+  --ui-text: #1d1d1f;
+  --ui-muted: #6e6e73;
+  --ui-blue: #0071e3;
+  --ui-blue-hover: #0077ed;
+  --ui-border: rgba(0,0,0,.08);
+  --ui-shadow: 0 8px 30px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+  --ui-shadow-hover: 0 18px 50px rgba(0,0,0,.10), 0 6px 18px rgba(0,0,0,.06);
+  --ui-radius-sm: 14px;
+  --ui-radius-md: 20px;
+  --ui-radius-lg: 28px;
+  --ui-radius-pill: 999px;
+  --ui-ease: cubic-bezier(.22,1,.36,1);
+}
+
+body { background: var(--ui-bg); color: var(--ui-text); }
+
+/* Shared surfaces */
+.ui-surface,
+.ui-card,
+.apple-card,
+.admin-card {
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+.ui-card,
+.apple-card,
+.admin-card { transition: transform 320ms var(--ui-ease), box-shadow 320ms var(--ui-ease), border-color 220ms ease; }
+
+@media (hover:hover) and (pointer:fine) {
+  .ui-card:hover,
+  .apple-card:hover,
+  .admin-card:hover { transform: translateY(-4px); box-shadow: var(--ui-shadow-hover); border-color: rgba(0,113,227,.14); }
+}
+
+.ui-button,
+.apple-button,
+.admin-button {
+  min-height: 44px;
+  border-radius: var(--ui-radius-pill);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.ui-button-primary {
+  background: var(--ui-blue);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0,113,227,.22);
+  transition: transform 220ms var(--ui-ease), background-color 180ms ease, box-shadow 220ms ease;
+}
+.ui-button-primary:hover { background: var(--ui-blue-hover); box-shadow: 0 12px 30px rgba(0,113,227,.28); }
+.ui-button-primary:active { transform: scale(.98); }
+
+.ui-input,
+.admin-input,
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  border-radius: var(--ui-radius-sm);
+  border-color: rgba(0,0,0,.12);
+  background: rgba(255,255,255,.88);
+  color: var(--ui-text);
+}
+
+.ui-input:focus,
+.admin-input:focus,
+input:focus,
+textarea:focus,
+select:focus { border-color: rgba(0,113,227,.55); box-shadow: 0 0 0 4px rgba(0,113,227,.10); }
+
+.ui-muted { color: var(--ui-muted); }
+.ui-divider { height: 1px; background: var(--ui-border); }
+.ui-pill { border-radius: var(--ui-radius-pill); }
+
+/* Consistent section rhythm and typography without overriding intentional Tailwind sizes. */
+main section { scroll-margin-top: 88px; }
+
+@media (max-width: 640px) {
+  .ui-surface,
+  .ui-card,
+  .apple-card,
+  .admin-card { border-radius: var(--ui-radius-md); -webkit-backdrop-filter: blur(12px) saturate(150%); backdrop-filter: blur(12px) saturate(150%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card, .apple-card, .admin-card, .ui-button-primary { transition-duration: .01ms !important; }
+}
