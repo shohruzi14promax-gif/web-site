@@ -40,7 +40,7 @@ export async function signInAdmin(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   if (data.user?.app_metadata?.role !== 'admin') { await supabase.auth.signOut(); throw new Error('Bu akkaunt admin huquqiga ega emas.'); }
-  return data;
+  return { ...data, error: null };
 }
 
 export async function signOutAdmin() { await supabase.auth.signOut(); }
