@@ -1,5 +1,5 @@
 import { Trophy, GraduationCap, Target, Award } from 'lucide-react';
-import { stats, historyTimeline } from '@/lib/data';
+import { stats } from '@/lib/data';
 
 const resultIcons = [Trophy, GraduationCap, Target, Award, Trophy, GraduationCap];
 
@@ -16,7 +16,7 @@ export default function Results() {
             Natijalarimiz gapiradi.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-            Maktabning mavjud statistikasi va rivojlanish yo‘li bir joyda, aniq va tushunarli ko‘rinishda.
+            Maktabimizning asosiy ko‘rsatkichlari va yutuqlari bir joyda, aniq va tushunarli ko‘rinishda.
           </p>
         </div>
 
@@ -39,29 +39,6 @@ export default function Results() {
               </article>
             );
           })}
-        </div>
-
-        <div className="mt-10 border-t border-slate-200/70 pt-10">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Maktab yo‘li</p>
-              <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-900">Rivojlanish tarixi</h3>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-3 md:grid-cols-2">
-            {historyTimeline.map((item) => (
-              <article key={`${item.year}-${item.title}`} className="rounded-3xl border border-slate-200/70 bg-white p-5">
-                <div className="flex gap-4">
-                  <span className="shrink-0 text-sm font-black text-[#0071e3]">{item.year}</span>
-                  <div>
-                    <h4 className="font-bold text-slate-900">{item.title}</h4>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
       </div>
     </section>
