@@ -73,7 +73,7 @@ export default function Navbar() {
           <span className="text-base font-bold tracking-tight text-[#1d1d1f]">1-IMI Jizzax</span>
         </button>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 lg:flex">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2.5 lg:flex">
           {primaryLinks.slice(0, 3).map(link => <button type="button" key={link.href} onClick={() => handleNavClick(link.href)} className="rounded-full px-3.5 py-2 text-sm font-medium text-[#1d1d1f] transition-[background-color,color,transform] duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95">{link.label}</button>)}
           {renderDesktopDropdown('Maktab hayoti', lifeMenu, 'life')}
           {renderDesktopDropdown('Maktab haqida', aboutMenu, 'about')}
