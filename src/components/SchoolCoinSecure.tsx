@@ -52,6 +52,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
 
   useEffect(() => setAdminState(adminSession), [adminSession]);
   useEffect(() => { if (mode === 'student' && !student) void loadCatalog(); }, [mode, student, loadCatalog]);
+  useEffect(() => { if (mode === 'student' && !student) void getCurrentSchoolCoinStudent().then(data => { if (data) setStudent(data as Student); }).catch(() => undefined); }, [mode, student]);
   useEffect(() => { if (mode === 'admin' && admin) void loadAdmin(); }, [mode, admin, loadAdmin]);
 
   const studentLogin = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setError(''); try { const result = await signInSchoolCoinStudent(code, pin); setStudent(result as Student); setPin(''); await loadOrders(); flash('SchoolCoin hisobingiz ochildi ✨'); } catch (err) { fail(err, 'Kirishda xatolik'); } finally { setBusy(false); } };
