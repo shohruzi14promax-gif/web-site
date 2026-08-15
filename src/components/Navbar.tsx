@@ -49,12 +49,7 @@ export default function Navbar() {
 
   const renderDesktopDropdown = (label: string, links: typeof aboutMenu, key: string) => (
     <div ref={desktopOpen === key ? desktopMenuRef : undefined} className="relative">
-      <button
-        type="button"
-        onClick={() => setDesktopOpen(value => value === key ? null : key)}
-        className="flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium text-[#1d1d1f] transition-[background-color,color,transform] duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95"
-        aria-expanded={desktopOpen === key}
-      >
+      <button type="button" onClick={() => setDesktopOpen(value => value === key ? null : key)} className="flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium text-[#1d1d1f] transition-[background-color,color,transform] duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95" aria-expanded={desktopOpen === key}>
         {label}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${desktopOpen === key ? 'rotate-180' : ''}`} />
       </button>
@@ -70,7 +65,7 @@ export default function Navbar() {
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 px-0 transition-[padding] duration-300 ${scrolled ? 'sm:px-5' : ''}`}>
-      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 md:px-12 lg:px-16 transition-[margin,padding,border-radius,background-color,box-shadow] duration-300 ${scrolled ? 'mt-3 rounded-2xl border border-white/70 bg-white/75 py-2.5 shadow-lg shadow-slate-900/5 backdrop-blur-2xl' : 'bg-transparent py-3'}`}>
+      <nav className={`relative mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 md:px-12 lg:px-16 transition-[margin,padding,border-radius,background-color,box-shadow] duration-300 ${scrolled ? 'mt-3 rounded-2xl border border-white/70 bg-white/75 py-2.5 shadow-lg shadow-slate-900/5 backdrop-blur-2xl' : 'bg-transparent py-3'}`}>
         <button type="button" onClick={() => handleNavClick(navLinks[0].href)} className="group flex items-center gap-2.5 rounded-xl transition-transform duration-200 hover:scale-[1.02] active:scale-95" aria-label="Bosh sahifaga o'tish">
           <span className={`relative flex items-center justify-center rounded-xl bg-[#0071e3] shadow-lg shadow-blue-500/20 transition-[width,height] duration-300 ${scrolled ? 'h-8 w-8' : 'h-9 w-9'}`}>
             <GraduationCap className="h-5 w-5 text-white" />
@@ -78,7 +73,7 @@ export default function Navbar() {
           <span className="text-base font-bold tracking-tight text-[#1d1d1f]">1-IMI Jizzax</span>
         </button>
 
-        <div className="hidden items-center gap-1 lg:flex">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 lg:flex">
           {primaryLinks.slice(0, 3).map(link => <button type="button" key={link.href} onClick={() => handleNavClick(link.href)} className="rounded-full px-3.5 py-2 text-sm font-medium text-[#1d1d1f] transition-[background-color,color,transform] duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95">{link.label}</button>)}
           {renderDesktopDropdown('Maktab hayoti', lifeMenu, 'life')}
           {renderDesktopDropdown('Maktab haqida', aboutMenu, 'about')}
