@@ -3,6 +3,9 @@
 -- IMPORTANT: apply only after the authenticated frontend flow has been verified.
 -- Historical migration drift is not reconstructed by this migration.
 
+CREATE UNIQUE INDEX IF NOT EXISTS schoolcoin_student_auth_bindings_student_id_uidx
+  ON public.schoolcoin_student_auth_bindings(student_id);
+
 CREATE OR REPLACE FUNCTION public.schoolcoin_bind_student(p_code text, p_pin text)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -26,8 +29,7 @@ begin
   END IF;
 
   IF EXISTS (
-    SELECT 1
-    FROM public.schoolcoin_student_auth_bindings
+    SELECT 1 FROM public.schoolcoin_student_auth_bindings
     WHERE auth_user_id = v_auth_user_id
   ) THEN
     RAISE EXCEPTION 'Bu Auth sessiyasi allaqachon bog‘langan';
@@ -44,8 +46,7 @@ begin
   END IF;
 
   IF EXISTS (
-    SELECT 1
-    FROM public.schoolcoin_student_auth_bindings
+    SELECT 1 FROM public.schoolcoin_student_auth_bindings
     WHERE student_id = v_student.id
   ) THEN
     RAISE EXCEPTION 'Bu student allaqachon Auth hisobiga bog‘langan';
