@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
+import Results from './components/Results';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
@@ -89,6 +90,7 @@ export default function App() {
       <Navbar />
       <main className="relative z-10 space-y-4 pb-16 sm:space-y-8">
         <Hero />
+        <Results />
         <About />
         <Academic />
         <SchoolLife />

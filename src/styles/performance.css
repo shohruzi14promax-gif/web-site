@@ -1,0 +1,68 @@
+/* Production performance hardening.
+ * Keep visual identity intact while reducing continuous GPU/layout work.
+ */
+
+/* Avoid expensive fixed backgrounds and continuous zoom on touch devices. */
+@media (hover: none), (pointer: coarse) {
+  .school-hero-bg {
+    background-attachment: scroll !important;
+    animation: none !important;
+  }
+
+  .apple-card:hover,
+  .admin-card:hover,
+  .admin-button:hover,
+  .admin-nav-item:hover,
+  .admin-delete:hover,
+  .admin-refresh:hover,
+  .image-hover:hover img {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .apple-card,
+  .admin-card,
+  .admin-sidebar,
+  .navbar-glass {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+}
+
+/* Reduce paint-heavy effects on smaller screens. */
+@media (max-width: 640px) {
+  .apple-card,
+  .admin-card {
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  .navbar-glass {
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04) !important;
+  }
+}
+
+/* Respect OS-level motion preferences and stop all decorative loops. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Images should not trigger layout shifts when dimensions are supplied by the component. */
+img {
+  content-visibility: auto;
+}
+
+/* Tables/lists can be long in admin views; isolate their paint/layout work. */
+.admin-list-item,
+.admin-image,
+.image-hover {
+  contain: layout paint;
+}
