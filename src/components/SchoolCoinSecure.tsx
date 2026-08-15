@@ -22,7 +22,32 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   const flash = useCallback((message: string) => { setNotice(message); window.setTimeout(() => setNotice(''), 2200); }, []);
   const loadCatalog = useCallback(async () => { const [activitiesResult, rewardsResult] = await Promise.all([supabase.from('schoolcoin_activities').select('*').eq('active', true).order('category').order('coin_reward', { ascending: false }), supabase.from('schoolcoin_market_rewards').select('*').eq('active', true).order('category').order('price')]); if (activitiesResult.error) fail(activitiesResult.error, 'Faoliyatlar yuklanmadi'); if (rewardsResult.error) fail(rewardsResult.error, 'Market yuklanmadi'); setActivities((activitiesResult.data || []) as ActivityItem[]); setRewards((rewardsResult.data || []) as Reward[]); }, [fail]);
   const loadOrders = useCallback(async () => { const result = await supabase.rpc('schoolcoin_student_orders', { p_code: code.trim(), p_pin: pin }); if (result.error) throw result.error; setOrders((result.data || []) as Order[]); }, [code, pin]);
-  const loadAdmin = useCallback(async () => { setBusy(true); setError(''); try { const [sr, rr, tr, or, ar, mr] = await Promise.all([supabase.from('schoolcoin_students').select('id,student_code,full_name,class_name,balance').order('class_name').order('full_name'), supabase.from('schoolcoin_requests').select('id,status,created_at,student_id,activity_id,schoolcoin_students(full_name,student_code),schoolcoin_activities(name,coin_reward)').eq('status', 'pending').order('created_at', { ascending: false }), supabase.from('schoolcoin_transactions').select('id,student_id,amount,transaction_type,note,created_at').order('created_at', { ascending: false }).limit(100), supabase.from('schoolcoin_orders').select('id,status,price,created_at,schoolcoin_market_rewards(title)').order('created_at', { ascending: false }), supabase.from('schoolcoin_activities').select('*').eq('active', true).order('category').order('coin_reward', { ascending: false }), supabase.from('schoolcoin_market_rewards').select('*').eq('active', true).order('category').order('price')]); for (const result of [sr, rr, tr, or, ar, mr]) if (result.error) throw result.error; setStudents((sr.data || []) as Student[]); setTransactions((tr.data || []) as Transaction[]); setActivities((ar.data || []) as ActivityItem[]); setRewards((mr.data || []) as Reward[]); setRequests(((rr.data || []) as Array<Record<string, unknown>>).map(row => ({ id: String(row.id), status: String(row.status), created_at: String(row.created_at), student: (row.schoolcoin_students as { full_name?: string } | null) || null, activity: (row.schoolcoin_activities as { name?: string; coin_reward?: number } | null) || null }))); setOrders(((or.data || []) as Array<Record<string, unknown>>).map(row => ({ id: String(row.id), status: String(row.status), price: Number(row.price), created_at: String(row.created_at), reward_title: String((row.schoolcoin_market_rewards as { title?: string } | null)?.title || 'Reward') }))); } catch (err) { fail(err, 'Admin ma’lumotlari yuklanmadi'); } finally { setBusy(false); } }, [fail]);
+  const loadAdmin = useCallback(async () => {
+    setBusy(true); setError('');
+    try {
+      const [sr, rr, tr, br, or, ar, mr] = await Promise.all([
+        supabase.from('schoolcoin_students').select('id,student_code,full_name,class_name').order('class_name').order('full_name'),
+        supabase.from('schoolcoin_requests').select('id,status,created_at,student_id,activity_id,schoolcoin_students(full_name,student_code),schoolcoin_activities(name,coin_reward)').eq('status', 'pending').order('created_at', { ascending: false }),
+        supabase.from('schoolcoin_transactions').select('id,student_id,amount,transaction_type,note,created_at').order('created_at', { ascending: false }).limit(100),
+        supabase.from('schoolcoin_transactions').select('student_id,amount'),
+        supabase.from('schoolcoin_orders').select('id,status,price,created_at,schoolcoin_market_rewards(title)').order('created_at', { ascending: false }),
+        supabase.from('schoolcoin_activities').select('*').eq('active', true).order('category').order('coin_reward', { ascending: false }),
+        supabase.from('schoolcoin_market_rewards').select('*').eq('active', true).order('category').order('price'),
+      ]);
+      for (const result of [sr, rr, tr, br, or, ar, mr]) if (result.error) throw result.error;
+
+      const balanceByStudent = new Map<string, number>();
+      for (const row of (br.data || []) as Array<{ student_id: string; amount: number }>) {
+        balanceByStudent.set(row.student_id, (balanceByStudent.get(row.student_id) || 0) + Number(row.amount || 0));
+      }
+      setStudents(((sr.data || []) as Array<Omit<Student, 'balance'>>).map(row => ({ ...row, balance: balanceByStudent.get(row.id) || 0 })));
+      setTransactions((tr.data || []) as Transaction[]);
+      setActivities((ar.data || []) as ActivityItem[]);
+      setRewards((mr.data || []) as Reward[]);
+      setRequests(((rr.data || []) as Array<Record<string, unknown>>).map(row => ({ id: String(row.id), status: String(row.status), created_at: String(row.created_at), student: (row.schoolcoin_students as { full_name?: string } | null) || null, activity: (row.schoolcoin_activities as { name?: string; coin_reward?: number } | null) || null })));
+      setOrders(((or.data || []) as Array<Record<string, unknown>>).map(row => ({ id: String(row.id), status: String(row.status), price: Number(row.price), created_at: String(row.created_at), reward_title: String((row.schoolcoin_market_rewards as { title?: string } | null)?.title || 'Reward') })));
+    } catch (err) { fail(err, 'Admin ma’lumotlari yuklanmadi'); } finally { setBusy(false); }
+  }, [fail]);
 
   useEffect(() => setAdminState(adminSession), [adminSession]);
   useEffect(() => { if (mode === 'student' && !student) void loadCatalog(); }, [mode, student, loadCatalog]);
