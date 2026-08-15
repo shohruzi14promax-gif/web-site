@@ -72,12 +72,6 @@ export async function signInSchoolCoinStudent(studentCode: string, pin: string) 
   return bound.data;
 }
 
-export async function getCurrentSchoolCoinStudent() {
-  const { data, error } = await supabase.rpc('schoolcoin_current_student');
-  if (error) throw error;
-  return data;
-}
-
 export async function signOutSchoolCoinStudent() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
