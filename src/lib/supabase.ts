@@ -44,3 +44,38 @@ export async function signInAdmin(email: string, password: string) {
 }
 
 export async function signOutAdmin() { await supabase.auth.signOut(); }
+
+export async function signInSchoolCoinStudent(studentCode: string, pin: string) {
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan.');
+
+  const existing = await supabase.auth.getSession();
+  if (existing.error) throw existing.error;
+
+  const existingUser = existing.data.session?.user;
+  if (!existingUser || existingUser.is_anonymous !== true) {
+    await supabase.auth.signOut();
+    const anonymous = await supabase.auth.signInAnonymously();
+    if (anonymous.error) throw anonymous.error;
+  }
+
+  const binding = await supabase.rpc('schoolcoin_bind_student', {
+    p_code: studentCode.trim(),
+    p_pin: pin,
+  });
+  if (binding.error) throw binding.error;
+
+  const current = await supabase.rpc('schoolcoin_current_student');
+  if (current.error) throw current.error;
+  return current.data;
+}
+
+export async function getCurrentSchoolCoinStudent() {
+  const { data, error } = await supabase.rpc('schoolcoin_current_student');
+  if (error) throw error;
+  return data;
+}
+
+export async function signOutSchoolCoinStudent() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
+}
