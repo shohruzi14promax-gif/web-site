@@ -1,4 +1,2 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://web-site-aha7.vercel.app/sitemap.xml
