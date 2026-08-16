@@ -4,7 +4,7 @@ This repository intentionally does not fabricate historical migrations that cann
 
 ## Verified live history — 2026-08-16
 
-The live project records 31 migrations in `supabase_migrations.schema_migrations`.
+The live project records 32 migrations in `supabase_migrations.schema_migrations`.
 
 The historical sequence through `20260816022026` is preserved as previously documented. The additional live hardening migrations verified after that point are:
 
@@ -14,13 +14,15 @@ The historical sequence through `20260816022026` is preserved as previously docu
 - 20260816041825 — `harden_schoolcoin_function_grants`
 - 20260816042647 — `harden_student_binding_and_evidence`
 - 20260816042901 — `consolidate_schoolcoin_policies_and_indexes`
+- 20260816075300 — `repair_student_progress_and_table_privileges`
 
 ## Current verification
 
-The live migration history and the branch contain the two final-pass migrations with the same version/name:
+The live migration history and the branch contain the final-pass migrations with the same version/name, including the latest student dashboard/RPC and direct-privilege repair:
 
 - `20260816042647_harden_student_binding_and_evidence.sql`
 - `20260816042901_consolidate_schoolcoin_policies_and_indexes.sql`
+- `20260816075300_repair_student_progress_and_table_privileges.sql`
 
 No production reset or data recreation was used.
 
