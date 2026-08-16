@@ -1,1 +1,1 @@
-SEO metadata is defined in the root document head. Canonical: https://web-site-hh82.vercel.app/ . Open Graph and Twitter metadata are configured for the school homepage.
+SEO metadata is defined in the root document head. No canonical URL is published until the production domain is confirmed. Unverified school imagery is intentionally excluded from Open Graph and Twitter metadata.
