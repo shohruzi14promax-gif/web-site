@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { GraduationCap, Menu, X } from 'lucide-react';
-import { navLinks } from '../lib/data';
 
 const menuLinks = [
   { href: '#hero', label: 'Bosh sahifa' },
@@ -79,7 +78,6 @@ export default function Navbar() {
             : 'bg-transparent py-3'
         }`}
       >
-        {/* Logo */}
         <button
           type="button"
           onClick={() => handleNavClick('#hero')}
@@ -93,66 +91,25 @@ export default function Navbar() {
           >
             <GraduationCap className="h-5 w-5 text-white" />
           </span>
-
-          <span className="text-base font-bold tracking-tight text-[#1d1d1f]">
-            1-IMI Jizzax
-          </span>
+          <span className="text-base font-bold tracking-tight text-[#1d1d1f]">1-IMI Jizzax</span>
         </button>
 
-        {/* Desktop Navigation */}
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 lg:flex">
           {menuLinks.map((link) => (
-            <button
-              key={link.href}
-              type="button"
-              onClick={() => handleNavClick(link.href)}
-              className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95"
-            >
+            <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95">
               {link.label}
             </button>
           ))}
         </div>
 
-        {/* Mobile Navigation */}
-        <div
-          ref={menuRef}
-          className="relative lg:hidden"
-        >
-          <button
-            type="button"
-            onClick={() => setMenuOpen((value) => !value)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-white/60 backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white/80 hover:shadow-md active:scale-90"
-            aria-label={
-              menuOpen
-                ? 'Menyuni yopish'
-                : 'Menyuni ochish'
-            }
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-          >
-            {menuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+        <div ref={menuRef} className="relative lg:hidden">
+          <button type="button" onClick={() => setMenuOpen((value) => !value)} className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-white/60 backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white/80 hover:shadow-md active:scale-90" aria-label={menuOpen ? 'Menyuni yopish' : 'Menyuni ochish'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-
-          <div
-            id="mobile-navigation"
-            className={`absolute right-0 top-12 w-[min(90vw,360px)] overflow-hidden rounded-3xl border border-white/70 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl transition-all duration-200 ${
-              menuOpen
-                ? 'visible translate-y-0 opacity-100'
-                : 'invisible -translate-y-2 opacity-0'
-            }`}
-          >
+          <div id="mobile-navigation" className={`absolute right-0 top-12 w-[min(90vw,360px)] overflow-hidden rounded-3xl border border-white/70 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl transition-all duration-200 ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`}>
             <div className="flex flex-col gap-1 p-3">
               {menuLinks.map((link) => (
-                <button
-                  key={link.href}
-                  type="button"
-                  onClick={() => handleNavClick(link.href)}
-                  className="rounded-2xl px-4 py-3.5 text-left text-base font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-blue-50 hover:pl-5 hover:text-[#0071e3]"
-                >
+                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="rounded-2xl px-4 py-3.5 text-left text-base font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-blue-50 hover:pl-5 hover:text-[#0071e3]">
                   {link.label}
                 </button>
               ))}
