@@ -18,6 +18,12 @@ const readArray = <T,>(key: string): T[] => {
   }
 };
 
+const clearModuleHash = () => {
+  const url = new URL(window.location.href);
+  url.hash = '';
+  window.history.replaceState({}, '', url);
+};
+
 export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isSchoolCoinOpen, setIsSchoolCoinOpen] = useState(false);
@@ -58,8 +64,6 @@ export default function App() {
     };
   }, []);
 
-  // Internal modules remain available to authorized staff through direct internal links,
-  // but are deliberately not promoted on the public school experience.
   useEffect(() => {
     const openInternalModule = () => {
       setIsAdminOpen(window.location.hash === '#internal-admin');
@@ -69,6 +73,15 @@ export default function App() {
     window.addEventListener('hashchange', openInternalModule);
     return () => window.removeEventListener('hashchange', openInternalModule);
   }, []);
+
+  const closeAdmin = () => {
+    setIsAdminOpen(false);
+    clearModuleHash();
+  };
+  const closeSchoolCoin = () => {
+    setIsSchoolCoinOpen(false);
+    clearModuleHash();
+  };
 
   const totalNotifications = announcements.length + birthdays.length;
 
@@ -114,8 +127,8 @@ export default function App() {
         </div>
       )}
 
-      {isAdminOpen && <CloudAdminPanelPro onClose={() => setIsAdminOpen(false)} />}
-      {isSchoolCoinOpen && <SchoolCoinSecure onClose={() => setIsSchoolCoinOpen(false)} initialMode="student" />}
+      {isAdminOpen && <CloudAdminPanelPro onClose={closeAdmin} />}
+      {isSchoolCoinOpen && <SchoolCoinSecure onClose={closeSchoolCoin} initialMode="student" />}
     </div>
   );
 }
