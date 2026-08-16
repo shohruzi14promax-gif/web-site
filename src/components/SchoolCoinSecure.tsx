@@ -42,7 +42,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
     if (!current) { setStudent(null); return; }
     setStudent(current);
     const [o, t, q, p] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_student_activity_progress')]);
-    for (const r of [o, t, q, p]) if (r.error) throw r.error;
+    for (const result of [o, t, q, p]) if (result.error) throw result.error;
     setOrders((o.data || []) as Order[]); setTransactions((t.data || []) as Transaction[]); setRequests((q.data || []) as RequestItem[]); setProgress((p.data || []) as Progress[]);
   }, []);
 
@@ -57,7 +57,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
         supabase.from('schoolcoin_activities').select('*').eq('active', true).order('category').order('coin_reward', { ascending: false }),
         supabase.from('schoolcoin_market_rewards').select('*').eq('active', true).order('category').order('price'),
       ]);
-      for (const r of [s, q, t, o, a, r]) if (r.error) throw r.error;
+      for (const result of [s, q, t, o, a, r]) if (result.error) throw result.error;
       setStudents((s.data || []) as AdminStudent[]); setAdminTransactions((t.data || []) as AdminTransaction[]); setActivities((a.data || []) as ActivityItem[]); setRewards((r.data || []) as Reward[]);
       setAdminRequests(((q.data || []) as Array<Record<string, unknown>>).map(x => ({ id: String(x.id), status: String(x.status), created_at: String(x.created_at), evidence_url: x.evidence_url as string | null, student: x.schoolcoin_students as AdminRequest['student'], activity: x.schoolcoin_activities as AdminRequest['activity'] })));
       setOrders(((o.data || []) as Array<Record<string, unknown>>).map(x => ({ id: String(x.id), status: String(x.status), price: Number(x.price), created_at: String(x.created_at), reward_title: String((x.schoolcoin_market_rewards as { title?: string } | null)?.title || 'Reward') })));
