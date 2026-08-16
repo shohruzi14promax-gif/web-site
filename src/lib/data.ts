@@ -33,11 +33,9 @@ export interface Teacher {
   category?: string;
 }
 
-// Staff records are admin-managed and are not published from unverified static data.
 export const administration: Teacher[] = [];
 export const teachers: Teacher[] = [];
 
-// Subject names are navigation labels only; details are published from verified/admin-managed content.
 export const subjects = [
   { name: 'Matematika', icon: 'Calculator', color: 'blue', desc: '' },
   { name: 'Ingliz tili', icon: 'Languages', color: 'blue', desc: '' },
@@ -59,7 +57,17 @@ export const schoolPresident = {
   description: '',
 };
 
-export const ministries: Array<Record<string, unknown>> = [];
+export type Ministry = {
+  name: string;
+  icon: string;
+  color: string;
+  minister: string;
+  telegram: string;
+  description: string;
+  initiatives: string[];
+};
+
+export const ministries: Ministry[] = [];
 export const galleryItems: Array<{ type: string; url: string; title: string }> = [];
 
 export const navLinks = [
