@@ -14,7 +14,7 @@ The historical sequence through `20260816022026` is preserved as previously docu
 - 20260816041825 — `harden_schoolcoin_function_grants`
 - 20260816042647 — `harden_student_binding_and_evidence`
 - 20260816042901 — `consolidate_schoolcoin_policies_and_indexes`
-- 20260816075300 — `repair_student_progress_and_table_privileges`
+- 20260816080017 — `repair_student_progress_and_table_privileges`
 
 ## Current verification
 
@@ -22,7 +22,7 @@ The live migration history and the branch contain the final-pass migrations with
 
 - `20260816042647_harden_student_binding_and_evidence.sql`
 - `20260816042901_consolidate_schoolcoin_policies_and_indexes.sql`
-- `20260816075300_repair_student_progress_and_table_privileges.sql`
+- `20260816080017_repair_student_progress_and_table_privileges.sql`
 
 No production reset or data recreation was used.
 
