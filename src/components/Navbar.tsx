@@ -46,12 +46,12 @@ export default function Navbar() {
     { href: '#school-life', label: t('events') },
   ];
   const more: Link[] = [
-    { href: '#achievements', label: t('achievements') },
+    { href: '#news', label: t('achievements') },
     { href: '#innovation', label: t('innovation') },
     { href: '#gallery', label: t('gallery') },
-    { href: '#media', label: t('media') },
-    { href: '#announcements', label: t('announcements') },
-    { href: '#events', label: t('events') },
+    { href: '#innovation', label: t('media') },
+    { href: '#news', label: t('announcements') },
+    { href: '#news', label: t('events') },
     { href: '#contact', label: t('contact') },
   ];
 
