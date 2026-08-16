@@ -105,7 +105,12 @@ export default function Navbar() {
     </div>
   );
 
-  const mobileLinks = [...school, ...education, ...life, ...more];
+  const mobileGroup = (title: string, links: Link[]) => (
+    <div>
+      <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{title}</p>
+      {links.map(link => <button key={`${title}-${link.href}-${link.label}`} type="button" onClick={() => go(link.href)}>{link.label}</button>)}
+    </div>
+  );
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 px-0 transition-[padding] duration-300 ${scrolled ? 'sm:px-5' : ''}`}>
@@ -133,7 +138,12 @@ export default function Navbar() {
           <div id="mobile-navigation" className={`mobile-nav ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`}>
             <div className="space-y-1 p-3">
               <button type="button" onClick={() => go('#hero')}>{t('home')}</button>
-              {mobileLinks.map(link => <button key={`${link.href}-${link.label}`} type="button" onClick={() => go(link.href)}>{link.label}</button>)}
+              {mobileGroup(t('school'), school)}
+              {mobileGroup(t('education'), education)}
+              {mobileGroup(t('life'), life)}
+              <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t('news')}</p>
+              <button type="button" onClick={() => go('#news')}>{t('news')}</button>
+              {mobileGroup(t('more'), more)}
               <div className="border-t px-3 pt-3">
                 <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t('digitalSystems')}</p>
                 <button type="button" onClick={() => openModule('#schoolcoin')}>🪙 SchoolCoin</button>
