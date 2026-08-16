@@ -2,6 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+:root { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+:root[data-theme='dark'] body { background:#0f172a; color:#e2e8f0; }
+:root[data-theme='dark'] .apple-section { background-color:rgba(15,23,42,.92) !important; }
+:root[data-theme='dark'] .apple-section :is(h1,h2,h3,h4,p,span,label,button) { color:inherit; }
+:root[data-theme='dark'] .bg-white, :root[data-theme='dark'] .bg-white\/80, :root[data-theme='dark'] .bg-white\/95 { background-color:rgba(30,41,59,.94) !important; }
+:root[data-theme='dark'] .bg-\[\#f5f5f7\], :root[data-theme='dark'] .bg-slate-50 { background-color:#0f172a !important; }
+.nav-surface { border-radius:1rem; border:1px solid rgba(255,255,255,.7); background:rgba(255,255,255,.8); box-shadow:0 8px 25px rgba(15,23,42,.08); backdrop-filter:blur(20px); }
+.nav-link { display:flex; align-items:center; gap:.25rem; border-radius:9999px; padding:.5rem .75rem; font-size:.875rem; font-weight:500; transition:background .2s,color .2s; }
+.nav-link:hover,.nav-dropdown button:hover,.mobile-nav button:hover { background:#eff6ff; color:#0071e3; }
+.nav-dropdown,.mobile-nav { transition:opacity .2s,transform .2s,visibility .2s; background:rgba(255,255,255,.97); border:1px solid rgba(226,232,240,.9); box-shadow:0 18px 40px rgba(15,23,42,.14); backdrop-filter:blur(20px); }
+.nav-dropdown { position:absolute; top:2.75rem; left:0; min-width:12rem; border-radius:1rem; padding:.5rem; }
+.nav-dropdown button,.mobile-nav button { display:block; width:100%; border-radius:.75rem; padding:.65rem .8rem; text-align:left; font-size:.875rem; font-weight:500; }
+.nav-icon { display:grid; height:2.5rem; width:2.5rem; place-items:center; border-radius:9999px; background:rgba(255,255,255,.75); }
+.nav-language { max-width:6.3rem; border-radius:.7rem; border:1px solid rgba(148,163,184,.35); background:transparent; padding:.45rem .4rem; font-size:.75rem; }
+.mobile-nav { position:absolute; right:0; top:3rem; width:min(90vw,22rem); border-radius:1.25rem; }
+:root[data-theme='dark'] .nav-surface,:root[data-theme='dark'] .nav-dropdown,:root[data-theme='dark'] .mobile-nav,:root[data-theme='dark'] .nav-icon { background:rgba(15,23,42,.94); border-color:rgba(71,85,105,.8); }
+:root[data-theme='dark'] .nav-link:hover,:root[data-theme='dark'] .nav-dropdown button:hover,:root[data-theme='dark'] .mobile-nav button:hover { background:#1e3a5f; color:#bfdbfe; }
+
+.site-main { position:relative; z-index:10; overflow:hidden; }
+.site-wrap { width:min(100% - 2.5rem, 72rem); margin-inline:auto; }
+.site-hero { min-height:44rem; padding-top:4rem; background:linear-gradient(100deg,rgba(248,250,252,.94),rgba(248,250,252,.76)),url('/images/maktab-bg.JPG') center/cover; }
+.site-section { padding:5.5rem 0; scroll-margin-top:5rem; }
+.site-tint { background:rgba(241,245,249,.72); }
+.site-eyebrow { color:#075ec4; font-size:.75rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+.site-heading { color:#0f172a; font-size:clamp(2rem,4vw,3rem); font-weight:800; line-height:1.1; letter-spacing:-.035em; }
+.site-subheading { font-size:1.5rem; font-weight:800; }
+.site-muted { color:#475569; }
+.site-card { border:1px solid rgba(203,213,225,.8); border-radius:1.25rem; background:rgba(255,255,255,.86); padding:1.4rem; box-shadow:0 8px 30px rgba(15,23,42,.06); }
+.site-empty { margin:2.5rem auto 0; max-width:36rem; border:1px dashed #94a3b8; border-radius:1.25rem; padding:2rem; color:#64748b; text-align:center; }
+.site-stat { border:1px solid rgba(255,255,255,.85); border-radius:1rem; background:rgba(255,255,255,.74); padding:1rem; backdrop-filter:blur(12px); }
+.site-stat strong { display:block; color:#0f172a; font-size:1.75rem; font-weight:800; letter-spacing:-.04em; }.site-stat span { color:#475569; font-size:.8rem; }
+.site-primary,.site-secondary { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; border-radius:.75rem; padding:.82rem 1.1rem; font-size:.9rem; font-weight:700; transition:transform .18s,background .18s; }.site-primary { background:#0071e3; color:white; }.site-primary:hover { background:#075ec4; transform:translateY(-1px); }.site-primary:disabled { cursor:not-allowed; opacity:.65; transform:none; }.site-secondary { border:1px solid #cbd5e1; background:rgba(255,255,255,.72); color:#0f172a; }.site-secondary:hover { background:white; }
+.site-input { width:100%; border:1px solid #cbd5e1; border-radius:.75rem; background:white; padding:.8rem .9rem; color:#0f172a; outline:none; }.site-input:focus { border-color:#0071e3; box-shadow:0 0 0 3px rgba(0,113,227,.15); }
+:root[data-theme='dark'] .site-hero { background:linear-gradient(100deg,rgba(15,23,42,.94),rgba(15,23,42,.78)),url('/images/maktab-bg.JPG') center/cover; }
+:root[data-theme='dark'] .site-tint { background:rgba(15,23,42,.82); }:root[data-theme='dark'] .site-heading,:root[data-theme='dark'] .site-card,:root[data-theme='dark'] .site-stat strong { color:#f8fafc; }:root[data-theme='dark'] .site-muted,:root[data-theme='dark'] .site-stat span,:root[data-theme='dark'] .site-empty { color:#cbd5e1; }:root[data-theme='dark'] .site-card,:root[data-theme='dark'] .site-stat { border-color:#334155; background:rgba(30,41,59,.88); }:root[data-theme='dark'] .site-secondary,:root[data-theme='dark'] .site-input { border-color:#475569; background:#1e293b; color:#f8fafc; }
+@media (max-width: 639px) { .site-wrap { width:min(100% - 1.5rem,72rem); }.site-section { padding:4rem 0; }.site-hero { min-height:auto; }.site-stat strong { font-size:1.45rem; } }
+
 :root {
   --apple-bg: #f8fafc;
   --apple-text: #0f172a;

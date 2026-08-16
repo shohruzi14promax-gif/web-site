@@ -1,0 +1,7 @@
+import { Megaphone } from 'lucide-react';
+
+export type NewsItem = { id?: string | number; title?: string; content?: string; description?: string; message?: string; date?: string };
+
+export default function NewsSection({ items }: { items: NewsItem[] }) {
+  return <section id="news" className="apple-section py-20"><div className="apple-container"><div className="mx-auto max-w-3xl text-center"><p className="apple-eyebrow">Yangiliklar</p><h2 className="apple-heading mt-3">Maktab yangiliklari</h2><p className="apple-subheading mt-4">Bu bo‘lim faqat admin tomonidan nashr etilgan rasmiy ma’lumotlarni ko‘rsatadi.</p></div>{items.length ? <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{items.slice(0, 6).map(item => <article key={item.id ?? `${item.title}-${item.date}`} className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-sm"><Megaphone className="h-5 w-5 text-[#0071e3]" /><p className="mt-5 text-xs text-slate-500">{item.date}</p><h3 className="mt-2 text-lg font-bold text-slate-900">{item.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{item.content || item.description || item.message}</p></article>)}</div> : <div className="mx-auto mt-10 max-w-xl rounded-3xl border border-dashed border-slate-300 bg-white/60 p-10 text-center"><Megaphone className="mx-auto h-8 w-8 text-slate-400" /><p className="mt-4 font-semibold">Hozircha rasmiy yangiliklar e’lon qilinmagan.</p><p className="mt-2 text-sm text-slate-500">Yangi xabarlar shu yerda paydo bo‘ladi.</p></div>}</div></section>;
+}

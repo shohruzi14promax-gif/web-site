@@ -7,13 +7,13 @@ const PROJECT_SUPABASE_URL = 'https://tljecpmgfwpwajwkkock.supabase.co';
 const resolvedSupabaseUrl = supabaseUrl || PROJECT_SUPABASE_URL;
 export const supabaseConfigured = Boolean(supabaseAnonKey);
 
-if (!supabaseAnonKey) console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY');
+if (!supabaseAnonKey) console.warn('Supabase is not configured; database-backed content will use local fallbacks.');
 
 export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey || 'placeholder-anon-key', { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 export interface StudentProposal { id: string; ministry: string; full_name: string; class: string; title: string; description: string; status: string; created_at: string; }
 
-export type SiteDataKey = 'teachers' | 'projects' | 'galleryList' | 'videoLessons' | 'announcements' | 'birthdays' | 'gpaList' | 'schoolLife';
+export type SiteDataKey = 'teachers' | 'projects' | 'galleryList' | 'videoLessons' | 'announcements' | 'birthdays' | 'gpaList' | 'schoolLife' | 'events' | 'achievements';
 
 export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> {
   if (!supabaseConfigured) return fallback;

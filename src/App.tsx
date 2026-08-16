@@ -1,20 +1,9 @@
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Academic from './components/Academic';
-import Administration from './components/Administration';
-import VideoLessons from './components/VideoLessons';
-import PresidentOffice from './components/PresidentOffice';
-import Innovation from './components/Innovation';
-import Gallery from './components/Gallery';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
-import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
-import Results from './components/Results';
-import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
+import PublicSite from './components/PublicSite';
+import { Bell, X, Cake, Megaphone } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
 type NotificationKey = 'announcements' | 'birthdays';
@@ -69,6 +58,18 @@ export default function App() {
     };
   }, []);
 
+  // Internal modules remain available to authorized staff through direct internal links,
+  // but are deliberately not promoted on the public school experience.
+  useEffect(() => {
+    const openInternalModule = () => {
+      setIsAdminOpen(window.location.hash === '#internal-admin');
+      setIsSchoolCoinOpen(window.location.hash === '#schoolcoin');
+    };
+    openInternalModule();
+    window.addEventListener('hashchange', openInternalModule);
+    return () => window.removeEventListener('hashchange', openInternalModule);
+  }, []);
+
   const totalNotifications = announcements.length + birthdays.length;
 
   return (
@@ -88,30 +89,7 @@ export default function App() {
       </div>
 
       <Navbar />
-      <main className="relative z-10 space-y-4 pb-16 sm:space-y-8">
-        <Hero />
-        <Results />
-        <About />
-        <Academic />
-        <SchoolLife />
-        <Administration />
-        <VideoLessons />
-        <PresidentOffice />
-        <Innovation />
-        <Gallery />
-        <Contact />
-      </main>
-      <Footer />
-
-      <button type="button" onClick={() => setIsSchoolCoinOpen(true)} className="fixed bottom-24 right-4 z-40 flex items-center gap-2 rounded-full bg-amber-500 px-4 py-3 text-white shadow-2xl transition-transform duration-200 hover:scale-105 active:scale-95 sm:right-6 sm:px-5" title="SchoolCoin" aria-label="SchoolCoin">
-        <Coins className="h-5 w-5" />
-        <span className="hidden text-sm font-bold sm:inline">SchoolCoin</span>
-      </button>
-
-      <button type="button" onClick={() => setIsAdminOpen(true)} className="fixed bottom-5 right-4 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-slate-900/90 px-4 py-3 text-white shadow-2xl backdrop-blur-xl transition-transform duration-200 hover:scale-105 active:scale-95 sm:right-6 sm:px-5" title="Admin Panel" aria-label="Admin Panel">
-        <Settings className="h-5 w-5" />
-        <span className="hidden text-sm font-semibold sm:inline">Admin Panel</span>
-      </button>
+      <PublicSite announcements={announcements} />
 
       {totalNotifications > 0 && (
         <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-xl transition-transform duration-200 hover:scale-105 active:scale-95 sm:left-6 sm:px-5" aria-label={`Yangi bildirishnomalar: ${totalNotifications}`}>
