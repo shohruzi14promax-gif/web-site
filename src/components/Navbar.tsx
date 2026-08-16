@@ -77,28 +77,15 @@ export default function Navbar() {
 
   const dropdown = (label: string, links: Link[], id: string) => (
     <div ref={desktopOpen === id ? desktopMenuRef : undefined} className="relative">
-      <button
-        type="button"
-        onClick={() => setDesktopOpen(value => value === id ? null : id)}
-        className="nav-link"
-        aria-expanded={desktopOpen === id}
-        aria-haspopup="menu"
-      >
+      <button type="button" onClick={() => setDesktopOpen(value => value === id ? null : id)} className="nav-link" aria-expanded={desktopOpen === id} aria-haspopup="menu">
         {label}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform ${desktopOpen === id ? 'rotate-180' : ''}`} />
       </button>
-      <div
-        className={`nav-dropdown ${desktopOpen === id ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`}
-        role="menu"
-      >
-        {links.map(link => (
-          <button key={`${id}-${link.href}-${link.label}`} type="button" role="menuitem" onClick={() => go(link.href)}>
-            {link.label}
-          </button>
-        ))}
+      <div className={`nav-dropdown ${desktopOpen === id ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`} role="menu">
+        {links.map(link => <button key={`${id}-${link.href}-${link.label}`} type="button" role="menuitem" onClick={() => go(link.href)}>{link.label}</button>)}
         {id === 'more' && (
           <div className="my-1 border-t border-slate-200 pt-1 dark:border-slate-700">
-            <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Raqamli tizimlar</p>
+            <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t('digitalSystems')}</p>
             <button type="button" role="menuitem" onClick={() => openModule('#schoolcoin')}>🪙 SchoolCoin</button>
             <button type="button" role="menuitem" onClick={() => openModule('#internal-admin')}>⚙️ Admin Panel</button>
           </div>
@@ -140,7 +127,7 @@ export default function Navbar() {
         <div className="hidden lg:block">{controls}</div>
 
         <div ref={menuRef} className="relative lg:hidden">
-          <button type="button" onClick={() => setMenuOpen(value => !value)} className="nav-icon" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
+          <button type="button" onClick={() => setMenuOpen(value => !value)} className="nav-icon" aria-label={menuOpen ? t('closeNavigation') : t('openNavigation')} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X /> : <Menu />}
           </button>
           <div id="mobile-navigation" className={`mobile-nav ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`}>
@@ -148,7 +135,7 @@ export default function Navbar() {
               <button type="button" onClick={() => go('#hero')}>{t('home')}</button>
               {mobileLinks.map(link => <button key={`${link.href}-${link.label}`} type="button" onClick={() => go(link.href)}>{link.label}</button>)}
               <div className="border-t px-3 pt-3">
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Raqamli tizimlar</p>
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{t('digitalSystems')}</p>
                 <button type="button" onClick={() => openModule('#schoolcoin')}>🪙 SchoolCoin</button>
                 <button type="button" onClick={() => openModule('#internal-admin')}>⚙️ Admin Panel</button>
                 <div className="pt-2">{controls}</div>
