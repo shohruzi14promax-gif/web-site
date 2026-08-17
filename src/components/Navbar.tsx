@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GraduationCap, Menu, X, Languages } from 'lucide-react';
-import { getLocale, initI18n, setLocale, type Locale } from '../lib/i18n';
+import { getLocale, initI18n, type Locale } from '../lib/i18n';
 
 const menuLinks = [
   { href: '#hero', label: 'Bosh sahifa' },
@@ -23,7 +23,6 @@ export default function Navbar() {
   useEffect(() => {
     setCurrentLocale(getLocale());
     initI18n();
-
     const onScroll = () => setScrolled(window.scrollY > 20);
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
@@ -31,7 +30,6 @@ export default function Navbar() {
     const onPointerDown = (event: PointerEvent) => {
       if (menuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false);
     };
-
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('keydown', onKeyDown);
     document.addEventListener('pointerdown', onPointerDown);
@@ -52,8 +50,9 @@ export default function Navbar() {
 
   const handleLocaleChange = (next: Locale) => {
     if (next === locale) return;
+    localStorage.setItem('site_locale', next);
     setCurrentLocale(next);
-    setLocale(next);
+    window.location.reload();
   };
 
   return (
@@ -78,9 +77,7 @@ export default function Navbar() {
           <div className="hidden items-center gap-0.5 rounded-full border border-white/70 bg-white/70 p-1 shadow-sm backdrop-blur-xl sm:flex" aria-label="Language selector">
             <Languages className="ml-2 h-4 w-4 text-slate-500" />
             {locales.map((item) => (
-              <button key={item} type="button" onClick={() => handleLocaleChange(item)} className={`rounded-full px-2.5 py-1.5 text-[11px] font-bold uppercase transition-all ${locale === item ? 'bg-[#0071e3] text-white shadow-sm' : 'text-slate-600 hover:bg-white'}`} aria-pressed={locale === item}>
-                {item}
-              </button>
+              <button key={item} type="button" onClick={() => handleLocaleChange(item)} className={`rounded-full px-2.5 py-1.5 text-[11px] font-bold uppercase transition-all ${locale === item ? 'bg-[#0071e3] text-white shadow-sm' : 'text-slate-600 hover:bg-white'}`} aria-pressed={locale === item}>{item}</button>
             ))}
           </div>
 
