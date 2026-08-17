@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { GraduationCap, Menu, X, Languages } from 'lucide-react';
 import { getLocale, initI18n, type Locale } from '../lib/i18n';
+import { initExtraI18n } from '../lib/i18nExtra';
 
 const menuLinks = [
   { href: '#hero', label: 'Bosh sahifa' },
@@ -23,6 +24,7 @@ export default function Navbar() {
   useEffect(() => {
     setCurrentLocale(getLocale());
     initI18n();
+    initExtraI18n();
     const onScroll = () => setScrolled(window.scrollY > 20);
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
