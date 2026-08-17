@@ -97,7 +97,7 @@ export default function App() {
         <VideoLessons />
         <PresidentOffice />
         <Innovation />
-        <Gallery />
+        <div id="gallery" className="scroll-mt-24"><Gallery /></div>
         <Contact />
       </main>
       <Footer />
