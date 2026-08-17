@@ -59,29 +59,26 @@ export default function App() {
           if (key === 'announcements' || key === 'birthdays') void syncNotificationKey(key);
         }).subscribe()
       : null;
+    const openAdmin = () => setIsAdminOpen(true);
+    const openSchoolCoin = () => setIsSchoolCoinOpen(true);
     window.addEventListener('admin_data_updated', loadNotifications);
     window.addEventListener('storage', loadNotifications);
+    window.addEventListener('open-admin', openAdmin);
+    window.addEventListener('open-schoolcoin', openSchoolCoin);
     return () => {
       alive = false;
       if (channel) void supabase.removeChannel(channel);
       window.removeEventListener('admin_data_updated', loadNotifications);
       window.removeEventListener('storage', loadNotifications);
+      window.removeEventListener('open-admin', openAdmin);
+      window.removeEventListener('open-schoolcoin', openSchoolCoin);
     };
   }, []);
 
   const totalNotifications = announcements.length + birthdays.length;
 
   return (
-    <div
-      className="min-h-screen relative text-slate-900 selection:bg-[#0071e3] selection:text-white"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(248,250,252,.72), rgba(248,250,252,.54)), url('/images/maktab-bg.JPG')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-        backgroundAttachment: 'scroll',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div className="site-shell min-h-screen relative text-slate-900 selection:bg-[#0071e3] selection:text-white" style={{ backgroundImage: `linear-gradient(to bottom, rgba(248,250,252,.72), rgba(248,250,252,.54)), url('/images/maktab-bg.JPG')`, backgroundSize: 'cover', backgroundPosition: 'center top', backgroundAttachment: 'scroll', backgroundRepeat: 'no-repeat' }}>
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none select-none" aria-hidden="true">
         <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-blue-500/15 to-indigo-600/10 blur-3xl animate-liquid motion-reduce:animate-none" />
         <div className="absolute top-[35%] right-[-10%] h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-purple-500/10 to-pink-500/10 blur-3xl animate-liquid motion-reduce:animate-none [animation-delay:3s]" />
@@ -97,7 +94,7 @@ export default function App() {
         <VideoLessons />
         <PresidentOffice />
         <Innovation />
-        <Gallery />
+        <div id="gallery" className="scroll-mt-24"><Gallery /></div>
         <Contact />
       </main>
       <Footer />
