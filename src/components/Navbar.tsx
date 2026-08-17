@@ -9,7 +9,7 @@ const menuLinks = [
   { href: '#school-life', label: 'Maktab hayoti' },
   { href: '#administration', label: 'Ma’muriyat' },
   { href: '#videolessons', label: 'Video darslar' },
-  { href: '#president-office', label: 'Prezident maktabi' },
+  { href: '#president', label: 'Prezident maktabi' },
   { href: '#innovation', label: 'Innovatsiya' },
   { href: '#gallery', label: 'Galereya' },
   { href: '#contact', label: 'Aloqa' },
@@ -72,46 +72,22 @@ export default function Navbar() {
           <span className="hidden text-sm font-bold tracking-tight text-[#1d1d1f] sm:inline lg:text-base">1-IMI Jizzax</span>
         </button>
 
-        {/* Desktop: exact same order as the sections in App.tsx. */}
         <div className="hidden min-w-0 flex-1 items-center justify-end gap-0.5 lg:flex">
           {menuLinks.map((link) => (
-            <button
-              key={link.href}
-              type="button"
-              onClick={() => handleNavClick(link.href)}
-              className="whitespace-nowrap rounded-full px-2.5 py-2 text-[12px] font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-white/85 hover:text-[#0071e3] active:scale-95 xl:px-3 xl:text-[13px]"
-            >
+            <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="whitespace-nowrap rounded-full px-2.5 py-2 text-[12px] font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-white/85 hover:text-[#0071e3] active:scale-95 xl:px-3 xl:text-[13px]">
               {link.label}
             </button>
           ))}
         </div>
 
         <div ref={menuRef} className="relative lg:hidden">
-          <button
-            type="button"
-            onClick={() => setMenuOpen((value) => !value)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/70 backdrop-blur-md transition-all duration-200 hover:bg-white/90 hover:shadow-md active:scale-90"
-            aria-label={menuOpen ? 'Menyuni yopish' : 'Menyuni ochish'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-          >
+          <button type="button" onClick={() => setMenuOpen((value) => !value)} className="flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/70 backdrop-blur-md transition-all duration-200 hover:bg-white/90 hover:shadow-md active:scale-90" aria-label={menuOpen ? 'Menyuni yopish' : 'Menyuni ochish'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-
-          <div
-            id="mobile-navigation"
-            className={`absolute right-0 top-12 w-[min(92vw,380px)] overflow-hidden rounded-3xl border border-white/70 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl transition-all duration-200 ${
-              menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'
-            }`}
-          >
+          <div id="mobile-navigation" className={`absolute right-0 top-12 w-[min(92vw,380px)] overflow-hidden rounded-3xl border border-white/70 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl transition-all duration-200 ${menuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'}`}>
             <div className="flex max-h-[75vh] flex-col gap-1 overflow-y-auto p-3">
               {menuLinks.map((link, index) => (
-                <button
-                  key={link.href}
-                  type="button"
-                  onClick={() => handleNavClick(link.href)}
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-blue-50 hover:pl-5 hover:text-[#0071e3]"
-                >
+                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-blue-50 hover:pl-5 hover:text-[#0071e3]">
                   <span className="w-5 text-xs font-bold text-slate-400">{index + 1}</span>
                   {link.label}
                 </button>
