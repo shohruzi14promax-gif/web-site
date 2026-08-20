@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Phone, Clock, User, Sparkles } from 'lucide-react';
 import { administration as staticAdministration } from '../lib/data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useI18n } from '../i18n';
 
 type AdministrationMember = { id?: string | number; name?: string; image?: string; role?: string; position?: string; reception?: string; phone?: string };
 
 export default function Administration() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+  const { t } = useI18n();
   const [administrationData, setAdministrationData] = useState<AdministrationMember[]>(staticAdministration as AdministrationMember[]);
 
   useEffect(() => {
@@ -34,9 +36,9 @@ export default function Administration() {
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className={`mx-auto mb-14 max-w-3xl text-center transition-[opacity,transform] duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}>
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#0071e3]"><Sparkles className="h-3.5 w-3.5" /> Ma’muriyat</div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-[#1d1d1f] sm:text-5xl md:text-6xl">Rahbariyat va <span className="text-gradient-blue">qabul kunlari</span></h2>
-          <p className="mt-5 text-base leading-relaxed text-[#6e6e73] sm:text-lg">Maktab ma’muriyati a’zolari, ularning lavozimlari va fuqarolarni qabul qilish kunlari.</p>
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#0071e3]"><Sparkles className="h-3.5 w-3.5" />{t('administration')}</div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-[#1d1d1f] sm:text-5xl md:text-6xl">{t('administration')}</h2>
+          <p className="mt-5 text-base leading-relaxed text-[#6e6e73] sm:text-lg">{t('profileInfo')}</p>
         </div>
 
         {administrationData.length ? (
@@ -45,11 +47,11 @@ export default function Administration() {
               <article key={person.id ?? `${person.name}-${index}`} className={`group overflow-hidden rounded-[30px] border border-white/80 bg-white/70 p-6 shadow-xl shadow-slate-900/5 backdrop-blur-2xl transition-[opacity,transform,box-shadow] duration-700 hover:-translate-y-1 hover:shadow-2xl ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 80}ms` }}>
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
                   <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl border border-white bg-slate-100 shadow-lg">
-                    {person.image ? <img src={person.image} alt={person.name || 'Ma’muriyat a’zosi'} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-[#0071e3]/50"><User className="h-12 w-12" /></div>}
+                    {person.image ? <img src={person.image} alt={person.name || t('administration')} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-[#0071e3]/50"><User className="h-12 w-12" /></div>}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-xl font-bold tracking-tight text-[#1d1d1f] group-hover:text-[#0071e3]">{person.name || 'Ma’muriyat a’zosi'}</h3>
-                    <p className="mt-1 text-sm font-semibold text-[#0071e3]">{person.role || person.position || 'Lavozim ko‘rsatilmagan'}</p>
+                    <h3 className="text-xl font-bold tracking-tight text-[#1d1d1f] group-hover:text-[#0071e3]">{person.name || t('administration')}</h3>
+                    <p className="mt-1 text-sm font-semibold text-[#0071e3]">{person.role || person.position || t('unavailable')}</p>
                     <div className="my-4 h-px bg-gradient-to-r from-black/10 to-transparent" />
                     <div className="space-y-2 text-sm text-[#6e6e73]">
                       {person.reception && <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-[#0071e3]" />{person.reception}</p>}
@@ -61,7 +63,7 @@ export default function Administration() {
             ))}
           </div>
         ) : (
-          <div className="mx-auto max-w-xl rounded-[30px] border border-white/70 bg-white/60 p-14 text-center shadow-xl backdrop-blur-xl"><User className="mx-auto h-10 w-10 text-[#0071e3]" /><p className="mt-4 text-sm text-[#6e6e73]">Hozircha ma’muriyat ma’lumotlari mavjud emas.</p></div>
+          <div className="mx-auto max-w-xl rounded-[30px] border border-white/70 bg-white/60 p-14 text-center shadow-xl backdrop-blur-xl"><User className="mx-auto h-10 w-10 text-[#0071e3]" /><p className="mt-4 text-sm text-[#6e6e73]">{t('empty')}</p></div>
         )}
       </div>
     </section>
