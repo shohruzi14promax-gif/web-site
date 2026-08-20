@@ -12,6 +12,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
+import SchoolCoinPublic from './components/SchoolCoinPublic';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
 import SchoolCoinActivityQuickAdd from './components/SchoolCoinActivityQuickAdd';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
@@ -89,11 +90,12 @@ export default function App() {
         <Hero />
         <About />
         <Academic />
-        <SchoolLife />
         <Administration />
-        <VideoLessons />
-        <PresidentOffice />
         <Innovation />
+        <SchoolCoinPublic />
+        <SchoolLife />
+        <PresidentOffice />
+        <VideoLessons />
         <div id="gallery" className="scroll-mt-24"><Gallery /></div>
         <Contact />
       </main>
