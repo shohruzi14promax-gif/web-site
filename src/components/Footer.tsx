@@ -1,70 +1,55 @@
-import { GraduationCap, Send, Youtube, Instagram, Facebook } from 'lucide-react';
+import { Facebook, GraduationCap, Instagram, Send, Youtube } from 'lucide-react';
 import { schoolInfo, navLinks } from '@/lib/data';
 
+const groups = [
+  { title: 'Maktab', links: ['#about', '#administration', '#academic', '#contact'], labels: ['About', 'Leadership', 'Academics', 'Contact'] },
+  { title: 'Student Life', links: ['#school-life', '#videolessons', '#gallery', '#innovation'], labels: ['Dormitory & Meals', 'Videos', 'Gallery', 'Projects'] },
+];
+
 export default function Footer() {
-  const handleNavClick = (href: string) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const handleNavClick = (href: string) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  const socials = [
+    { href: schoolInfo.social.telegram, icon: Send, label: 'Telegram' },
+    { href: schoolInfo.social.youtube, icon: Youtube, label: 'YouTube' },
+    { href: schoolInfo.social.instagram, icon: Instagram, label: 'Instagram' },
+    { href: schoolInfo.social.facebook, icon: Facebook, label: 'Facebook' },
+  ].filter(item => item.href);
 
   return (
-    <footer className="bg-[#1d1d1f] px-5 py-16 sm:px-8 md:px-12 lg:px-16">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-10 md:grid-cols-3">
+    <footer className="bg-[#08182d] text-white">
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 md:px-10 lg:px-12 lg:py-18">
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0071e3]">
-                <GraduationCap className="h-5 w-5 text-white" strokeWidth={2.5} />
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600"><GraduationCap className="h-5 w-5" /></span>
+              <div><p className="text-sm font-black tracking-wide">1-IMI JIZZAX</p><p className="text-xs text-slate-400">Learn. Create. Lead.</p></div>
+            </div>
+            <p className="mt-5 max-w-sm text-sm leading-6 text-slate-300">{schoolInfo.name}. Raqamli xizmatlar, akademik rivojlanish va o‘quvchi tashabbuslari birlashadigan yagona ekotizim.</p>
+            <div className="mt-6 flex gap-2">
+              {socials.map(({ href, icon: Icon, label }) => <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-blue-400/40 hover:bg-blue-500/15 hover:text-white"><Icon className="h-4 w-4" /></a>)}
+            </div>
+          </div>
+
+          {groups.map(group => (
+            <div key={group.title}>
+              <h3 className="text-xs font-bold uppercase tracking-[.16em] text-blue-300">{group.title}</h3>
+              <div className="mt-5 space-y-3">
+                {group.links.map((href, index) => <button key={href} type="button" onClick={() => handleNavClick(href)} className="block text-sm text-slate-300 transition hover:text-white">{group.labels[index]}</button>)}
               </div>
-              <span className="text-base font-bold text-white">1-IMI Jizzax</span>
             </div>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              {schoolInfo.name}. 2022-yildan beri sifatli ta'lim berib kelyapmiz.
-            </p>
-            <div className="mt-5 flex gap-3">
-              <a href={schoolInfo.social.telegram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Send className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.youtube} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Youtube className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Instagram className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.facebook} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Facebook className="h-4 w-4 text-white" />
-              </a>
-            </div>
-          </div>
+          ))}
 
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Bo'limlar</h4>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-left text-sm text-white/60 transition-colors hover:text-white"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Aloqa</h4>
-            <div className="mt-4 space-y-2 text-sm text-white/60">
-              <p>{schoolInfo.address}</p>
-              <p>{schoolInfo.phone}</p>
-              <p>{schoolInfo.email}</p>
+            <h3 className="text-xs font-bold uppercase tracking-[.16em] text-amber-300">SchoolCoin</h3>
+            <div className="mt-5 space-y-3">
+              {['About', 'How it works', 'Marketplace', 'Leaderboard'].map(label => <button key={label} type="button" onClick={() => window.dispatchEvent(new CustomEvent('open-schoolcoin'))} className="block text-sm text-slate-300 transition hover:text-white">{label}</button>)}
             </div>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6 text-center">
-          <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} {schoolInfo.name}. Barcha huquqlar himoyalangan.
-          </p>
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} {schoolInfo.name}. Barcha huquqlar himoyalangan.</p>
+          <p>{schoolInfo.address} · {schoolInfo.phone}</p>
         </div>
       </div>
     </footer>
