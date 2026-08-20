@@ -3,33 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --apple-bg: #f8fafc;
-  --apple-text: #0f172a;
-  --apple-blue: #0071e3;
-  --apple-blue-dark: #0066cc;
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08), 0 20px 60px rgba(0, 113, 227, 0.08);
-  --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --school-navy: #0b1f3a;
+  --school-navy-2: #12345a;
+  --school-blue: #2563eb;
+  --school-gold: #d6a84f;
+  --school-emerald: #059669;
+  --school-surface: #ffffff;
+  --school-muted: #64748b;
+  --school-border: #e2e8f0;
+  --school-bg: #f8fafc;
+  --school-radius: 18px;
+  --school-shadow: 0 14px 40px rgba(11,31,58,.08);
+  --transition-smooth: cubic-bezier(.16,1,.3,1);
 }
 
 * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-body { margin: 0; font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--apple-text); background-color: var(--apple-bg); letter-spacing: -0.01em; overflow-x: hidden; }
+html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+body { margin: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--school-navy); background: var(--school-bg); overflow-x: hidden; }
 button, input, textarea, select { font-family: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 img { max-width: 100%; height: auto; display: block; }
 
-/* Theme foundation. Existing page content stays intact; the theme switcher adds a safe global dark surface/text treatment. */
+@layer components {
+  .institutional-card { @apply rounded-[18px] border border-slate-200 bg-white shadow-[0_14px_40px_rgba(11,31,58,.08)]; }
+  .institutional-section { @apply mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 md:px-10 lg:px-12 lg:py-20; }
+  .section-kicker { @apply text-xs font-bold uppercase tracking-[.18em] text-blue-600; }
+  .section-title { @apply mt-3 text-3xl font-black tracking-[-.03em] text-slate-950 sm:text-4xl lg:text-5xl; }
+  .section-copy { @apply mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg; }
+  .school-button { @apply inline-flex min-h-11 items-center justify-center rounded-xl px-5 text-sm font-bold transition-all duration-300 active:scale-[.98]; }
+}
+
 html.dark body { color: #e2e8f0; background: #020617; }
-html.dark .site-shell { color: #e2e8f0; background-color: #020617 !important; background-image: linear-gradient(to bottom, rgba(2,6,23,.84), rgba(2,6,23,.92)), url('/images/maktab-bg.JPG') !important; }
-html.dark .site-shell .bg-white,
-html.dark .site-shell .bg-white\/95,
-html.dark .site-shell .bg-white\/90,
-html.dark .site-shell .bg-white\/85 { background-color: rgba(15,23,42,.94); }
+html.dark .site-shell { color: #e2e8f0; background-color: #020617 !important; }
+html.dark .site-shell .institutional-card { background: #0f172a; border-color: rgba(148,163,184,.2); }
+html.dark .site-shell .text-slate-950,
 html.dark .site-shell .text-slate-900,
 html.dark .site-shell .text-slate-800,
-html.dark .site-shell .text-slate-700 { color: #e2e8f0; }
+html.dark .site-shell .text-slate-700 { color: #f1f5f9; }
 html.dark .site-shell .text-slate-600,
 html.dark .site-shell .text-slate-500 { color: #94a3b8; }
 html.dark .site-shell .border-slate-200,
@@ -37,8 +47,9 @@ html.dark .site-shell .border-slate-200\/70,
 html.dark .site-shell .border-slate-100 { border-color: rgba(148,163,184,.2); }
 html.dark .site-shell input,
 html.dark .site-shell textarea,
-html.dark .site-shell select { background-color: rgba(15,23,42,.9); color: #e2e8f0; border-color: rgba(148,163,184,.25); }
-html.dark .site-shell .bg-slate-50,
-html.dark .site-shell .bg-slate-100 { background-color: rgba(30,41,59,.72); }
+html.dark .site-shell select { background: #0f172a; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
 
-::selection { background: #0071e3; color: white; }
+::selection { background: #2563eb; color: white; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
