@@ -50,7 +50,6 @@ html.dark .site-shell input,
 html.dark .site-shell textarea,
 html.dark .site-shell select { background: #0f172a; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
 
-/* SchoolCoin modal is rendered outside .site-shell; keep all three theme modes readable. */
 html.dark [class*="z-[120]"] { color: #e2e8f0; }
 html.dark [class*="z-[120]"] > div { background-color: #0f172a; color: #e2e8f0; }
 html.dark [class*="z-[120]"] .bg-white,
@@ -70,7 +69,6 @@ html.dark [class*="z-[120]"] input,
 html.dark [class*="z-[120]"] textarea,
 html.dark [class*="z-[120]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
 
-/* Admin overlay is rendered outside .site-shell. Keep its forms/tables usable in dark mode. */
 html.dark [class*="z-[100]"] { color: #e2e8f0; }
 html.dark [class*="z-[100]"] > div { color: #e2e8f0; }
 html.dark [class*="z-[100]"] .bg-white { background-color: #0f172a; }
@@ -86,18 +84,62 @@ html.dark [class*="z-[100]"] textarea,
 html.dark [class*="z-[100]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
 
 ::selection { background: #2563eb; color: white; }
-
-/* Prevent wide admin tables and data grids from forcing viewport overflow. */
 [class*="z-[100]"] table { width: 100%; min-width: 0; }
 [class*="z-[100]"] th,
 [class*="z-[100]"] td { overflow-wrap: anywhere; }
 
+/* Responsive institutional UI: keep dense content usable without horizontal page overflow. */
+main, section, article, header, footer { min-width: 0; }
+button, a { touch-action: manipulation; }
+textarea { max-width: 100%; }
+iframe { max-width: 100%; }
+
+@media (max-width: 1024px) {
+  .apple-container, .institutional-section { width: 100%; }
+  table { max-width: 100%; }
+}
+
+@media (max-width: 768px) {
+  html { scroll-padding-top: 76px; }
+  .apple-container, .institutional-section { padding-left: 1rem; padding-right: 1rem; }
+  .section-title { font-size: clamp(1.75rem, 7vw, 2.5rem); line-height: 1.08; }
+  .section-copy { font-size: .975rem; line-height: 1.65; }
+  [class*="grid-cols-"] { min-width: 0; }
+  [class*="overflow-hidden"] img { max-width: 100%; }
+  [role="dialog"] { max-height: calc(100dvh - 1rem); overflow-y: auto; }
+}
+
 @media (max-width: 640px) {
   [class*="z-[120]"], [class*="z-[100]"] { padding: .5rem !important; }
-  [class*="z-[120]"] > div, [class*="z-[100]"] > div { border-radius: 22px; }
+  [class*="z-[120]"] > div, [class*="z-[100]"] > div { border-radius: 22px; max-width: 100%; }
   [class*="z-[120]"] button, [class*="z-[100]"] button { min-height: 40px; }
   [class*="z-[100]"] input, [class*="z-[100]"] textarea, [class*="z-[100]"] select { font-size: 16px; }
   [class*="z-[100]"] table { display: block; overflow-x: auto; max-width: 100%; }
+  [class*="z-[100]"] th, [class*="z-[100]"] td { white-space: normal; }
+}
+
+@media (max-width: 430px) {
+  .apple-section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .apple-container, .institutional-section { padding-left: .875rem; padding-right: .875rem; }
+  .school-button { width: 100%; }
+}
+
+@media (max-width: 390px) {
+  body { font-size: 15px; }
+  .apple-container, .institutional-section { padding-left: .75rem; padding-right: .75rem; }
+}
+
+@media (max-width: 360px) {
+  .apple-container, .institutional-section { padding-left: .625rem; padding-right: .625rem; }
+  .section-title { font-size: 1.7rem; }
+}
+
+@media (min-width: 1280px) {
+  .apple-container, .institutional-section { max-width: 80rem; }
+}
+
+@media (min-width: 1536px) {
+  .apple-container, .institutional-section { max-width: 88rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
