@@ -15,6 +15,7 @@ import SchoolLife from './components/SchoolLife';
 import SchoolCoinPublic from './components/SchoolCoinPublic';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
 import SchoolCoinActivityQuickAdd from './components/SchoolCoinActivityQuickAdd';
+import News from './components/News';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
@@ -95,6 +96,7 @@ export default function App() {
         <SchoolCoinPublic />
         <SchoolLife />
         <PresidentOffice />
+        <News />
         <VideoLessons />
         <div id="gallery" className="scroll-mt-24"><Gallery /></div>
         <Contact />
