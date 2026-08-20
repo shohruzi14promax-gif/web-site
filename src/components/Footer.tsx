@@ -1,5 +1,5 @@
 import { Facebook, GraduationCap, Instagram, Send, Youtube } from 'lucide-react';
-import { schoolInfo, navLinks } from '@/lib/data';
+import { schoolInfo } from '@/lib/data';
 
 const groups = [
   { title: 'Maktab', links: ['#about', '#administration', '#academic', '#contact'], labels: ['About', 'Leadership', 'Academics', 'Contact'] },
