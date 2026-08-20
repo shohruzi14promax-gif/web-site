@@ -51,7 +51,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   const loadAdmin = useCallback(async () => {
     setBusy(true); setError('');
     try {
-      const [s, q, t, o, a, r] = await Promise.all([
+      const [s, q, tx, o, a, r] = await Promise.all([
         supabase.rpc('schoolcoin_admin_student_balances'),
         supabase.from('schoolcoin_requests').select('id,status,created_at,evidence_url,schoolcoin_students(full_name,student_code),schoolcoin_activities(name,coin_reward)').eq('status', 'pending').order('created_at', { ascending: false }),
         supabase.from('schoolcoin_transactions').select('id,student_id,amount,transaction_type,note,created_at').order('created_at', { ascending: false }).limit(200),
@@ -59,8 +59,8 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
         supabase.from('schoolcoin_activities').select('*').eq('active', true).order('category').order('coin_reward', { ascending: false }),
         supabase.from('schoolcoin_market_rewards').select('*').eq('active', true).order('category').order('price'),
       ]);
-      for (const result of [s, q, t, o, a, r]) if (result.error) throw result.error;
-      setStudents((s.data || []) as AdminStudent[]); setAdminTransactions((t.data || []) as AdminTransaction[]); setActivities((a.data || []) as ActivityItem[]); setRewards((r.data || []) as Reward[]);
+      for (const result of [s, q, tx, o, a, r]) if (result.error) throw result.error;
+      setStudents((s.data || []) as AdminStudent[]); setAdminTransactions((tx.data || []) as AdminTransaction[]); setActivities((a.data || []) as ActivityItem[]); setRewards((r.data || []) as Reward[]);
       setAdminRequests(((q.data || []) as Array<Record<string, unknown>>).map(x => ({ id: String(x.id), status: String(x.status), created_at: String(x.created_at), evidence_url: x.evidence_url as string | null, student: x.schoolcoin_students as AdminRequest['student'], activity: x.schoolcoin_activities as AdminRequest['activity'] })));
       setOrders(((o.data || []) as Array<Record<string, unknown>>).map(x => ({ id: String(x.id), status: String(x.status), price: Number(x.price), created_at: String(x.created_at), reward_title: String((x.schoolcoin_market_rewards as { title?: string } | null)?.title || t('reward')) })));
     } catch (e) { fail(e, t('serverError')); } finally { setBusy(false); }
