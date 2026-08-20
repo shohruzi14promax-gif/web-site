@@ -70,12 +70,36 @@ html.dark [class*="z-[120]"] input,
 html.dark [class*="z-[120]"] textarea,
 html.dark [class*="z-[120]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
 
+/* Admin overlay is rendered outside .site-shell. Keep its forms/tables usable in dark mode. */
+html.dark [class*="z-[100]"] { color: #e2e8f0; }
+html.dark [class*="z-[100]"] > div { color: #e2e8f0; }
+html.dark [class*="z-[100]"] .bg-white { background-color: #0f172a; }
+html.dark [class*="z-[100]"] .bg-slate-100 { background-color: #020617; }
+html.dark [class*="z-[100]"] .text-slate-950,
+html.dark [class*="z-[100]"] .text-slate-900,
+html.dark [class*="z-[100]"] .text-slate-800,
+html.dark [class*="z-[100]"] .text-slate-700 { color: #f1f5f9; }
+html.dark [class*="z-[100]"] .text-slate-600,
+html.dark [class*="z-[100]"] .text-slate-500 { color: #94a3b8; }
+html.dark [class*="z-[100]"] input,
+html.dark [class*="z-[100]"] textarea,
+html.dark [class*="z-[100]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
+
 ::selection { background: #2563eb; color: white; }
+
+/* Prevent wide admin tables and data grids from forcing viewport overflow. */
+[class*="z-[100]"] table { width: 100%; min-width: 0; }
+[class*="z-[100]"] th,
+[class*="z-[100]"] td { overflow-wrap: anywhere; }
+
 @media (max-width: 640px) {
-  [class*="z-[120]"] { padding: .5rem !important; }
-  [class*="z-[120]"] > div { border-radius: 22px; }
-  [class*="z-[120]"] button { min-height: 40px; }
+  [class*="z-[120]"], [class*="z-[100]"] { padding: .5rem !important; }
+  [class*="z-[120]"] > div, [class*="z-[100]"] > div { border-radius: 22px; }
+  [class*="z-[120]"] button, [class*="z-[100]"] button { min-height: 40px; }
+  [class*="z-[100]"] input, [class*="z-[100]"] textarea, [class*="z-[100]"] select { font-size: 16px; }
+  [class*="z-[100]"] table { display: block; overflow-x: auto; max-width: 100%; }
 }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
