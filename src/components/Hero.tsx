@@ -1,5 +1,5 @@
 import { ArrowRight, ChevronDown, Coins, GraduationCap } from 'lucide-react';
-import { schoolInfo, stats } from '@/lib/data';
+import { stats } from '@/lib/data';
 import { useScrollAnimation, useCountUp } from '@/hooks/useScrollAnimation';
 import { useI18n } from '../i18n';
 
