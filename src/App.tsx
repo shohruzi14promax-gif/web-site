@@ -25,7 +25,6 @@ type NotificationKey = 'announcements' | 'birthdays';
 type NotificationItem = Record<string, unknown> & { id?: string | number; name?: string; class?: string; title?: string; content?: string; description?: string; message?: string; date?: string };
 
 const readArray = <T,>(key: string): T[] => { try { const parsed = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(parsed) ? parsed : []; } catch { return []; } };
-function PageSection({ id, children, className = '' }: { id: string; children: React.ReactNode; className?: string }) { return <section id={id} className={`scroll-mt-24 ${className}`}>{children}</section>; }
 
 export default function App() {
   const { t } = useI18n();
@@ -53,19 +52,21 @@ export default function App() {
       <div className="pointer-events-none fixed inset-0 -z-10 select-none overflow-hidden" aria-hidden="true"><div className="animate-liquid absolute left-[-10%] top-[-10%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-blue-500/15 to-indigo-600/10 blur-3xl motion-reduce:animate-none" /><div className="animate-liquid absolute right-[-10%] top-[35%] h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-purple-500/10 to-pink-500/10 blur-3xl motion-reduce:animate-none" /></div>
       <Navbar />
       <main className="relative z-10 pb-16">
-        <PageSection id="hero"><Hero /></PageSection>
-        <PageSection id="about"><About /></PageSection>
-
-        <PageSection id="academic"><Academic /><Teachers /></PageSection>
-
-        <PageSection id="school-life"><SchoolLife /><PresidentOffice /></PageSection>
-
-        <PageSection id="administration"><Administration /></PageSection>
-
-        <PageSection id="media" className="media-section"><News /><Events /><VideoLessons /><Gallery /></PageSection>
-
-        <PageSection id="innovation"><Innovation /></PageSection>
-        <PageSection id="contact"><Contact /></PageSection>
+        <Hero />
+        <About />
+        <Academic />
+        <Teachers />
+        <SchoolLife />
+        <PresidentOffice />
+        <Administration />
+        <section id="media" className="scroll-mt-24 media-section">
+          <News />
+          <Events />
+          <VideoLessons />
+          <Gallery />
+        </section>
+        <Innovation />
+        <Contact />
       </main>
 
       <Footer />
