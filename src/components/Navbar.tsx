@@ -6,8 +6,6 @@ type SectionKey = 'home' | 'about' | 'academic' | 'life' | 'administration' | 'm
 
 type NavLink = { href: string; key: SectionKey };
 
-// Keep the primary navigation aligned with the site's information architecture.
-// Contact is intentionally in "More" rather than competing with the six primary sections.
 const links: NavLink[] = [
   { href: '#hero', key: 'home' },
   { href: '#about', key: 'about' },
@@ -25,6 +23,18 @@ const extraLinks: NavLink[] = [
 ];
 
 const sectionIds = [...links, ...extraLinks].map(link => link.href.slice(1));
+const sectionKeyById: Record<string, SectionKey> = {
+  hero: 'home',
+  about: 'about',
+  academic: 'academic',
+  'school-life': 'life',
+  administration: 'administration',
+  media: 'media',
+  president: 'president',
+  innovation: 'innovation',
+  gallery: 'gallery',
+  contact: 'contact',
+};
 
 export default function Navbar() {
   const { locale, setLocale, t } = useI18n();
@@ -54,7 +64,8 @@ export default function Navbar() {
           const visible = entries
             .filter(entry => entry.isIntersecting)
             .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-          if (visible?.target.id) setActiveSection(visible.target.id as SectionKey);
+          const nextKey = visible?.target.id ? sectionKeyById[visible.target.id] : undefined;
+          if (nextKey) setActiveSection(nextKey);
         }, { rootMargin: '-24% 0px -62% 0px', threshold: [0.05, 0.2, 0.5] })
       : null;
 
@@ -74,7 +85,8 @@ export default function Navbar() {
   }, [dark]);
 
   const navigate = (href: string) => {
-    setActiveSection(href.slice(1) as SectionKey);
+    const nextKey = sectionKeyById[href.slice(1)];
+    if (nextKey) setActiveSection(nextKey);
     setMenuOpen(false);
     setMoreOpen(false);
     const element = document.querySelector(href);
