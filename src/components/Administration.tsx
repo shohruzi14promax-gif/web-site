@@ -47,7 +47,7 @@ export default function Administration() {
               <article key={person.id ?? `${person.name}-${index}`} className={`group overflow-hidden rounded-[30px] border border-white/80 bg-white/70 p-6 shadow-xl shadow-slate-900/5 backdrop-blur-2xl transition-[opacity,transform,box-shadow] duration-700 hover:-translate-y-1 hover:shadow-2xl ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 80}ms` }}>
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
                   <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl border border-white bg-slate-100 shadow-lg">
-                    {person.image ? <img src={person.image} alt={person.name || t('administration')} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-[#0071e3]/50"><User className="h-12 w-12" /></div>}
+                    {person.image && !person.image.endsWith('/default.jpg') ? <img src={person.image} alt={person.name || t('administration')} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-[#0071e3]/50"><User className="h-12 w-12" /></div>}
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="text-xl font-bold tracking-tight text-[#1d1d1f] group-hover:text-[#0071e3]">{person.name || t('administration')}</h3>
