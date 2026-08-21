@@ -19,9 +19,11 @@ export default function Gallery() {
   const { t } = useI18n();
   const [galleryList, setGalleryList] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const load = async () => {
     setLoading(true);
+    setError(false);
     try {
       if (supabaseConfigured) {
         const cloud = await getSiteData<GalleryItem[]>('galleryList', []);
@@ -32,6 +34,9 @@ export default function Gallery() {
         }
       }
       setGalleryList(loadLocalGallery());
+    } catch {
+      setGalleryList([]);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -56,9 +61,11 @@ export default function Gallery() {
       </div>
 
       {loading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label={t('loading')} aria-busy="true">
+        <div role="status" aria-label={t('loading')} aria-busy="true" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => <div key={index} className="aspect-video animate-pulse rounded-3xl border border-gray-100 bg-white/70 dark:border-white/10 dark:bg-slate-900/70" />)}
         </div>
+      ) : error ? (
+        <div role="alert" className="rounded-3xl border border-red-200 bg-red-50 py-12 text-center text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-300">{t('error')}</div>
       ) : galleryList.length === 0 ? (
         <div className="rounded-3xl border border-gray-100 bg-white py-12 text-center shadow-sm dark:border-white/10 dark:bg-slate-900"><ImageIcon className="mx-auto mb-3 h-10 w-10 text-gray-300" aria-hidden="true" /><p className="text-sm text-gray-500 dark:text-slate-400">{t('empty')}</p></div>
       ) : (
