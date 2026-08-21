@@ -3,8 +3,6 @@ import { historyTimeline } from '@/lib/data';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useI18n } from '../i18n';
 
-const iconMap: Record<string, typeof Target> = { Target, Lightbulb, Heart, Users };
-
 const copy = {
   uz: {
     eyebrow: 'Maktab', title: 'Maktab haqida', source: 'Rasmiy manba',
