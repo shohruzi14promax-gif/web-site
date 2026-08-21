@@ -16,7 +16,7 @@ import SchoolCoinSecure from './components/SchoolCoinSecure';
 import SchoolCoinActivityQuickAdd from './components/SchoolCoinActivityQuickAdd';
 import News from './components/News';
 import Events from './components/Events';
-import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
+import { Settings, Bell, X, Cake, Megaphone } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 import { useI18n } from './i18n';
 
@@ -55,7 +55,6 @@ export default function App() {
         <About />
         <Academic />
         <SchoolLife />
-        <PresidentOffice />
         <Administration />
         <section id="media" className="scroll-mt-24 media-section">
           <News />
@@ -64,13 +63,11 @@ export default function App() {
           <Gallery />
         </section>
         <Innovation />
+        <PresidentOffice />
         <Contact />
       </main>
 
       <Footer />
-
-      <button type="button" onClick={() => setIsSchoolCoinOpen(true)} className="fixed bottom-24 right-4 z-40 flex items-center gap-2 rounded-full bg-amber-500 px-4 py-3 text-white shadow-2xl transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none sm:right-6" title={t('schoolCoin')} aria-label={t('schoolCoin')}><Coins className="h-5 w-5" /><span className="hidden text-sm font-bold sm:inline">{t('schoolCoin')}</span></button>
-      <button type="button" onClick={() => setIsAdminOpen(true)} className="fixed bottom-5 right-4 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-slate-900/90 px-4 py-3 text-white shadow-2xl transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none sm:right-6" title={t('admin')} aria-label={t('admin')}><Settings className="h-5 w-5" /><span className="hidden text-sm font-semibold sm:inline">{t('admin')}</span></button>
 
       {total > 0 && <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none sm:left-6" aria-label={`${t('notifications')}: ${total}`}><Bell className="h-5 w-5" /><span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-[#0071e3]">{total}</span><span className="hidden text-sm font-medium sm:inline">{t('announcements')}</span></button>}
 
