@@ -15,7 +15,6 @@ import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
 import SchoolCoinActivityQuickAdd from './components/SchoolCoinActivityQuickAdd';
 import News from './components/News';
-import Teachers from './components/Teachers';
 import Events from './components/Events';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
@@ -55,7 +54,6 @@ export default function App() {
         <Hero />
         <About />
         <Academic />
-        <Teachers />
         <SchoolLife />
         <PresidentOffice />
         <Administration />
