@@ -34,7 +34,7 @@ const copy = {
 } as const;
 
 export default function About() {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const { ref: goalsRef, isVisible: goalsVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: timelineRef, isVisible: timelineVisible } = useScrollAnimation<HTMLDivElement>();
   const current = copy[locale];
@@ -68,7 +68,7 @@ export default function About() {
 
         <div ref={timelineRef} className="relative mt-24">
           <div className={`mb-12 text-center transition-all duration-1000 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h3 className="text-2xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white sm:text-3xl">{locale === 'uz' ? 'Tarixiy xronologiya' : locale === 'ru' ? 'Историческая хронология' : 'Historical timeline'}</h3>
+            <h3 className="text-2xl font-semibold tracking-tight text-[#1d1d1f] dark:text-white sm:text-3xl">{t('historicalTimeline')}</h3>
             <p className="mt-3 text-base text-[#6e6e73] dark:text-slate-400">{current.source}</p>
           </div>
           <div className="relative mx-auto max-w-3xl">
