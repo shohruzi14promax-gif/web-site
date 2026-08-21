@@ -4,20 +4,24 @@ import { useI18n, type Locale } from '../i18n';
 
 type SectionKey = 'home' | 'about' | 'academic' | 'life' | 'administration' | 'media' | 'contact' | 'president' | 'innovation' | 'gallery';
 
-const links: { href: string; key: SectionKey }[] = [
+type NavLink = { href: string; key: SectionKey };
+
+// Keep the primary navigation aligned with the site's information architecture.
+// Contact is intentionally in "More" rather than competing with the six primary sections.
+const links: NavLink[] = [
   { href: '#hero', key: 'home' },
   { href: '#about', key: 'about' },
   { href: '#academic', key: 'academic' },
   { href: '#school-life', key: 'life' },
   { href: '#administration', key: 'administration' },
-  { href: '#videolessons', key: 'media' },
-  { href: '#contact', key: 'contact' },
+  { href: '#media', key: 'media' },
 ];
 
-const extraLinks: { href: string; key: Exclude<SectionKey, 'home' | 'about' | 'academic' | 'life' | 'administration' | 'media' | 'contact'> }[] = [
+const extraLinks: NavLink[] = [
   { href: '#president', key: 'president' },
   { href: '#innovation', key: 'innovation' },
   { href: '#gallery', key: 'gallery' },
+  { href: '#contact', key: 'contact' },
 ];
 
 const sectionIds = [...links, ...extraLinks].map(link => link.href.slice(1));
@@ -96,7 +100,7 @@ export default function Navbar() {
     window.dispatchEvent(new CustomEvent('open-admin'));
   };
 
-  const navButton = (link: { href: string; key: SectionKey }) => {
+  const navButton = (link: NavLink) => {
     const active = activeSection === link.key;
     return (
       <button
@@ -140,7 +144,7 @@ export default function Navbar() {
         </button>
 
         <div className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
-          {links.slice(0, 6).map(navButton)}
+          {links.map(navButton)}
           <div className="relative">
             <button type="button" onClick={() => setMoreOpen(value => !value)} aria-expanded={moreOpen} className="flex items-center gap-1 rounded-xl px-3 py-2 text-[12px] font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10 xl:text-[13px]">
               {t('more')}<ChevronDown className={`h-4 w-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`} />
@@ -172,7 +176,7 @@ export default function Navbar() {
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-12 max-h-[80vh] w-[min(94vw,390px)] overflow-y-auto rounded-[28px] border border-slate-200/70 bg-white/95 p-3 shadow-[0_24px_70px_rgba(15,23,42,.2)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/95">
-              {links.slice(0, 6).map((link, index) => <button key={link.href} type="button" onClick={() => navigate(link.href)} aria-current={activeSection === link.key ? 'page' : undefined} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10"><span className="w-5 text-xs text-slate-400">{index + 1}</span>{t(link.key)}</button>)}
+              {links.map((link, index) => <button key={link.href} type="button" onClick={() => navigate(link.href)} aria-current={activeSection === link.key ? 'page' : undefined} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10"><span className="w-5 text-xs text-slate-400">{index + 1}</span>{t(link.key)}</button>)}
               <div className="my-2 border-t border-slate-200 dark:border-white/10" />
               {extraLinks.map(link => <button key={link.href} type="button" onClick={() => navigate(link.href)} className="flex w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10">{t(link.key)}</button>)}
               <div className="my-2 border-t border-slate-200 dark:border-white/10" />
