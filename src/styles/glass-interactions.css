@@ -1,0 +1,128 @@
+/* Restrained Apple-style glass interaction layer. Loaded after the production polish styles. */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.64);
+  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.48);
+  --glass-shadow: 0 14px 40px rgba(15, 23, 42, 0.07);
+  --glass-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer components {
+  .glass-surface {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+  }
+
+  .glass-pill {
+    background: rgba(255,255,255,.62);
+    border: 1px solid rgba(255,255,255,.5);
+    box-shadow: 0 6px 18px rgba(15,23,42,.05);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+  }
+
+  .glass-button {
+    background: rgba(255,255,255,.58) !important;
+    border: 1px solid rgba(255,255,255,.5) !important;
+    box-shadow: 0 8px 22px rgba(15,23,42,.055);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    transition: transform .28s var(--glass-ease), background-color .28s ease, border-color .28s ease, box-shadow .28s ease;
+  }
+
+  .glass-button:hover { background: rgba(255,255,255,.76) !important; border-color: rgba(255,255,255,.7) !important; transform: translateY(-1px); }
+  .glass-button:active { transform: scale(.98); }
+}
+
+/* Public interactive cards: solid by default, translucent only during interaction. */
+#academic button.rounded-2xl:hover,
+#school-life article:hover,
+#administration article:hover,
+#innovation article:hover,
+#gallery article:hover,
+#about .apple-card:hover,
+#contact .group:hover {
+  background: var(--glass-bg) !important;
+  border-color: rgba(255,255,255,.62) !important;
+  backdrop-filter: blur(16px) saturate(118%);
+  -webkit-backdrop-filter: blur(16px) saturate(118%);
+}
+
+#academic button.rounded-2xl:active,
+#school-life article:active,
+#administration article:active,
+#innovation article:active,
+#gallery article:active { transform: translateY(-1px) scale(.99); }
+
+#school-life article img,
+#gallery article img { transition: transform .55s var(--glass-ease); }
+#school-life article:hover img,
+#gallery article:hover img { transform: scale(1.03); }
+
+/* Soft tinted administration glass without increasing saturation. */
+#administration article:nth-child(4n+1):hover { background: rgba(239,246,255,.68) !important; }
+#administration article:nth-child(4n+2):hover { background: rgba(245,243,255,.68) !important; }
+#administration article:nth-child(4n+3):hover { background: rgba(255,247,237,.68) !important; }
+#administration article:nth-child(4n+4):hover { background: rgba(240,253,244,.68) !important; }
+#administration article:hover svg { transform: scale(1.03); transition: transform .28s var(--glass-ease); }
+
+/* Timeline cards stay legible; only their hover state gets the glass layer. */
+#about .relative.mx-auto.max-w-3xl .apple-card:hover {
+  background: rgba(255,255,255,.68) !important;
+  backdrop-filter: blur(14px) saturate(115%);
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+}
+
+/* Contact inputs remain solid for readability; focus gets a glass-like blue ring. */
+#contact input:focus,
+#contact textarea:focus {
+  box-shadow: 0 0 0 4px rgba(0,113,227,.10), 0 8px 24px rgba(15,23,42,.035) !important;
+}
+
+/* Small floating controls can use the same restrained surface. */
+body > #root button.fixed:hover {
+  background: rgba(255,255,255,.72) !important;
+  border-color: rgba(255,255,255,.62) !important;
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+}
+
+/* One-shot shine, opt-in through .glass-shine; never runs continuously. */
+.glass-shine { overflow: hidden; }
+.glass-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 -45%;
+  width: 35%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.22), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.glass-shine:hover::after { opacity: 1; animation: glassShine .68s ease-out 1; }
+@keyframes glassShine { from { transform: translateX(0); } to { transform: translateX(420%); } }
+
+/* Modal/panel surfaces where existing components opt into these semantic names. */
+.glass-modal-backdrop { background: rgba(15,23,42,.32); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.glass-modal { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.52); box-shadow: 0 24px 70px rgba(15,23,42,.16); backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%); }
+
+@media (hover: none), (pointer: coarse) {
+  .glass-shine::after { display: none; }
+  #school-life article:hover img,
+  #gallery article:hover img { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-shine:hover::after { animation: none; opacity: 0; }
+  .glass-button,
+  #administration article:hover svg,
+  #school-life article img,
+  #gallery article img { transition: none !important; }
+  #academic button.rounded-2xl:active,
+  #school-life article:active,
+  #administration article:active,
+  #innovation article:active,
+  #gallery article:active { transform: none; }
+}
