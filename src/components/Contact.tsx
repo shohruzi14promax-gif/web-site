@@ -21,7 +21,10 @@ export default function Contact() {
     setName(''); setMessage(''); setSubmitted(true); setSending(false); window.setTimeout(() => setSubmitted(false), 4000);
   };
 
-  const exactMapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(schoolInfo.address)}&output=embed`;
+  // Use the school's map search target rather than geocoding the street string directly.
+  // The previous address-only embed could resolve to the wrong region/zoom.
+  const mapQuery = 'Jizzax shahar 1-son ixtisoslashtirilgan maktab-internati, Jizzax, Uzbekistan';
+  const exactMapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed&z=16`;
 
   return (
     <section id="contact" className="apple-section bg-[#f5f5f7]/60 py-20 dark:bg-slate-950/40">
@@ -38,7 +41,9 @@ export default function Contact() {
             </div>
             <div className="rounded-3xl border border-black/5 bg-white/80 p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/80"><h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#6e6e73]">{t('media')}</h3><div className="flex gap-4"><a href={schoolInfo.social.telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="flex flex-1 flex-col items-center gap-2 rounded-2xl bg-[#f5f5f7] p-3 transition hover:-translate-y-1 dark:bg-slate-800"><Send className="h-5 w-5 text-[#0088cc]" /><span className="text-xs font-medium dark:text-white">Telegram</span></a><a href={schoolInfo.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex flex-1 flex-col items-center gap-2 rounded-2xl bg-[#f5f5f7] p-3 transition hover:-translate-y-1 dark:bg-slate-800"><Instagram className="h-5 w-5 text-[#c13584]" /><span className="text-xs font-medium dark:text-white">Instagram</span></a><a href={schoolInfo.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex flex-1 flex-col items-center gap-2 rounded-2xl bg-[#f5f5f7] p-3 transition hover:-translate-y-1 dark:bg-slate-800"><Facebook className="h-5 w-5 text-[#1877f2]" /><span className="text-xs font-medium dark:text-white">Facebook</span></a></div></div>
           </div>
-          <div className={`h-full min-h-[480px] overflow-hidden rounded-3xl border border-black/5 shadow-sm lg:col-span-6 transition-all duration-700 motion-reduce:transition-none ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}><iframe src={exactMapEmbed} width="100%" height="100%" style={{ minHeight: '520px', border: 0 }} loading="lazy" title={t('place')} /></div>
+          <div className={`h-full min-h-[480px] overflow-hidden rounded-3xl border border-black/5 bg-white shadow-sm lg:col-span-6 transition-all duration-700 motion-reduce:transition-none ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <iframe src={exactMapEmbed} width="100%" height="100%" style={{ minHeight: '520px', border: 0 }} loading="lazy" title={t('place')} referrerPolicy="no-referrer-when-downgrade" />
+          </div>
         </div>
       </div>
     </section>
