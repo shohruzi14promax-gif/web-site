@@ -19,6 +19,7 @@ const sectionLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeHref, setActiveHref] = useState('#hero');
   const [menuOpen, setMenuOpen] = useState(false);
   const [sectionsOpen, setSectionsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -37,11 +38,30 @@ export default function Navbar() {
       if (menuOpen && menuRef.current && !menuRef.current.contains(target)) setMenuOpen(false);
       if (sectionsOpen && sectionsRef.current && !sectionsRef.current.contains(target)) setSectionsOpen(false);
     };
+
+    const sectionIds = [...menuLinks, ...sectionLinks].map(link => link.href.slice(1));
+    const sections = sectionIds
+      .map(id => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+    const observer = sections.length
+      ? new IntersectionObserver(
+          entries => {
+            const visible = entries
+              .filter(entry => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (visible) setActiveHref(`#${visible.target.id}`);
+          },
+          { rootMargin: '-24% 0px -62% 0px', threshold: [0.05, 0.2, 0.5] },
+        )
+      : null;
+
     onScroll();
+    sections.forEach(section => observer?.observe(section));
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('keydown', onKeyDown);
     document.addEventListener('pointerdown', onPointerDown);
     return () => {
+      observer?.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('pointerdown', onPointerDown);
@@ -49,6 +69,7 @@ export default function Navbar() {
   }, [menuOpen, sectionsOpen]);
 
   const handleNavClick = (href: string) => {
+    setActiveHref(href);
     setMenuOpen(false);
     setSectionsOpen(false);
     const element = document.querySelector(href);
@@ -58,13 +79,14 @@ export default function Navbar() {
   };
 
   const navStyle = {
-    '--nav-bg': scrolled ? 'rgba(255, 255, 255, 0.82)' : 'rgba(255, 255, 255, 0.38)',
-    '--nav-shadow': scrolled ? '0 12px 34px rgba(15, 23, 42, 0.065)' : '0 8px 24px rgba(15, 23, 42, 0.035)',
+    '--nav-bg': scrolled ? 'rgba(255, 255, 255, 0.76)' : 'rgba(255, 255, 255, 0.28)',
+    '--nav-border': scrolled ? 'rgba(255, 255, 255, 0.62)' : 'rgba(255, 255, 255, 0.42)',
+    '--nav-shadow': scrolled ? '0 10px 30px rgba(15, 23, 42, 0.055)' : '0 7px 20px rgba(15, 23, 42, 0.022)',
   } as CSSProperties;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-2.5 sm:px-5 sm:pt-3">
-      <nav style={navStyle} className="glass-nav mx-auto flex w-full max-w-5xl items-center justify-between rounded-[22px] px-3 py-2 transition-all duration-300 sm:px-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-2 sm:px-5 sm:pt-2.5">
+      <nav style={navStyle} className="glass-nav mx-auto flex w-full max-w-5xl items-center justify-between rounded-[20px] px-3 py-1.5 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-200 sm:px-4">
         <button type="button" onClick={() => handleNavClick('#hero')} className="group flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-1 transition-transform duration-200 active:scale-[.98]" aria-label="Bosh sahifaga o'tish">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0b1424] text-white shadow-sm transition-all duration-300">
             <GraduationCap className="h-5 w-5" />
@@ -73,17 +95,20 @@ export default function Navbar() {
         </button>
 
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 lg:flex">
-          {menuLinks.map(link => (
-            <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="relative rounded-full px-3 py-2 text-[13px] font-medium text-slate-600 transition-all duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60">
-              {link.label}
-            </button>
-          ))}
+          {menuLinks.map(link => {
+            const isActive = activeHref === link.href;
+            return (
+              <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`relative rounded-[11px] px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60 ${isActive ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={isActive ? 'page' : undefined}>
+                {link.label}
+              </button>
+            );
+          })}
 
           <div ref={sectionsRef} className="relative">
             <button
               type="button"
               onClick={() => setSectionsOpen(value => !value)}
-              className="flex items-center gap-1 rounded-full px-3 py-2 text-[13px] font-medium text-slate-600 transition-all duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60"
+              className={`flex items-center gap-1 rounded-[11px] px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60 ${sectionLinks.some(link => activeHref === link.href) ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`}
               aria-expanded={sectionsOpen}
               aria-haspopup="true"
             >
@@ -93,7 +118,7 @@ export default function Navbar() {
 
             <div className={`absolute right-0 top-[calc(100%+8px)] w-52 origin-top-right rounded-2xl border border-white/70 bg-white/80 p-1.5 shadow-xl shadow-slate-900/10 backdrop-blur-xl transition-all duration-200 ${sectionsOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-1 scale-[.98] opacity-0'}`}>
               {sectionLinks.map(link => (
-                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-[13px] font-medium text-slate-600 transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
+                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-[13px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3] ${activeHref === link.href ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={activeHref === link.href ? 'page' : undefined}>
                   {link.label}
                 </button>
               ))}
@@ -108,7 +133,7 @@ export default function Navbar() {
           <div id="mobile-navigation" className={`glass-nav absolute right-0 top-[52px] w-[min(90vw,360px)] overflow-hidden rounded-[24px] transition-all duration-300 ${menuOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-2 scale-[.98] opacity-0'}`}>
             <div className="p-2.5">
               {menuLinks.map(link => (
-                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-11 w-full items-center rounded-2xl px-4 py-3 text-left text-[15px] font-medium text-slate-700 transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
+                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`flex min-h-11 w-full items-center rounded-2xl px-4 py-3 text-left text-[15px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3] ${activeHref === link.href ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-700'}`} aria-current={activeHref === link.href ? 'page' : undefined}>
                   {link.label}
                 </button>
               ))}
@@ -121,7 +146,7 @@ export default function Navbar() {
                 <div className={`grid transition-[grid-template-rows,opacity] duration-250 ${sectionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                   <div className="min-h-0 overflow-hidden px-2 pb-1">
                     {sectionLinks.map(link => (
-                      <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-600 transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
+                      <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3] ${activeHref === link.href ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={activeHref === link.href ? 'page' : undefined}>
                         {link.label}
                       </button>
                     ))}
