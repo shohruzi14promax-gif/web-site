@@ -8,6 +8,8 @@ import './styles/schoolcoin-animations.css';
 import './styles/ios-polish.css';
 import './styles/accessibility-responsive.css';
 import './styles/luxury-v2.css';
+import './styles/premium-system.css';
+import './styles/premium-sections.css';
 
 // The public portal is intentionally single-language and light-mode only.
 document.documentElement.lang = 'uz';

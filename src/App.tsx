@@ -45,6 +45,26 @@ export default function App() {
     return () => { alive = false; if (channel) void supabase.removeChannel(channel); window.removeEventListener('admin_data_updated', load); window.removeEventListener('storage', load); window.removeEventListener('open-admin', openAdmin); window.removeEventListener('open-schoolcoin', openCoin); };
   }, []);
 
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('main > section:not(#hero)'));
+    if (!sections.length) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      sections.forEach(section => section.classList.add('premium-section-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('premium-section-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.04, rootMargin: '0px 0px -60px 0px' });
+    sections.forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   const total = announcements.length + birthdays.length;
   return (
     <div className="site-shell relative min-h-screen text-slate-900 selection:bg-[#0071e3] selection:text-white">
@@ -69,7 +89,7 @@ export default function App() {
 
       <Footer />
 
-      {total > 0 && <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none sm:left-6" aria-label={`${t('notifications')}: ${total}`}><Bell className="h-5 w-5" /><span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-[#0071e3]">{total}</span><span className="hidden text-sm font-medium sm:inline">{t('announcements')}</span></button>}
+      {total > 0 && <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none" aria-label={`${t('notifications')}: ${total}`}><Bell className="h-5 w-5" /><span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-[#0071e3]">{total}</span><span className="hidden text-sm font-medium sm:inline">{t('announcements')}</span></button>}
 
       {showNotifModal && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-md" role="presentation" onClick={() => setShowNotifModal(false)}><div className="relative w-full max-w-lg overflow-hidden rounded-[28px] bg-white p-5 shadow-2xl sm:p-6" role="dialog" aria-modal="true" aria-labelledby="notification-title" onClick={e => e.stopPropagation()}><div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3"><h3 id="notification-title" className="flex items-center gap-2 text-base font-bold text-slate-900"><Megaphone className="h-5 w-5 text-[#0071e3]" />{t('notifications')}</h3><button type="button" onClick={() => setShowNotifModal(false)} aria-label={t('close')} className="rounded-full p-2 hover:bg-slate-100"><X className="h-5 w-5" /></button></div><div className="max-h-[60vh] space-y-3 overflow-y-auto">{birthdays.map(b => <div key={`b-${b.id}`} className="flex gap-3 rounded-2xl border border-pink-100 bg-pink-50 p-4"><Cake className="h-5 w-5 text-pink-600" /><div><h4 className="text-sm font-semibold text-slate-900">{t('birthdays')}</h4><p className="mt-1 text-xs"><strong>{b.name}</strong> ({b.class})</p></div></div>)}{announcements.map(a => <div key={`a-${a.id}`} className="flex gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4"><Megaphone className="h-5 w-5 text-[#0071e3]" /><div><h4 className="text-sm font-semibold text-slate-900">{a.title}</h4><p className="mt-1 text-xs">{a.content || a.description || a.message}</p><span className="text-[10px] text-slate-400">{a.date}</span></div></div>)}</div></div></div>}
 

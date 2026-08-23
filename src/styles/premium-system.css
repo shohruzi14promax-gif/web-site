@@ -1,0 +1,322 @@
+/* Premium school design system: calm, editorial, iOS-inspired, motion-safe. */
+:root {
+  --premium-ink: #1d1d1f;
+  --premium-muted: #6e6e73;
+  --premium-blue: #0071e3;
+  --premium-blue-soft: rgba(0, 113, 227, .08);
+  --premium-surface: rgba(255, 255, 255, .86);
+  --premium-line: rgba(15, 23, 42, .085);
+  --premium-shadow: 0 18px 50px rgba(15, 23, 42, .075);
+  --premium-shadow-hover: 0 24px 65px rgba(15, 23, 42, .11);
+  --premium-ease: cubic-bezier(.22, 1, .36, 1);
+  --premium-spring: cubic-bezier(.34, 1.18, .64, 1);
+}
+
+/* Keep the visual language consistent across every public section. */
+main > section:not(#hero) {
+  background: #fff;
+  color: var(--premium-ink);
+}
+main > section:not(#hero)::before,
+main > section:not(#hero)::after {
+  background: none !important;
+}
+
+.apple-section,
+.institutional-section {
+  padding-top: clamp(4.5rem, 8vw, 7.5rem);
+  padding-bottom: clamp(4.5rem, 8vw, 7.5rem);
+}
+
+.apple-container,
+.institutional-section,
+#hero > div,
+#hero > .relative {
+  width: min(1180px, calc(100% - 2rem));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.apple-heading,
+.section-title,
+main h1,
+main h2 {
+  color: var(--premium-ink);
+  font-weight: 750;
+  letter-spacing: -.045em;
+  line-height: 1.06;
+}
+
+.apple-subheading,
+.section-copy {
+  color: var(--premium-muted);
+  line-height: 1.7;
+}
+
+/* One quiet card language instead of many competing treatments. */
+.apple-card,
+.institutional-card,
+main article {
+  border-color: var(--premium-line);
+  box-shadow: var(--premium-shadow);
+  transition:
+    transform 320ms var(--premium-ease),
+    box-shadow 320ms var(--premium-ease),
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+main article:hover,
+.apple-card:hover,
+.institutional-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--premium-shadow-hover);
+}
+
+main article img,
+.apple-card img {
+  transition: transform 500ms var(--premium-ease), filter 400ms ease;
+}
+
+main article:hover img,
+.apple-card:hover img {
+  transform: scale(1.025);
+}
+
+/* Prevent the previous global shimmer from making ordinary controls feel flashy. */
+main button:not(:disabled)::after {
+  display: none !important;
+}
+
+main button,
+main a {
+  -webkit-tap-highlight-color: transparent;
+  transition-timing-function: var(--premium-ease);
+}
+
+main button:not(:disabled):active,
+main a:active {
+  transform: translateY(0) scale(.985);
+}
+
+.school-button {
+  min-height: 44px;
+  border-radius: 14px;
+  box-shadow: none;
+  transition:
+    transform 220ms var(--premium-ease),
+    box-shadow 220ms var(--premium-ease),
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.school-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .10);
+}
+
+.school-button:active {
+  transform: scale(.985);
+  box-shadow: none;
+}
+
+/* Hero: cinematic school photography, but restrained and editorial. */
+#hero {
+  min-height: min(860px, 100svh);
+  padding-top: clamp(6.5rem, 12vw, 9rem);
+  padding-bottom: 2rem;
+  background: #020817;
+}
+
+#hero .hero-school-photo {
+  opacity: .5;
+  filter: saturate(.82) contrast(.98);
+  transform-origin: center;
+}
+
+#hero::before {
+  background:
+    linear-gradient(90deg, rgba(2, 8, 23, .96) 0%, rgba(2, 12, 29, .84) 42%, rgba(4, 19, 38, .50) 100%),
+    linear-gradient(180deg, rgba(2, 8, 23, .32), rgba(2, 8, 23, .72));
+}
+
+#hero .hero-reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+}
+
+#hero .hero-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 620ms var(--premium-ease), transform 620ms var(--premium-ease);
+}
+
+#hero .hero-reveal-1.is-visible { transition-delay: 40ms; }
+#hero .hero-reveal-2.is-visible { transition-delay: 130ms; }
+#hero .hero-reveal-3.is-visible { transition-delay: 220ms; }
+#hero .hero-reveal-4.is-visible { transition-delay: 310ms; }
+#hero .hero-reveal-5.is-visible { transition-delay: 390ms; }
+
+#hero h1 {
+  text-shadow: 0 16px 44px rgba(0, 0, 0, .24);
+}
+
+#hero .hero-product-card {
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .075);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  transition: transform 450ms var(--premium-ease), background-color 300ms ease, box-shadow 450ms var(--premium-ease);
+}
+
+#hero .hero-product-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, .095);
+}
+
+/* Stats are a quiet product-style rail rather than six floating cards. */
+#hero .hero-stats {
+  border: 1px solid rgba(255, 255, 255, .13);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, .20);
+}
+
+/* Section headings enter before their grids, preserving hierarchy. */
+.premium-reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 620ms var(--premium-ease), transform 620ms var(--premium-ease);
+}
+
+.premium-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.premium-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity 560ms var(--premium-ease), transform 560ms var(--premium-ease);
+}
+
+.premium-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.premium-stagger.is-visible > *:nth-child(1) { transition-delay: 40ms; }
+.premium-stagger.is-visible > *:nth-child(2) { transition-delay: 100ms; }
+.premium-stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.premium-stagger.is-visible > *:nth-child(4) { transition-delay: 220ms; }
+.premium-stagger.is-visible > *:nth-child(5) { transition-delay: 280ms; }
+.premium-stagger.is-visible > *:nth-child(6) { transition-delay: 340ms; }
+
+/* Refined tabs and filters. */
+#academic button[aria-pressed="true"] {
+  box-shadow: 0 6px 20px rgba(15, 23, 42, .08);
+}
+
+#academic button,
+#administration button {
+  transition: transform 220ms var(--premium-ease), background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+/* Gallery/media imagery should feel physical, not like a carousel effect. */
+.media-section iframe {
+  border-radius: 22px;
+  box-shadow: var(--premium-shadow);
+}
+
+.media-section img,
+#school-life img,
+#contact iframe {
+  transition: transform 500ms var(--premium-ease), filter 400ms ease;
+}
+
+/* Contact form focus states. */
+#contact input:focus,
+#contact textarea:focus,
+#contact select:focus {
+  border-color: rgba(0, 113, 227, .42);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, .08);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+/* Mobile menu and popovers should feel like native surfaces. */
+.ios-mobile-menu,
+.ios-popover {
+  transform-origin: top right;
+  animation: premium-surface-in 280ms var(--premium-spring) both;
+}
+
+@keyframes premium-surface-in {
+  from { opacity: 0; transform: translateY(-7px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Skeleton utility for future data-driven states. */
+.premium-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #eef0f2;
+  border-radius: 12px;
+}
+
+.premium-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .62), transparent);
+  animation: premium-skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes premium-skeleton-shimmer {
+  to { transform: translateX(100%); }
+}
+
+/* 320–430px: preserve breathing room without horizontal overflow. */
+@media (max-width: 430px) {
+  .ios-navbar-wrap { padding-left: 8px; padding-right: 8px; }
+  .ios-navbar { min-height: 54px; border-radius: 17px; }
+  .ios-brand-name { font-size: 13px; }
+  #hero { min-height: 760px; padding-top: 6.5rem; }
+  #hero h1 { font-size: clamp(2.8rem, 14vw, 4.25rem); }
+  #hero .hero-school-photo { opacity: .34; }
+  .apple-section,
+  .institutional-section { padding-top: 4rem; padding-bottom: 4rem; }
+  main article { border-radius: 24px; }
+}
+
+@media (max-width: 360px) {
+  .ios-brand-name { display: none; }
+  #hero { min-height: 720px; }
+  #hero h1 { font-size: 2.8rem; }
+  #hero .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Reduced motion: retain clarity and state changes, remove movement. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  #hero .hero-school-photo { animation: none !important; transform: none !important; }
+  #hero .hero-reveal,
+  #hero .hero-reveal.is-visible,
+  .premium-reveal,
+  .premium-stagger > *,
+  .premium-stagger.is-visible > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  main article:hover,
+  .apple-card:hover,
+  .institutional-card:hover,
+  .school-button:hover,
+  #hero .hero-product-card:hover { transform: none !important; }
+}
