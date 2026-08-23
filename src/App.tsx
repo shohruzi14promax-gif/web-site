@@ -12,7 +12,6 @@ import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
-import SchoolCoinActivityQuickAdd from './components/SchoolCoinActivityQuickAdd';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
@@ -121,7 +120,6 @@ export default function App() {
 
       {isAdminOpen && <CloudAdminPanelPro onClose={() => setIsAdminOpen(false)} />}
       {isSchoolCoinOpen && <SchoolCoinSecure onClose={() => setIsSchoolCoinOpen(false)} initialMode="student" />}
-      {isSchoolCoinOpen && <SchoolCoinActivityQuickAdd />}
     </div>
   );
 }
