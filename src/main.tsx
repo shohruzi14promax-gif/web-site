@@ -11,6 +11,7 @@ import './styles/luxury-v2.css';
 import './styles/premium-system.css';
 import './styles/premium-sections.css';
 import './styles/premium-cursor.css';
+import './styles/premium-glass-system.css';
 
 document.documentElement.lang = 'uz';
 document.documentElement.dir = 'ltr';
