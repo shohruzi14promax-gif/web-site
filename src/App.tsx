@@ -4,10 +4,9 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Academic from './components/Academic';
 import Administration from './components/Administration';
-import VideoLessons from './components/VideoLessons';
 import PresidentOffice from './components/PresidentOffice';
 import Innovation from './components/Innovation';
-import Gallery from './components/Gallery';
+import Media from './components/Media';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
@@ -78,12 +77,11 @@ export default function App() {
         <Hero />
         <About />
         <Academic />
-        <VideoLessons />
         <SchoolLife />
-        <Innovation />
-        <PresidentOffice />
         <Administration />
-        <Gallery />
+        <PresidentOffice />
+        <Innovation />
+        <Media />
         <Contact />
       </main>
       <Footer />
