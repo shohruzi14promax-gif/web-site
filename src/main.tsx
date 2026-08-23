@@ -8,6 +8,17 @@ import './styles/schoolcoin-animations.css';
 import './styles/ios-polish.css';
 import './styles/accessibility-responsive.css';
 
+// The public portal is intentionally single-language and light-mode only.
+document.documentElement.lang = 'uz';
+document.documentElement.dir = 'ltr';
+document.documentElement.classList.remove('dark');
+document.documentElement.dataset.theme = 'light';
+document.documentElement.style.colorScheme = 'light';
+localStorage.removeItem('site_theme');
+localStorage.setItem('site_locale', 'uz');
+localStorage.setItem('locale', 'uz');
+localStorage.setItem('language', 'uz');
+
 const root = document.getElementById('root');
 if (!root) throw new Error('Application root element was not found.');
 
