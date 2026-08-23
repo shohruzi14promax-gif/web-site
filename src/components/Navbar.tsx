@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { GraduationCap, Menu, X } from 'lucide-react';
 
 const menuLinks = [
@@ -29,7 +29,6 @@ export default function Navbar() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('pointerdown', onScroll);
       document.removeEventListener('pointerdown', onPointerDown);
     };
   }, [menuOpen]);
@@ -42,11 +41,16 @@ export default function Navbar() {
     window.scrollTo({ top: y, behavior: 'smooth' });
   };
 
+  const navStyle = {
+    '--nav-bg': scrolled ? 'rgba(255, 255, 255, 0.82)' : 'rgba(255, 255, 255, 0.38)',
+    '--nav-shadow': scrolled ? '0 12px 34px rgba(15, 23, 42, 0.065)' : '0 8px 24px rgba(15, 23, 42, 0.035)',
+  } as CSSProperties;
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-2.5 sm:px-5 sm:pt-3">
-      <nav className={`glass-nav mx-auto flex w-full max-w-5xl items-center justify-between rounded-[22px] px-3 py-2 transition-all duration-300 sm:px-4 ${scrolled ? 'mt-0 bg-white/[0.82]' : 'mt-0 bg-white/[0.38]'}`}>
+      <nav style={navStyle} className="glass-nav mx-auto flex w-full max-w-5xl items-center justify-between rounded-[22px] px-3 py-2 transition-all duration-300 sm:px-4">
         <button type="button" onClick={() => handleNavClick('#hero')} className="group flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-1 transition-transform duration-200 active:scale-[.98]" aria-label="Bosh sahifaga o'tish">
-          <span className={`flex items-center justify-center rounded-xl bg-[#0b1424] text-white shadow-sm transition-all duration-300 ${scrolled ? 'h-9 w-9' : 'h-9 w-9'}`}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0b1424] text-white shadow-sm transition-all duration-300">
             <GraduationCap className="h-5 w-5" />
           </span>
           <span className="hidden text-sm font-bold tracking-tight text-[#0b1424] sm:block">1-IMI Jizzax</span>
