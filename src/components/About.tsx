@@ -48,19 +48,19 @@ export default function About() {
           })}
         </div>
 
-        <div ref={timelineRef} className="relative mt-24">
-          <div className={`mb-12 text-center transition-all duration-1000 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div ref={timelineRef} className="relative mt-20">
+          <div className={`mb-10 text-center transition-all duration-1000 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h3 className="text-2xl font-semibold tracking-tight text-[#1d1d1f] sm:text-3xl">{t('historicalTimeline')}</h3>
             <p className="mt-3 text-base text-[#6e6e73]">{current.source}</p>
           </div>
-          <div className="relative mx-auto max-w-3xl">
-            <div className={`absolute left-4 top-0 h-full w-px origin-top bg-gradient-to-b from-[#0071e3] via-[#0071e3]/30 to-transparent transition-transform duration-[1500ms] motion-reduce:transition-none sm:left-1/2 sm:-translate-x-1/2 ${timelineVisible ? 'scale-y-100' : 'scale-y-0'}`} aria-hidden="true" />
+          <div className="relative mx-auto max-w-4xl">
+            <div className={`absolute left-4 top-0 h-full w-px origin-top bg-gradient-to-b from-[#0071e3] via-[#0071e3]/30 to-transparent transition-transform duration-[1200ms] motion-reduce:transition-none sm:left-1/2 sm:-translate-x-1/2 ${timelineVisible ? 'scale-y-100' : 'scale-y-0'}`} aria-hidden="true" />
             {historyTimeline.map((item, index) => (
-              <div key={index} className={`relative mb-12 flex flex-col gap-4 pl-12 sm:w-1/2 sm:pl-0 ${index % 2 === 0 ? 'sm:pr-12 sm:text-right' : 'sm:ml-auto sm:pl-12'} transition-all duration-800 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: `${index * 150}ms` }}>
-                <div className={`absolute top-1 left-[-0.75rem] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-white shadow-sm ring-2 ring-[#0071e3]/15 sm:left-auto ${index % 2 === 0 ? 'sm:-right-3' : 'sm:-left-3'}`} aria-hidden="true">
+              <div key={index} className={`relative mb-8 flex flex-col gap-3 pl-12 sm:w-1/2 sm:pl-0 ${index % 2 === 0 ? 'sm:pr-10 sm:text-right' : 'sm:ml-auto sm:pl-10'} transition-all duration-700 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${index * 120}ms` }}>
+                <div className={`absolute top-2 left-[-0.75rem] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-white shadow-sm ring-2 ring-[#0071e3]/15 sm:left-auto ${index % 2 === 0 ? 'sm:-right-3' : 'sm:-left-3'}`} aria-hidden="true">
                   <div className="h-2.5 w-2.5 rounded-full bg-[#0071e3]" />
                 </div>
-                <div className="apple-card group !p-6 transition-all duration-500 hover:-translate-y-2 motion-reduce:transition-none">
+                <div className="apple-card group !p-5 transition-all duration-500 hover:-translate-y-1.5 motion-reduce:transition-none sm:p-6">
                   <div className="mb-1 text-2xl font-bold text-[#0071e3]">{item.year}</div>
                   <h4 className="mb-2 text-lg font-semibold text-[#1d1d1f]">{item.title}</h4>
                   <p className="text-sm leading-relaxed text-[#6e6e73]">{item.description}</p>
