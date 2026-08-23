@@ -37,6 +37,7 @@ img { max-width: 100%; height: auto; display: block; }
 @keyframes section-rise { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
 @keyframes soft-float { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -8px, 0); } }
 @keyframes shimmer { 0% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes hero-kenburns { 0% { transform: scale(1.02) translate3d(0, 0, 0); } 100% { transform: scale(1.09) translate3d(-1.2%, -1%, 0); } }
 
 main > section:not(#hero) { position: relative; isolation: isolate; }
 main > section:not(#hero)::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 10% 0%, rgba(37,99,235,.045), transparent 28%), radial-gradient(circle at 90% 50%, rgba(99,102,241,.035), transparent 26%); }
@@ -147,20 +148,7 @@ iframe { max-width: 100%; }
   .institutional-section { padding-left: .75rem; padding-right: .75rem; }
 }
 
-@media (max-width: 360px) {
-  .institutional-section { padding-left: .625rem; padding-right: .625rem; }
-  .section-title { font-size: 1.7rem; }
-  .apple-heading { font-size: 2rem; }
-}
-
-@media (min-width: 1280px) {
-  .institutional-section { max-width: 80rem; }
-}
-
-@media (min-width: 1536px) {
-  .institutional-section { max-width: 88rem; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
