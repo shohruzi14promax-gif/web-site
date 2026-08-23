@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --school-blue: #0071e3;
+  --school-blue: #007aff;
   --school-blue-dark: #005bb8;
-  --ink: #0b1424;
-  --text: #111827;
+  --ink: #0b1220;
+  --text: #0b1220;
   --muted: #64748b;
   --surface: #ffffff;
-  --surface-soft: #f8fafc;
+  --surface-soft: #f7f9fc;
   --surface-muted: #f1f5f9;
   --border: rgba(15, 23, 42, 0.08);
   --border-strong: rgba(15, 23, 42, 0.12);
+  --glass: rgba(255, 255, 255, 0.68);
+  --glass-strong: rgba(255, 255, 255, 0.78);
   --gold: #b8892d;
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-sm: 0 8px 28px rgba(15, 23, 42, 0.055);
@@ -34,8 +36,8 @@ button, input, textarea, select { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
-::selection { background: rgba(0, 113, 227, .16); color: var(--ink); }
-:focus-visible { outline: 3px solid rgba(0, 113, 227, .28); outline-offset: 3px; }
+::selection { background: rgba(0, 122, 255, .16); color: var(--ink); }
+:focus-visible { outline: 3px solid rgba(0, 122, 255, .28); outline-offset: 3px; }
 
 ::-webkit-scrollbar { width: 9px; height: 9px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -43,69 +45,53 @@ a { color: inherit; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(71, 85, 105, .55); }
 
 @layer components {
-  .apple-section {
-    position: relative;
-    padding: 88px 20px;
-  }
-
+  .apple-section { position: relative; padding: 88px 20px; }
   .apple-container { width: 100%; max-width: 1180px; margin: 0 auto; }
 
   .apple-card {
     position: relative;
     overflow: hidden;
-    background: rgba(255,255,255,.92) !important;
-    border: 1px solid var(--border) !important;
+    background: var(--glass) !important;
+    border: 1px solid rgba(255,255,255,.72) !important;
     border-radius: 24px !important;
     color: var(--text) !important;
     box-shadow: var(--shadow-sm);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
     transform: translateZ(0);
-    transition: transform .34s var(--ease-premium), box-shadow .34s var(--ease-premium), border-color .34s ease, background-color .34s ease;
+    transition: transform .28s var(--ease-premium), box-shadow .28s var(--ease-premium), border-color .24s ease, background-color .24s ease;
   }
 
   .apple-card::before { content: none; }
-  .apple-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(0,113,227,.14) !important; background: #fff !important; }
+  .apple-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(15,23,42,.10) !important; background: var(--glass-strong) !important; }
 
-  .apple-heading {
-    margin: 0;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.04;
-    font-weight: 750;
-    letter-spacing: -.045em;
-    color: var(--ink);
+  .glass-surface, .glass-card, .glass-panel {
+    background: rgba(255,255,255,.68);
+    border: 1px solid rgba(255,255,255,.68);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
   }
+  .glass-pill, .glass-button { border: 1px solid rgba(255,255,255,.68); background: rgba(255,255,255,.68); box-shadow: 0 8px 24px rgba(15,23,42,.07); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); transition: transform .22s var(--ease-premium), background-color .22s ease, box-shadow .22s ease; }
+  .glass-button:hover, .glass-pill:hover { transform: translateY(-1px); background: rgba(255,255,255,.78); box-shadow: 0 12px 30px rgba(15,23,42,.09); }
+  .glass-nav { background: rgba(255,255,255,.68); border: 1px solid rgba(255,255,255,.72); box-shadow: 0 12px 35px rgba(15,23,42,.07); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+  .glass-modal { background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.72); box-shadow: var(--shadow-lg); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); }
 
+  .apple-heading { margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.04; font-weight: 750; letter-spacing: -.045em; color: var(--ink); }
   .apple-subheading { color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.16rem); line-height: 1.7; }
   .apple-eyebrow { color: var(--school-blue); font-size: .72rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
 
-  .apple-button {
-    position: relative;
-    display: inline-flex;
-    min-height: 48px;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    border-radius: 999px;
-    background: var(--school-blue);
-    padding: 13px 24px;
-    color: #fff;
-    font-size: .96rem;
-    font-weight: 650;
-    box-shadow: 0 10px 26px rgba(0,113,227,.20);
-    transition: transform .22s var(--ease-premium), box-shadow .28s ease, background-color .2s ease;
-  }
-  .apple-button:hover { transform: translateY(-1px); background: #006bd6; box-shadow: 0 14px 34px rgba(0,113,227,.24); }
+  .apple-button { position: relative; display: inline-flex; min-height: 48px; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: var(--school-blue); padding: 13px 24px; color: #fff; font-size: .96rem; font-weight: 650; box-shadow: 0 10px 26px rgba(0,122,255,.20); transition: transform .22s var(--ease-premium), box-shadow .28s ease, background-color .2s ease; }
+  .apple-button:hover { transform: translateY(-1px); background: #006bd6; box-shadow: 0 14px 34px rgba(0,122,255,.24); }
   .apple-button:active { transform: scale(.98); }
 }
 
 .text-gradient-blue { color: var(--school-blue); background: none; -webkit-background-clip: initial; background-clip: initial; }
 
-/* Public landing page surfaces */
 #about, #academic, #school-life, #administration, #innovation, #gallery, #contact { isolation: isolate; }
-#about > .pointer-events-none, #administration > .pointer-events-none, #innovation > .pointer-events-none { opacity: .22; }
+#about > .pointer-events-none, #administration > .pointer-events-none, #innovation > .pointer-events-none { opacity: .12; }
 #about, #academic, #administration, #innovation { background: transparent; }
-#school-life { background: #f8fafc; }
+#school-life { background: #f7f9fc; }
 #contact { background: #f1f5f9 !important; }
 
 #academic .rounded-\[28px\], #academic .rounded-\[30px\], #academic .rounded-3xl,
@@ -120,43 +106,46 @@ a { color: inherit; }
 
 #gallery { max-width: 1180px; margin: 0 auto; }
 #gallery > div:first-child { align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
-#gallery article { background: #fff !important; border-radius: 24px !important; }
-#gallery article img { transition: transform .55s var(--ease-premium); }
-#gallery article:hover img { transform: scale(1.035); }
+#gallery article { background: rgba(255,255,255,.68) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+#gallery article img { transition: transform .5s var(--ease-premium); }
+#gallery article:hover img { transform: scale(1.03); }
 
-#school-life article { background: #fff !important; border-radius: 24px !important; }
+#school-life article { background: rgba(255,255,255,.68) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
 #school-life article img { border-radius: 18px; }
+#school-life article:hover { background: rgba(255,255,255,.76) !important; }
+#administration article { background: rgba(255,255,255,.70) !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
 
-#contact input, #contact textarea { border-color: var(--border-strong) !important; background: #f8fafc !important; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
-#contact input:focus, #contact textarea:focus { border-color: rgba(0,113,227,.55) !important; box-shadow: 0 0 0 4px rgba(0,113,227,.08); background: #fff !important; }
+#contact .group, #contact form { background: rgba(255,255,255,.68) !important; backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); border-radius: 24px !important; }
+#contact input, #contact textarea { border-color: var(--border-strong) !important; background: rgba(248,250,252,.92) !important; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+#contact input:focus, #contact textarea:focus { border-color: rgba(0,122,255,.55) !important; box-shadow: 0 0 0 4px rgba(0,122,255,.08); background: #fff !important; }
 #contact iframe { border-radius: 24px; background: #e2e8f0; }
 
-/* Hero */
 #hero { min-height: 760px; padding-top: 120px; }
 #hero .hero-content { position: relative; z-index: 2; }
 
-/* Motion primitives */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
 @keyframes imageReveal { from { opacity: 0; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
 @keyframes textReveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes floatSoft { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@keyframes glowSoft { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
-@keyframes liquidSoft { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(8px,-8px,0); } }
 
 .animate-fade-up { animation: fadeUp .6s var(--ease-premium) both; }
 .animate-fade-in { animation: fadeIn .5s ease both; }
 .animate-scale-in { animation: scaleIn .5s var(--ease-premium) both; }
-.animate-float { animation: floatSoft 5s ease-in-out infinite; }
-.animate-glow { animation: glowSoft 2.8s ease-in-out infinite; }
-.animate-liquid { animation: liquidSoft 8s ease-in-out infinite; }
 .animate-pulse { animation-duration: 2.6s; }
 
-/* Timeline */
+/* Keep public motion finite and calm. Decorative float/glow/liquid effects are intentionally disabled. */
+.animate-float, .animate-glow, .animate-liquid { animation: none !important; }
+#about .apple-eyebrow.animate-pulse { animation: none !important; }
+
+/* Timeline geometry: one consistent rail and identical nodes. */
 #about .relative.mx-auto.max-w-3xl { max-width: 900px; }
 #about .relative.mx-auto.max-w-3xl > .absolute { opacity: .7; }
-#about .relative.mx-auto.max-w-3xl .apple-card { border-radius: 20px !important; padding: 22px !important; }
+#about .relative.mx-auto.max-w-3xl .apple-card { border-radius: 22px !important; padding: 22px !important; }
+#about .relative.mx-auto.max-w-3xl .apple-card:hover { transform: translateY(-3px) !important; }
+#about .relative.mx-auto.max-w-3xl .apple-card + * { }
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] { transform: none !important; }
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"]:hover { transform: none !important; }
 
 /* Administration color restraint */
 #administration article:nth-child(4n+1) .h-28 { background: #eff6ff; }
@@ -167,10 +156,8 @@ a { color: inherit; }
 /* Floating controls */
 body > #root button.fixed { transition: transform .22s var(--ease-premium), box-shadow .25s ease, background-color .25s ease; }
 
-/* SchoolCoin / Admin modal polish without changing behavior */
 .schoolcoin-shell, .admin-shell { border-radius: 28px; }
 
-/* Prevent accidental oversized gaps on small screens */
 @media (max-width: 767px) {
   .apple-section { padding: 68px 16px; }
   #hero { min-height: 720px; padding-top: 104px; }
@@ -178,6 +165,7 @@ body > #root button.fixed { transition: transform .22s var(--ease-premium), box-
   #hero .stats-grid { margin-top: 48px; }
   #about .relative.mx-auto.max-w-3xl { margin-top: 56px; }
   #contact iframe { min-height: 360px !important; }
+  .glass-surface, .glass-card, .glass-panel, .glass-nav { background: rgba(255,255,255,.76); }
 }
 
 @media (min-width: 768px) { .apple-section { padding: 96px 32px; } }
@@ -186,5 +174,5 @@ body > #root button.fixed { transition: transform .22s var(--ease-premium), box-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .apple-card:hover, #school-life article:hover, #administration article:hover, #gallery article:hover { transform: none; }
+  .apple-card:hover, #school-life article:hover, #administration article:hover, #gallery article:hover { transform: none !important; }
 }
