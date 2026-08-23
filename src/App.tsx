@@ -78,11 +78,11 @@ export default function App() {
         <Hero />
         <About />
         <Academic />
-        <SchoolLife />
-        <Administration />
         <VideoLessons />
-        <PresidentOffice />
+        <SchoolLife />
         <Innovation />
+        <PresidentOffice />
+        <Administration />
         <Gallery />
         <Contact />
       </main>
