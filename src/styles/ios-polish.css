@@ -13,7 +13,6 @@ html { text-rendering: optimizeLegibility; }
 body { overflow-x: hidden; }
 button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 
-/* Calm, finite, compositor-friendly motion. */
 .apple-card,
 .apple-button,
 .navbar-glass,
@@ -25,22 +24,9 @@ section [class*="rounded-[30px]"] {
 
 .apple-card,
 .apple-button { touch-action: manipulation; }
-
-.apple-card {
-  transition-property: transform, opacity, box-shadow, border-color, background-color;
-  transition-duration: 300ms;
-}
-
-.apple-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--ios-shadow-hover);
-}
-
-.apple-button {
-  transition-property: transform, opacity, box-shadow, background-color;
-  transition-duration: 220ms;
-}
-
+.apple-card { transition-property: transform, opacity, box-shadow, border-color, background-color; transition-duration: 300ms; }
+.apple-card:hover { transform: translateY(-3px); box-shadow: var(--ios-shadow-hover); }
+.apple-button { transition-property: transform, opacity, box-shadow, background-color; transition-duration: 220ms; }
 .apple-button:hover { transform: translateY(-1px); }
 .apple-button:active { transform: scale(0.98); }
 
@@ -52,7 +38,6 @@ section [class*="rounded-[30px]"] {
 
 /* Unified public card language. */
 #academic button.rounded-2xl,
-#academic > div > div.rounded-\\[28px\\],
 #school-life article,
 #administration article,
 #innovation article,
@@ -92,7 +77,6 @@ section [class*="rounded-[30px]"] {
   letter-spacing: -0.045em;
   color: var(--ios-ink);
 }
-
 #school-life h2,
 #administration h2,
 #innovation h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
@@ -107,13 +91,8 @@ section [class*="rounded-[30px]"] {
   line-height: 1.7;
 }
 
-/* School Life / Gallery headings are editorially centered with the rest of the page. */
 #school-life > div > div:first-child,
-#gallery > div > div:first-child {
-  margin-inline: auto;
-  text-align: center;
-}
-
+#gallery > div > div:first-child { margin-inline: auto; text-align: center; }
 #school-life > div > div:first-child { max-width: 760px; }
 #gallery > div > div:first-child {
   align-items: center !important;
@@ -122,7 +101,6 @@ section [class*="rounded-[30px]"] {
   border-bottom: 0 !important;
   padding-bottom: 0 !important;
 }
-
 #gallery > div > div:first-child > div:last-child { margin-top: 4px; }
 #school-life h2, #gallery h2 { letter-spacing: -0.045em; }
 
@@ -137,12 +115,9 @@ section [class*="rounded-[30px]"] {
 #hero .hero-content { isolation: isolate; }
 #hero .stats-grid { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 
-/* Timeline: one exact geometry model on desktop and mobile. */
+/* Timeline: exact central-line geometry on desktop and one vertical rail on mobile. */
 #about .relative.mx-auto.max-w-3xl { max-width: 980px; }
-#about .relative.mx-auto.max-w-3xl > .absolute {
-  width: 2px;
-  opacity: .45;
-}
+#about .relative.mx-auto.max-w-3xl > .absolute { width: 2px; opacity: .45; }
 #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] { margin-bottom: 42px; }
 #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] {
   width: 28px;
@@ -150,24 +125,12 @@ section [class*="rounded-[30px]"] {
   border-width: 0;
   box-shadow: 0 0 0 6px rgba(0,113,227,.08), 0 5px 16px rgba(15,23,42,.10);
 }
-#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] > div {
-  width: 8px;
-  height: 8px;
-  box-shadow: none;
-}
-/* The line is centered on the card split; dots are centered exactly on that line. */
-#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"]:nth-child(2) > div[class*="absolute"] {
-  right: -14px !important;
-}
-#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"]:nth-child(3) > div[class*="absolute"] {
-  left: -14px !important;
-}
-#about .relative.mx-auto.max-w-3xl .apple-card {
-  border-radius: 20px !important;
-  padding: 22px !important;
-  box-shadow: var(--ios-shadow) !important;
-}
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] > div { width: 8px; height: 8px; box-shadow: none; }
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"]:nth-child(2) > div[class*="absolute"] { right: -14px !important; }
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"]:nth-child(3) > div[class*="absolute"] { left: -14px !important; }
+#about .relative.mx-auto.max-w-3xl .apple-card { border-radius: 20px !important; padding: 22px !important; box-shadow: var(--ios-shadow) !important; }
 #about .relative.mx-auto.max-w-3xl .apple-card:hover { transform: translateY(-2px); }
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"]:hover { transform: none !important; }
 
 /* Academic: restrained accent palette and selected-state hierarchy. */
 #academic .inline-flex.rounded-full { box-shadow: 0 8px 24px rgba(15,23,42,.05); }
@@ -194,12 +157,9 @@ section [class*="rounded-[30px]"] {
 #gallery article:hover img,
 #school-life article:hover img,
 #innovation article:hover img { transform: scale(1.03); }
-#gallery article .bg-gradient-to-t {
-  opacity: 1;
-  background: linear-gradient(to top, rgba(11,20,36,.48), transparent) !important;
-}
+#gallery article .bg-gradient-to-t { opacity: 1; background: linear-gradient(to top, rgba(11,20,36,.48), transparent) !important; }
 
-/* Innovation: remove dashboard-like glass; preserve the existing hierarchy. */
+/* Innovation: remove dashboard-like glass while preserving the existing layout. */
 #innovation > div > div[class*="grid-cols-2"] > div {
   border-radius: 22px !important;
   background: rgba(255,255,255,.86) !important;
@@ -270,16 +230,8 @@ img, iframe { max-width: 100%; }
   #hero > div:first-child > div:nth-child(2) { background-image: linear-gradient(90deg, rgba(255,255,255,.78), rgba(255,255,255,.34)) !important; }
   #about .relative.mx-auto.max-w-3xl { margin-top: 56px; }
   #about .relative.mx-auto.max-w-3xl > .absolute { left: 14px !important; transform: none !important; }
-  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] {
-    padding-left: 54px !important;
-    width: 100% !important;
-    margin-bottom: 30px;
-  }
-  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] {
-    left: 0 !important;
-    right: auto !important;
-    top: 2px;
-  }
+  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] { padding-left: 54px !important; width: 100% !important; margin-bottom: 30px; }
+  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] { left: 0 !important; right: auto !important; top: 2px; }
   #about .relative.mx-auto.max-w-3xl .apple-card { padding: 20px !important; }
   #gallery > div > div:first-child { margin-bottom: 28px; }
   #contact iframe { min-height: 380px !important; }
