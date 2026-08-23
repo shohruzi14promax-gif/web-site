@@ -7,14 +7,13 @@ const menuLinks = [
   { href: '#academic', label: 'Akademik' },
   { href: '#school-life', label: 'Maktab hayoti' },
   { href: '#administration', label: 'Ma’muriyat' },
-  { href: '#gallery', label: 'Media' },
   { href: '#contact', label: 'Aloqa' },
 ];
 
 const sectionLinks = [
-  { href: '#gallery', label: 'Galereya' },
+  { href: '#president', label: 'Prezident Devoni' },
   { href: '#innovation', label: 'Innovatsiya' },
-  { href: '#president', label: 'Prezident devoni' },
+  { href: '#media', label: 'Media' },
 ];
 
 export default function Navbar() {
@@ -95,7 +94,7 @@ export default function Navbar() {
         </button>
 
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 lg:flex">
-          {menuLinks.map(link => {
+          {menuLinks.slice(0, 5).map(link => {
             const isActive = activeHref === link.href;
             return (
               <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`relative rounded-[11px] px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60 ${isActive ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={isActive ? 'page' : undefined}>
@@ -124,6 +123,10 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+
+          <button type="button" onClick={() => handleNavClick('#contact')} className={`relative rounded-[11px] px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60 ${activeHref === '#contact' ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={activeHref === '#contact' ? 'page' : undefined}>
+            Aloqa
+          </button>
         </div>
 
         <div ref={menuRef} className="relative lg:hidden">
@@ -143,7 +146,7 @@ export default function Navbar() {
                   <span>Yana</span>
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${sectionsOpen ? 'rotate-180' : ''}`} />
                 </button>
-                <div className={`grid transition-[grid-template-rows,opacity] duration-250 ${sectionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                <div className={`grid transition-[grid-template-rows,opacity] duration-300 ${sectionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                   <div className="min-h-0 overflow-hidden px-2 pb-1">
                     {sectionLinks.map(link => (
                       <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className={`flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3] ${activeHref === link.href ? 'bg-[#0071e3]/[0.10] text-[#0068d7]' : 'text-slate-600'}`} aria-current={activeHref === link.href ? 'page' : undefined}>
