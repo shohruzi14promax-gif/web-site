@@ -87,7 +87,7 @@ export default function Navbar() {
               aria-expanded={sectionsOpen}
               aria-haspopup="true"
             >
-              Bo‘limlar
+              Yana
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${sectionsOpen ? 'rotate-180' : ''}`} />
             </button>
 
@@ -115,7 +115,7 @@ export default function Navbar() {
 
               <div className="my-1.5 border-t border-slate-200/60 pt-1.5">
                 <button type="button" onClick={() => setSectionsOpen(value => !value)} className="flex min-h-11 w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-semibold text-slate-800 transition-colors duration-200 hover:bg-[#0071e3]/[0.07]" aria-expanded={sectionsOpen}>
-                  <span>Bo‘limlar</span>
+                  <span>Yana</span>
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${sectionsOpen ? 'rotate-180' : ''}`} />
                 </button>
                 <div className={`grid transition-[grid-template-rows,opacity] duration-250 ${sectionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
