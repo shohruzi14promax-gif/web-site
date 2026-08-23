@@ -7,35 +7,32 @@
   --glass-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@layer components {
-  .glass-surface {
-    background: var(--glass-bg) !important;
-    border: 1px solid var(--glass-border) !important;
-    box-shadow: var(--glass-shadow);
-    backdrop-filter: blur(18px) saturate(120%);
-    -webkit-backdrop-filter: blur(18px) saturate(120%);
-  }
-
-  .glass-pill {
-    background: rgba(255,255,255,.62);
-    border: 1px solid rgba(255,255,255,.5);
-    box-shadow: 0 6px 18px rgba(15,23,42,.05);
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-  }
-
-  .glass-button {
-    background: rgba(255,255,255,.58) !important;
-    border: 1px solid rgba(255,255,255,.5) !important;
-    box-shadow: 0 8px 22px rgba(15,23,42,.055);
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    transition: transform .28s var(--glass-ease), background-color .28s ease, border-color .28s ease, box-shadow .28s ease;
-  }
-
-  .glass-button:hover { background: rgba(255,255,255,.76) !important; border-color: rgba(255,255,255,.7) !important; transform: translateY(-1px); }
-  .glass-button:active { transform: scale(.98); }
+.glass-surface {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
 }
+
+.glass-pill {
+  background: rgba(255,255,255,.62);
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 6px 18px rgba(15,23,42,.05);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+}
+
+.glass-button {
+  background: rgba(255,255,255,.58) !important;
+  border: 1px solid rgba(255,255,255,.5) !important;
+  box-shadow: 0 8px 22px rgba(15,23,42,.055);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  transition: transform .28s var(--glass-ease), background-color .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+.glass-button:hover { background: rgba(255,255,255,.76) !important; border-color: rgba(255,255,255,.7) !important; transform: translateY(-1px); }
+.glass-button:active { transform: scale(.98); }
 
 /* Public interactive cards: solid by default, translucent only during interaction. */
 #academic button.rounded-2xl:hover,
@@ -104,7 +101,6 @@ body > #root button.fixed:hover {
 .glass-shine:hover::after { opacity: 1; animation: glassShine .68s ease-out 1; }
 @keyframes glassShine { from { transform: translateX(0); } to { transform: translateX(420%); } }
 
-/* Modal/panel surfaces where existing components opt into these semantic names. */
 .glass-modal-backdrop { background: rgba(15,23,42,.32); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .glass-modal { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.52); box-shadow: 0 24px 70px rgba(15,23,42,.16); backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%); }
 
