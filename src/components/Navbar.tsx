@@ -7,7 +7,7 @@ const menuLinks = [
   { href: '#academic', label: 'Akademik' },
   { href: '#school-life', label: 'Maktab hayoti' },
   { href: '#administration', label: 'Ma’muriyat' },
-  { href: '#media', label: 'Media' },
+  { href: '#gallery', label: 'Media' },
   { href: '#contact', label: 'Aloqa' },
 ];
 

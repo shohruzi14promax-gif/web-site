@@ -13,32 +13,23 @@
   --surface-muted: #f1f5f9;
   --border: rgba(15, 23, 42, 0.08);
   --border-strong: rgba(15, 23, 42, 0.12);
-  --glass: rgba(255, 255, 255, 0.68);
-  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-strong: rgba(255, 255, 255, 0.82);
   --gold: #b8892d;
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-sm: 0 8px 28px rgba(15, 23, 42, 0.055);
   --shadow-md: 0 16px 44px rgba(15, 23, 42, 0.075);
   --shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.10);
 }
-
 * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
-body {
-  margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: var(--text);
-  background: var(--surface-soft);
-  letter-spacing: -0.012em;
-  overflow-x: hidden;
-}
+body { margin: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--surface-soft); letter-spacing: -0.012em; overflow-x: hidden; }
 button, input, textarea, select { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 ::selection { background: rgba(0, 122, 255, .16); color: var(--ink); }
 :focus-visible { outline: 3px solid rgba(0, 122, 255, .28); outline-offset: 3px; }
-
 ::-webkit-scrollbar { width: 9px; height: 9px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
 ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, .42); border-radius: 999px; border: 2px solid #f1f5f9; }
@@ -47,132 +38,128 @@ a { color: inherit; }
 @layer components {
   .apple-section { position: relative; padding: 88px 20px; }
   .apple-container { width: 100%; max-width: 1180px; margin: 0 auto; }
-
-  .apple-card {
-    position: relative;
-    overflow: hidden;
-    background: var(--glass) !important;
-    border: 1px solid rgba(255,255,255,.72) !important;
-    border-radius: 24px !important;
-    color: var(--text) !important;
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    transform: translateZ(0);
-    transition: transform .28s var(--ease-premium), box-shadow .28s var(--ease-premium), border-color .24s ease, background-color .24s ease;
-  }
-
+  .apple-card { position: relative; overflow: hidden; background: var(--glass) !important; border: 1px solid rgba(255,255,255,.72) !important; border-radius: 24px !important; color: var(--text) !important; box-shadow: var(--shadow-sm); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); transform: translateZ(0); transition: transform .28s var(--ease-premium), box-shadow .28s var(--ease-premium), border-color .24s ease, background-color .24s ease; }
   .apple-card::before { content: none; }
   .apple-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(15,23,42,.10) !important; background: var(--glass-strong) !important; }
-
-  .glass-surface, .glass-card, .glass-panel {
-    background: rgba(255,255,255,.68);
-    border: 1px solid rgba(255,255,255,.68);
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-  }
-  .glass-pill, .glass-button { border: 1px solid rgba(255,255,255,.68); background: rgba(255,255,255,.68); box-shadow: 0 8px 24px rgba(15,23,42,.07); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); transition: transform .22s var(--ease-premium), background-color .22s ease, box-shadow .22s ease; }
-  .glass-button:hover, .glass-pill:hover { transform: translateY(-1px); background: rgba(255,255,255,.78); box-shadow: 0 12px 30px rgba(15,23,42,.09); }
-  .glass-nav { background: rgba(255,255,255,.68); border: 1px solid rgba(255,255,255,.72); box-shadow: 0 12px 35px rgba(15,23,42,.07); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
-  .glass-modal { background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.72); box-shadow: var(--shadow-lg); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); }
-
+  .glass-surface, .glass-card, .glass-panel { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.68); box-shadow: var(--shadow-sm); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+  .glass-pill, .glass-button { border: 1px solid rgba(255,255,255,.68); background: rgba(255,255,255,.72); box-shadow: 0 8px 24px rgba(15,23,42,.07); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); transition: transform .22s var(--ease-premium), background-color .22s ease, box-shadow .22s ease; }
+  .glass-button:hover, .glass-pill:hover { transform: translateY(-1px); background: rgba(255,255,255,.82); box-shadow: 0 12px 30px rgba(15,23,42,.09); }
+  .glass-nav { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.72); box-shadow: 0 12px 35px rgba(15,23,42,.07); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+  .glass-modal { background: rgba(255,255,255,.82); border: 1px solid rgba(255,255,255,.72); box-shadow: var(--shadow-lg); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); }
   .apple-heading { margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.04; font-weight: 750; letter-spacing: -.045em; color: var(--ink); }
   .apple-subheading { color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.16rem); line-height: 1.7; }
   .apple-eyebrow { color: var(--school-blue); font-size: .72rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
-
   .apple-button { position: relative; display: inline-flex; min-height: 48px; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: var(--school-blue); padding: 13px 24px; color: #fff; font-size: .96rem; font-weight: 650; box-shadow: 0 10px 26px rgba(0,122,255,.20); transition: transform .22s var(--ease-premium), box-shadow .28s ease, background-color .2s ease; }
   .apple-button:hover { transform: translateY(-1px); background: #006bd6; box-shadow: 0 14px 34px rgba(0,122,255,.24); }
   .apple-button:active { transform: scale(.98); }
 }
-
 .text-gradient-blue { color: var(--school-blue); background: none; -webkit-background-clip: initial; background-clip: initial; }
-
 #about, #academic, #school-life, #administration, #innovation, #gallery, #contact { isolation: isolate; }
 #about > .pointer-events-none, #administration > .pointer-events-none, #innovation > .pointer-events-none { opacity: .12; }
 #about, #academic, #administration, #innovation { background: transparent; }
 #school-life { background: #f7f9fc; }
 #contact { background: #f1f5f9 !important; }
-
-#academic .rounded-\[28px\], #academic .rounded-\[30px\], #academic .rounded-3xl,
-#school-life article, #administration article, #innovation article, #contact .group,
-#contact form, #contact iframe, #gallery article {
-  border-color: var(--border) !important;
-  box-shadow: var(--shadow-sm) !important;
-}
-
+#academic .rounded-\[28px\], #academic .rounded-\[30px\], #academic .rounded-3xl, #school-life article, #administration article, #innovation article, #contact .group, #contact form, #contact iframe { border-color: var(--border) !important; box-shadow: var(--shadow-sm) !important; }
+#gallery article { border-color: var(--border) !important; box-shadow: var(--shadow-sm) !important; }
 #academic button.rounded-2xl, #school-life article, #administration article, #gallery article { transition: transform .3s var(--ease-premium), box-shadow .3s var(--ease-premium), border-color .25s ease, background-color .25s ease; }
 #academic button.rounded-2xl:hover, #school-life article:hover, #administration article:hover, #gallery article:hover { transform: translateY(-3px); box-shadow: var(--shadow-md) !important; }
-
 #gallery { max-width: 1180px; margin: 0 auto; }
 #gallery > div:first-child { align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
-#gallery article { background: rgba(255,255,255,.68) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+#gallery article { background: rgba(255,255,255,.72) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
 #gallery article img { transition: transform .5s var(--ease-premium); }
 #gallery article:hover img { transform: scale(1.03); }
-
-#school-life article { background: rgba(255,255,255,.68) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+#school-life article { background: rgba(255,255,255,.72) !important; border-radius: 24px !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
 #school-life article img { border-radius: 18px; }
-#school-life article:hover { background: rgba(255,255,255,.76) !important; }
-#administration article { background: rgba(255,255,255,.70) !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
-
-#contact .group, #contact form { background: rgba(255,255,255,.68) !important; backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); border-radius: 24px !important; }
+#school-life article:hover { background: rgba(255,255,255,.80) !important; }
+#administration article { background: rgba(255,255,255,.74) !important; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); }
+#contact .group, #contact form { background: rgba(255,255,255,.72) !important; backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); border-radius: 24px !important; }
 #contact input, #contact textarea { border-color: var(--border-strong) !important; background: rgba(248,250,252,.92) !important; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
 #contact input:focus, #contact textarea:focus { border-color: rgba(0,122,255,.55) !important; box-shadow: 0 0 0 4px rgba(0,122,255,.08); background: #fff !important; }
 #contact iframe { border-radius: 24px; background: #e2e8f0; }
-
 #hero { min-height: 760px; padding-top: 120px; }
 #hero .hero-content { position: relative; z-index: 2; }
-
 @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
 @keyframes imageReveal { from { opacity: 0; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
 @keyframes textReveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
 .animate-fade-up { animation: fadeUp .6s var(--ease-premium) both; }
 .animate-fade-in { animation: fadeIn .5s ease both; }
 .animate-scale-in { animation: scaleIn .5s var(--ease-premium) both; }
 .animate-pulse { animation-duration: 2.6s; }
-
-/* Keep public motion finite and calm. Decorative float/glow/liquid effects are intentionally disabled. */
 .animate-float, .animate-glow, .animate-liquid { animation: none !important; }
 #about .apple-eyebrow.animate-pulse { animation: none !important; }
-
-/* Timeline geometry: one consistent rail and identical nodes. */
 #about .relative.mx-auto.max-w-3xl { max-width: 900px; }
 #about .relative.mx-auto.max-w-3xl > .absolute { opacity: .7; }
 #about .relative.mx-auto.max-w-3xl .apple-card { border-radius: 22px !important; padding: 22px !important; }
 #about .relative.mx-auto.max-w-3xl .apple-card:hover { transform: translateY(-3px) !important; }
-#about .relative.mx-auto.max-w-3xl .apple-card + * { }
-#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] { transform: none !important; }
-#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"]:hover { transform: none !important; }
-
-/* Administration color restraint */
 #administration article:nth-child(4n+1) .h-28 { background: #eff6ff; }
 #administration article:nth-child(4n+2) .h-28 { background: #f5f3ff; }
 #administration article:nth-child(4n+3) .h-28 { background: #fff7ed; }
 #administration article:nth-child(4n+4) .h-28 { background: #f0fdf4; }
-
-/* Floating controls */
 body > #root button.fixed { transition: transform .22s var(--ease-premium), box-shadow .25s ease, background-color .25s ease; }
-
 .schoolcoin-shell, .admin-shell { border-radius: 28px; }
+
+/* FINAL POLISH: calmer hierarchy, consistent surfaces, and safe small-screen composition. */
+#hero > div:first-child > div:nth-child(2) { background: linear-gradient(90deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.34) 54%, rgba(255,255,255,.06) 100%) !important; }
+#hero > div:first-child > div:nth-child(3) { background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(248,250,252,.78) 100%) !important; }
+#hero .max-w-4xl.grid { border-radius: 26px; background: rgba(255,255,255,.80); border-color: rgba(255,255,255,.78); box-shadow: var(--shadow-md); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); }
+#hero .max-w-4xl.grid > div { min-width: 0; }
+#about .group:hover { transform: translateY(-3px) !important; }
+#about .group:hover [class*="group-hover:scale"], #about .group:hover [class*="group-hover:rotate"] { transform: none !important; }
+#about .group > .absolute.bottom-0 { opacity: 0; transition: opacity .22s ease; }
+#about .group:hover > .absolute.bottom-0 { opacity: 1; }
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] { margin-bottom: 40px; }
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] { width: 30px !important; height: 30px !important; box-shadow: 0 6px 18px rgba(15,23,42,.08) !important; }
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] > div { width: 8px !important; height: 8px !important; box-shadow: none !important; }
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"]:hover { transform: none !important; }
+#school-life h2, #administration h2, #president h2 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.04; font-weight: 750; letter-spacing: -.045em; color: var(--ink); }
+#school-life article, #administration article { border-radius: 24px !important; }
+#academic .rounded-2xl.border.p-4 { border-radius: 22px !important; background: rgba(255,255,255,.72); }
+#academic .rounded-2xl.border.p-4[class*="border-[#0071e3]"] { border-color: rgba(0,122,255,.32) !important; background: rgba(0,122,255,.06) !important; box-shadow: 0 10px 28px rgba(0,122,255,.08) !important; }
+#academic [class*="bg-emerald"], #academic [class*="bg-orange"], #academic [class*="bg-red"] { background-color: rgba(0,122,255,.08) !important; color: var(--school-blue) !important; }
+#president .group { border-radius: 24px; }
+#president .group:hover { transform: translateY(-3px) !important; box-shadow: var(--shadow-md) !important; }
+#president .group:hover [class*="group-hover:scale"], #president .group:hover [class*="group-hover:rotate"] { transform: none !important; }
+#president .group a:hover { transform: translateY(-1px) !important; }
+#gallery article { border-radius: 24px !important; }
+#gallery article:hover { transform: translateY(-3px) !important; }
+#gallery article img { transform-origin: center; }
+#contact .group, #contact form { min-width: 0; }
+#contact input, #contact textarea { min-width: 0; }
+#contact a, #contact button { min-height: 44px; }
+#contact iframe { min-height: 420px !important; }
 
 @media (max-width: 767px) {
   .apple-section { padding: 68px 16px; }
   #hero { min-height: 720px; padding-top: 104px; }
   #hero h1 { font-size: clamp(2.65rem, 13vw, 4.5rem) !important; line-height: .98 !important; }
-  #hero .stats-grid { margin-top: 48px; }
+  #hero .max-w-4xl.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 40px; gap: 0; padding: 8px; }
+  #hero .max-w-4xl.grid > div { padding: 8px 4px; }
+  #hero .max-w-4xl.grid > div > div:first-child { font-size: clamp(1.65rem, 8vw, 2rem); }
+  #hero .max-w-4xl.grid > div > div:last-child { line-height: 1.25; overflow-wrap: anywhere; }
   #about .relative.mx-auto.max-w-3xl { margin-top: 56px; }
   #contact iframe { min-height: 360px !important; }
-  .glass-surface, .glass-card, .glass-panel, .glass-nav { background: rgba(255,255,255,.76); }
+  #contact .lg\:col-span-6 { min-width: 0; }
+  #school-life h2, #administration h2, #president h2 { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; }
+  #school-life > div > div:first-child, #administration > div > div:first-child { margin-bottom: 40px; }
+  body > #root button.fixed { bottom: max(16px, env(safe-area-inset-bottom)); }
+  body > #root button.fixed.bottom-24 { bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
-
+@media (max-width: 374px) {
+  .apple-section { padding-left: 14px; padding-right: 14px; }
+  #hero h1 { font-size: clamp(2.45rem, 13vw, 3.4rem) !important; }
+  #hero .max-w-4xl.grid > div > div:last-child { font-size: .68rem; }
+  #mobile-navigation { width: min(88vw, 340px); }
+  #contact iframe { min-height: 340px !important; }
+}
 @media (min-width: 768px) { .apple-section { padding: 96px 32px; } }
 @media (min-width: 1024px) { .apple-section { padding: 112px 40px; } }
-
+@media (hover: hover) and (pointer: fine) {
+  #school-life article:hover, #administration article:hover { transform: translateY(-3px) !important; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .apple-card:hover, #school-life article:hover, #administration article:hover, #gallery article:hover { transform: none !important; }
+  .apple-card:hover, #school-life article:hover, #administration article:hover, #gallery article:hover, #about .group:hover, #president .group:hover { transform: none !important; }
 }
