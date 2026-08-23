@@ -34,7 +34,6 @@ img { max-width: 100%; height: auto; display: block; }
   .school-button { @apply inline-flex min-h-11 items-center justify-center rounded-xl px-5 text-sm font-bold transition-all duration-300 active:scale-[.98]; }
 }
 
-/* Premium page motion: subtle, fast, and disabled automatically for reduced-motion users. */
 @keyframes section-rise { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
 @keyframes soft-float { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -8px, 0); } }
 @keyframes shimmer { 0% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
@@ -47,76 +46,67 @@ main > section + section { border-top: 1px solid rgba(226,232,240,.65); }
 .institutional-card:hover { transform: translateY(-4px); box-shadow: 0 22px 55px rgba(11,31,58,.12); }
 .school-button:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,.18); }
 
-/* Better empty states instead of visually broken/blank sections. */
 .media-section iframe { border: 0; border-radius: 18px; box-shadow: 0 18px 45px rgba(11,31,58,.12); }
 
-html.dark body { color: #e2e8f0; background: #020617; }
-html.dark .site-shell { color: #e2e8f0; background-color: #020617 !important; }
-html.dark .site-shell .institutional-card { background: #0f172a; border-color: rgba(148,163,184,.2); }
-html.dark .site-shell .text-slate-950,
-html.dark .site-shell .text-slate-900,
-html.dark .site-shell .text-slate-800,
-html.dark .site-shell .text-slate-700 { color: #f1f5f9; }
-html.dark .site-shell .text-slate-600,
-html.dark .site-shell .text-slate-500 { color: #94a3b8; }
-html.dark .site-shell .border-slate-200,
-html.dark .site-shell .border-slate-200\/70,
-html.dark .site-shell .border-slate-100 { border-color: rgba(148,163,184,.2); }
-html.dark .site-shell input,
-html.dark .site-shell textarea,
-html.dark .site-shell select { background: #0f172a; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
-html.dark main > section + section { border-color: rgba(148,163,184,.12); }
-
-html.dark [class*="z-[120]"] { color: #e2e8f0; }
-html.dark [class*="z-[120]"] > div { background-color: #0f172a; color: #e2e8f0; }
-html.dark [class*="z-[120]"] .bg-white,
-html.dark [class*="z-[120]"] .bg-white\/95,
-html.dark [class*="z-[120]"] .bg-slate-50 { background-color: #0f172a; }
-html.dark [class*="z-[120]"] .bg-slate-100 { background-color: #1e293b; }
-html.dark [class*="z-[120]"] .text-slate-950,
-html.dark [class*="z-[120]"] .text-slate-900,
-html.dark [class*="z-[120]"] .text-slate-800,
-html.dark [class*="z-[120]"] .text-slate-700 { color: #f1f5f9; }
-html.dark [class*="z-[120]"] .text-slate-600,
-html.dark [class*="z-[120]"] .text-slate-500,
-html.dark [class*="z-[120]"] .text-slate-400 { color: #94a3b8; }
-html.dark [class*="z-[120]"] .border-slate-200,
-html.dark [class*="z-[120]"] .border-slate-100 { border-color: rgba(148,163,184,.2); }
-html.dark [class*="z-[120]"] input,
-html.dark [class*="z-[120]"] textarea,
-html.dark [class*="z-[120]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
-
-html.dark [class*="z-[100]"] { color: #e2e8f0; }
-html.dark [class*="z-[100]"] > div { color: #e2e8f0; }
-html.dark [class*="z-[100]"] .bg-white { background-color: #0f172a; }
-html.dark [class*="z-[100]"] .bg-slate-100 { background-color: #020617; }
-html.dark [class*="z-[100]"] .text-slate-950,
-html.dark [class*="z-[100]"] .text-slate-900,
-html.dark [class*="z-[100]"] .text-slate-800,
-html.dark [class*="z-[100]"] .text-slate-700 { color: #f1f5f9; }
-html.dark [class*="z-[100]"] .text-slate-600,
-html.dark [class*="z-[100]"] .text-slate-500 { color: #94a3b8; }
-html.dark [class*="z-[100]"] input,
-html.dark [class*="z-[100]"] textarea,
-html.dark [class*="z-[100]"] select { background: #111827; color: #e2e8f0; border-color: rgba(148,163,184,.25); }
+/* Premium light-only navigation. */
+.ios-navbar-wrap { position: fixed; inset: 0 0 auto; z-index: 100; padding: 12px 16px 0; pointer-events: none; }
+.ios-navbar { pointer-events: auto; position: relative; display: flex; align-items: center; gap: 8px; width: min(1180px, 100%); min-height: 62px; margin: 0 auto; padding: 8px 10px; border: 1px solid rgba(255,255,255,.75); border-radius: 22px; background: rgba(255,255,255,.88); box-shadow: 0 12px 36px rgba(11,31,58,.10); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); transition: box-shadow .35s var(--transition-smooth), border-color .35s var(--transition-smooth), transform .35s var(--transition-smooth); }
+.ios-navbar.is-scrolled { border-color: rgba(226,232,240,.95); box-shadow: 0 16px 44px rgba(11,31,58,.14); }
+.ios-brand { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; border: 0; background: transparent; padding: 6px 9px; color: var(--school-navy); cursor: pointer; }
+.ios-brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg,#0b1f3a,#2563eb); color: white; box-shadow: 0 7px 18px rgba(37,99,235,.22); }
+.ios-brand-mark svg { width: 20px; height: 20px; }
+.ios-brand-name { font-size: .9rem; font-weight: 850; letter-spacing: -.02em; white-space: nowrap; }
+.ios-desktop-nav { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.ios-nav-link { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 40px; padding: 0 11px; border: 0; border-radius: 12px; background: transparent; color: #64748b; font-size: .78rem; font-weight: 750; cursor: pointer; transition: color .25s ease, background .25s ease, transform .25s var(--transition-smooth); }
+.ios-nav-link:hover, .ios-nav-link.is-open { color: #0b1f3a; background: #f1f5f9; }
+.ios-nav-link.is-active { color: #0b1f3a; }
+.ios-nav-active-pill { position: absolute; bottom: 5px; left: 50%; width: 18px; height: 3px; border-radius: 99px; background: #2563eb; transform: translateX(-50%); }
+.ios-actions { margin-left: 4px; }
+.ios-coin-button { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 13px; border: 1px solid #dbeafe; border-radius: 12px; background: #eff6ff; color: #1d4ed8; font-size: .78rem; font-weight: 800; cursor: pointer; transition: transform .25s var(--transition-smooth), background .25s ease, box-shadow .25s ease; }
+.ios-coin-button:hover { transform: translateY(-1px); background: #dbeafe; box-shadow: 0 8px 20px rgba(37,99,235,.12); }
+.ios-more-wrap { position: relative; }
+.ios-popover { position: absolute; top: calc(100% + 10px); right: 0; width: 210px; padding: 9px; border: 1px solid #e2e8f0; border-radius: 16px; background: rgba(255,255,255,.97); box-shadow: 0 18px 50px rgba(11,31,58,.16); backdrop-filter: blur(18px); }
+.ios-popover p { margin: 5px 9px 7px; color: #94a3b8; font-size: .65rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+.ios-popover button { display: flex; width: 100%; align-items: center; min-height: 38px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #334155; font-size: .8rem; font-weight: 700; text-align: left; cursor: pointer; }
+.ios-popover button:hover { background: #f1f5f9; color: #0b1f3a; }
+.ios-menu-strong { color: #1d4ed8 !important; }
+.ios-menu-divider { height: 1px; margin: 7px 3px; background: #e2e8f0; }
+.ios-mobile-actions, .ios-mobile-menu { display: none; }
 
 ::selection { background: #2563eb; color: white; }
 [class*="z-[100]"] table { width: 100%; min-width: 0; }
-[class*="z-[100]"] th,
-[class*="z-[100]"] td { overflow-wrap: anywhere; }
+[class*="z-[100]"] th, [class*="z-[100]"] td { overflow-wrap: anywhere; }
 main, section, article, header, footer { min-width: 0; }
 button, a { touch-action: manipulation; }
 textarea { max-width: 100%; }
 iframe { max-width: 100%; }
 
-@media (max-width: 1024px) {
-  .apple-container, .institutional-section { width: 100%; }
-  table { max-width: 100%; }
+@media (max-width: 1100px) {
+  .ios-desktop-nav { display: none; }
+  .ios-actions { margin-left: auto; }
+  .ios-mobile-actions { display: block; }
+  .ios-menu-button { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 12px; background: #f1f5f9; color: #0b1f3a; cursor: pointer; }
+  .ios-menu-button svg { width: 20px; height: 20px; }
+  .ios-mobile-menu { position: absolute; top: calc(100% + 10px); left: 0; right: 0; display: block; padding: 10px; border: 1px solid #e2e8f0; border-radius: 18px; background: rgba(255,255,255,.98); box-shadow: 0 20px 55px rgba(11,31,58,.16); backdrop-filter: blur(18px); }
+  .ios-mobile-links { display: grid; gap: 3px; }
+  .ios-mobile-links button { display: flex; align-items: center; gap: 12px; min-height: 43px; width: 100%; padding: 0 12px; border: 0; border-radius: 11px; background: transparent; color: #475569; font-size: .86rem; font-weight: 750; text-align: left; cursor: pointer; }
+  .ios-mobile-links button span { width: 22px; color: #94a3b8; font-size: .68rem; }
+  .ios-mobile-links button:hover, .ios-mobile-links button.is-active { background: #f1f5f9; color: #0b1f3a; }
+  .ios-mobile-links button.is-active span { color: #2563eb; }
+  .ios-mobile-coin, .ios-mobile-admin { width: 100%; min-height: 45px; margin-top: 6px; border: 0; border-radius: 12px; font-weight: 800; cursor: pointer; }
+  .ios-mobile-coin { background: #eff6ff; color: #1d4ed8; }
+  .ios-mobile-admin { background: #0b1f3a; color: white; }
 }
 
 @media (max-width: 768px) {
   html { scroll-padding-top: 76px; }
-  .apple-container, .institutional-section { padding-left: 1rem; padding-right: 1rem; }
+  .ios-navbar-wrap { padding: 8px 10px 0; }
+  .ios-navbar { min-height: 56px; border-radius: 18px; }
+  .ios-brand-name { font-size: .84rem; }
+  .ios-brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+  .ios-actions { display: none; }
+  .ios-mobile-actions { margin-left: auto; }
+  .institutional-section { padding-left: 1rem; padding-right: 1rem; }
   .section-title { font-size: clamp(1.75rem, 7vw, 2.5rem); line-height: 1.08; }
   .section-copy { font-size: .975rem; line-height: 1.65; }
   [class*="grid-cols-"] { min-width: 0; }
@@ -135,26 +125,26 @@ iframe { max-width: 100%; }
 
 @media (max-width: 430px) {
   .apple-section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
-  .apple-container, .institutional-section { padding-left: .875rem; padding-right: .875rem; }
+  .institutional-section { padding-left: .875rem; padding-right: .875rem; }
   .school-button { width: 100%; }
 }
 
 @media (max-width: 390px) {
   body { font-size: 15px; }
-  .apple-container, .institutional-section { padding-left: .75rem; padding-right: .75rem; }
+  .institutional-section { padding-left: .75rem; padding-right: .75rem; }
 }
 
 @media (max-width: 360px) {
-  .apple-container, .institutional-section { padding-left: .625rem; padding-right: .625rem; }
+  .institutional-section { padding-left: .625rem; padding-right: .625rem; }
   .section-title { font-size: 1.7rem; }
 }
 
 @media (min-width: 1280px) {
-  .apple-container, .institutional-section { max-width: 80rem; }
+  .institutional-section { max-width: 80rem; }
 }
 
 @media (min-width: 1536px) {
-  .apple-container, .institutional-section { max-width: 88rem; }
+  .institutional-section { max-width: 88rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
