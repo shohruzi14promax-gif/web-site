@@ -10,8 +10,8 @@ import './styles/accessibility-responsive.css';
 import './styles/luxury-v2.css';
 import './styles/premium-system.css';
 import './styles/premium-sections.css';
+import './styles/premium-cursor.css';
 
-// The public portal is intentionally single-language and light-mode only.
 document.documentElement.lang = 'uz';
 document.documentElement.dir = 'ltr';
 document.documentElement.classList.remove('dark');
