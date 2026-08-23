@@ -63,7 +63,7 @@ export default function Navbar() {
           <button type="button" onClick={() => setMenuOpen(value => !value)} className="glass-button flex h-11 w-11 items-center justify-center rounded-full text-slate-800" aria-label={menuOpen ? 'Menyuni yopish' : 'Menyuni ochish'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <div id="mobile-navigation" className={`glass-nav absolute right-0 top-[52px] w-[min(90vw,360px)] overflow-hidden rounded-[24px] transition-all duration-220 ${menuOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-2 scale-[.98] opacity-0'}`}>
+          <div id="mobile-navigation" className={`glass-nav absolute right-0 top-[52px] w-[min(90vw,360px)] overflow-hidden rounded-[24px] transition-all duration-200 ${menuOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-2 scale-[.98] opacity-0'}`}>
             <div className="p-2.5">
               {menuLinks.map(link => (
                 <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-11 w-full items-center rounded-2xl px-4 py-3 text-left text-[15px] font-medium text-slate-700 transition-colors hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
