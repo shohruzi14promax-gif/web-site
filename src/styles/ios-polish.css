@@ -1,8 +1,21 @@
-/* iOS-inspired motion polish: compositor-friendly, subtle, touch-first. */
+/* Second-pass iOS / premium school polish. UI only; no business logic. */
 :root {
-  --ios-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ios-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ios-blue: #0071e3;
+  --ios-ink: #0b1424;
+  --ios-muted: #64748b;
+  --ios-border: rgba(15, 23, 42, 0.085);
+  --ios-shadow: 0 10px 32px rgba(15, 23, 42, 0.055);
+  --ios-shadow-hover: 0 18px 46px rgba(15, 23, 42, 0.085);
 }
 
+html { text-rendering: optimizeLegibility; }
+body { overflow-x: hidden; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+
+/* --------------------------------------------------
+   Motion: calm, finite, compositor-friendly
+-------------------------------------------------- */
 .apple-card,
 .apple-button,
 .navbar-glass,
@@ -14,17 +27,17 @@ section [class*="rounded-[30px]"] {
 
 .apple-card,
 .apple-button {
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
 .apple-card {
-  transition-property: transform, opacity, box-shadow;
-  transition-duration: 420ms;
+  transition-property: transform, opacity, box-shadow, border-color, background-color;
+  transition-duration: 300ms;
 }
 
 .apple-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: var(--ios-shadow-hover);
 }
 
 .apple-button {
@@ -32,46 +45,332 @@ section [class*="rounded-[30px]"] {
   transition-duration: 220ms;
 }
 
-.apple-button:hover {
-  transform: translateY(-1px);
+.apple-button:hover { transform: translateY(-1px); }
+.apple-button:active { transform: scale(0.98); }
+
+/* Remove continuous decorative loops from the previous pass. */
+.animate-float,
+.animate-glow,
+.animate-liquid,
+.animate-pulse {
+  animation: none !important;
 }
 
-.apple-button:active {
-  transform: scale(0.975);
+/* --------------------------------------------------
+   Unified public card language
+-------------------------------------------------- */
+#academic button.rounded-2xl,
+#academic > div > div.rounded-\[28px\],
+#school-life article,
+#administration article,
+#innovation article,
+#gallery article,
+#contact .group,
+#contact form {
+  border: 1px solid var(--ios-border) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--ios-shadow) !important;
 }
 
-/* Keep scroll-driven entrances light: only compositor-friendly properties. */
-@keyframes iosFadeUp {
-  from { opacity: 0; transform: translate3d(0, 14px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+#school-life article:hover,
+#administration article:hover,
+#innovation article:hover,
+#gallery article:hover,
+#academic button.rounded-2xl:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ios-shadow-hover) !important;
 }
 
-.ios-fade-up {
-  animation: iosFadeUp 560ms var(--ios-ease) both;
+#school-life article img,
+#innovation article img,
+#gallery article img,
+#administration article img {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------
+   Consistent section rhythm and headings
+-------------------------------------------------- */
+#school-life > div > div:first-child,
+#gallery > div > div:first-child {
+  margin-inline: auto;
+  text-align: center;
+}
+
+#school-life > div > div:first-child { max-width: 760px; }
+#gallery > div > div:first-child {
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column;
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#gallery > div > div:first-child > div:last-child {
+  margin-top: 4px;
+}
+
+#school-life h2,
+#gallery h2 {
+  letter-spacing: -0.045em;
+}
+
+/* --------------------------------------------------
+   Hero: keep the building photograph visually present
+-------------------------------------------------- */
+#hero > div:first-child > div:first-child {
+  background-position: center 38% !important;
+}
+
+#hero > div:first-child > div:nth-child(2) {
+  background-image: linear-gradient(90deg, rgba(255,255,255,.70) 0%, rgba(255,255,255,.40) 48%, rgba(255,255,255,.08) 100%) !important;
+}
+
+#hero > div:first-child > div:nth-child(3) {
+  background-image: linear-gradient(180deg, rgba(248,250,252,0) 55%, rgba(248,250,252,.88) 100%) !important;
+}
+
+#hero .hero-content { isolation: isolate; }
+#hero .stats-grid { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+/* --------------------------------------------------
+   Timeline: one geometry model on desktop and mobile
+-------------------------------------------------- */
+#about .relative.mx-auto.max-w-3xl {
+  max-width: 980px;
+}
+
+#about .relative.mx-auto.max-w-3xl > .absolute {
+  width: 2px;
+  opacity: .45;
+}
+
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] {
+  margin-bottom: 42px;
+}
+
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] {
+  width: 28px;
+  height: 28px;
+  border-width: 0;
+  box-shadow: 0 0 0 6px rgba(0,113,227,.08), 0 5px 16px rgba(15,23,42,.10);
+}
+
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] > div {
+  width: 8px;
+  height: 8px;
+  box-shadow: none;
+}
+
+#about .relative.mx-auto.max-w-3xl .apple-card {
+  border-radius: 20px !important;
+  padding: 22px !important;
+  box-shadow: var(--ios-shadow) !important;
+}
+
+#about .relative.mx-auto.max-w-3xl .apple-card:hover {
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------
+   Academic: editorial, calm, selected-state hierarchy
+-------------------------------------------------- */
+#academic .inline-flex.rounded-full {
+  box-shadow: 0 8px 24px rgba(15,23,42,.05);
+}
+
+#academic button.rounded-2xl {
+  background: #fff !important;
+}
+
+#academic button.rounded-2xl[aria-pressed="true"],
+#academic button.rounded-2xl:focus-visible {
+  border-color: rgba(0,113,227,.28) !important;
+}
+
+#academic img {
+  transition: transform 300ms var(--ios-ease);
+}
+
+#academic .apple-card:hover img { transform: scale(1.025); }
+
+/* --------------------------------------------------
+   Administration: soft category tints, never neon
+-------------------------------------------------- */
+#administration article:nth-child(4n+1) .h-28 { background: #eff6ff !important; }
+#administration article:nth-child(4n+2) .h-28 { background: #f5f3ff !important; }
+#administration article:nth-child(4n+3) .h-28 { background: #f0fdf4 !important; }
+#administration article:nth-child(4n+4) .h-28 { background: #fff7ed !important; }
+
+/* --------------------------------------------------
+   Gallery / School Life: editorial image treatment
+-------------------------------------------------- */
+#gallery article,
+#school-life article {
+  overflow: hidden;
+}
+
+#gallery article img,
+#school-life article img,
+#innovation article img {
+  transition: transform 450ms var(--ios-ease);
+}
+
+#gallery article:hover img,
+#school-life article:hover img,
+#innovation article:hover img {
+  transform: scale(1.03);
+}
+
+#gallery article .bg-gradient-to-t {
+  opacity: 1;
+  background: linear-gradient(to top, rgba(11,20,36,.48), transparent) !important;
+}
+
+/* --------------------------------------------------
+   Statistics: stronger hierarchy, less dashboard feel
+-------------------------------------------------- */
+#innovation > div > div[class*="grid-cols-2"] > div {
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.86) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#innovation > div > div[class*="grid-cols-2"] > div > div:first-child {
+  letter-spacing: -0.055em;
+}
+
+/* --------------------------------------------------
+   Contact: consistent controls and map container
+-------------------------------------------------- */
+#contact input,
+#contact textarea {
+  min-height: 48px;
+  border-radius: 16px !important;
+  border-color: rgba(15,23,42,.12) !important;
+  background: #f8fafc !important;
+}
+
+#contact textarea { min-height: 110px; }
+#contact input:focus,
+#contact textarea:focus {
+  border-color: rgba(0,113,227,.52) !important;
+  box-shadow: 0 0 0 4px rgba(0,113,227,.08) !important;
+  background: #fff !important;
+}
+
+#contact iframe {
+  border-radius: 24px;
+  border: 1px solid var(--ios-border) !important;
+}
+
+/* --------------------------------------------------
+   Navbar: transparent at top, floating glass on scroll
+-------------------------------------------------- */
+header.fixed nav {
+  transition: margin-top 260ms var(--ios-ease), padding 260ms var(--ios-ease), border-color 260ms ease, background-color 260ms ease, box-shadow 260ms ease;
+}
+
+header.fixed nav button {
+  min-height: 44px;
+}
+
+/* --------------------------------------------------
+   Admin / Student / SchoolCoin surfaces
+   Target existing wrappers only; no behavior changes.
+-------------------------------------------------- */
+[class~="z-[100]"],
+[class~="z-[120]"] {
+  background: rgba(11,20,36,.58) !important;
+}
+
+[class~="z-[100]"] > div,
+[class~="z-[120]"] > div {
+  border: 1px solid rgba(255,255,255,.70);
+  box-shadow: 0 30px 90px rgba(15,23,42,.22);
+}
+
+[class~="z-[100]"] input,
+[class~="z-[100]"] textarea,
+[class~="z-[100]"] select,
+[class~="z-[120]"] input,
+[class~="z-[120]"] textarea,
+[class~="z-[120]"] select {
+  min-height: 46px;
+  border-radius: 14px;
+  border-color: rgba(15,23,42,.12);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+[class~="z-[100]"] input:focus,
+[class~="z-[100]"] textarea:focus,
+[class~="z-[100]"] select:focus,
+[class~="z-[120]"] input:focus,
+[class~="z-[120]"] textarea:focus,
+[class~="z-[120]"] select:focus {
+  border-color: rgba(0,113,227,.50);
+  box-shadow: 0 0 0 4px rgba(0,113,227,.08);
+}
+
+[class~="z-[120]"] article,
+[class~="z-[100]"] article {
+  border-radius: 20px;
+  border-color: rgba(15,23,42,.08);
+  box-shadow: 0 8px 24px rgba(15,23,42,.045);
+}
+
+/* --------------------------------------------------
+   Responsive QA guards
+-------------------------------------------------- */
+*, *::before, *::after { min-width: 0; }
+img, iframe { max-width: 100%; }
+
+@media (max-width: 767px) {
+  .apple-section { padding-top: 72px; padding-bottom: 72px; }
+  #hero { min-height: 720px; }
+  #hero > div:first-child > div:first-child { background-position: 58% 35% !important; }
+  #hero > div:first-child > div:nth-child(2) { background-image: linear-gradient(90deg, rgba(255,255,255,.78), rgba(255,255,255,.34)) !important; }
+  #about .relative.mx-auto.max-w-3xl > .absolute { left: 14px !important; transform: none !important; }
+  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] { padding-left: 54px !important; width: 100% !important; margin-bottom: 30px; }
+  #about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] > div[class*="absolute"] { left: 0 !important; right: auto !important; top: 2px; }
+  #about .relative.mx-auto.max-w-3xl .apple-card { padding: 20px !important; }
+  #gallery > div > div:first-child { margin-bottom: 28px; }
+  #contact iframe { min-height: 380px !important; }
+  [class~="z-[100]"], [class~="z-[120]"] { padding: 12px !important; }
+  [class~="z-[100]"] > div, [class~="z-[120]"] > div { border-radius: 24px; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  #about .relative.mx-auto.max-w-3xl { max-width: 860px; }
 }
 
 @media (hover: none) and (pointer: coarse) {
   .apple-card:hover,
-  .apple-button:hover { transform: none; }
-
-  .apple-card:active {
-    transform: scale(0.99);
-  }
-}
-
-@media (max-width: 640px) {
-  .ios-fade-up { animation-duration: 460ms; }
-
-  /* Avoid heavy visual work on smaller screens while keeping the motion. */
-  .backdrop-blur-2xl,
-  .backdrop-blur-xl {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
+  .apple-button:hover,
+  #school-life article:hover,
+  #administration article:hover,
+  #innovation article:hover,
+  #gallery article:hover { transform: none; }
+  #gallery article:hover img,
+  #school-life article:hover img,
+  #innovation article:hover img { transform: none; }
+  .apple-card:active { transform: scale(.99); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ios-fade-up { animation: none !important; }
-  .apple-card,
-  .apple-button { transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .apple-card:hover,
+  .apple-button:hover,
+  #school-life article:hover,
+  #administration article:hover,
+  #innovation article:hover,
+  #gallery article:hover { transform: none !important; }
 }
