@@ -1,5 +1,20 @@
 import { GraduationCap, Send, Youtube, Instagram, Facebook } from 'lucide-react';
-import { schoolInfo, navLinks } from '@/lib/data';
+import { schoolInfo } from '@/lib/data';
+
+const primaryLinks = [
+  { label: 'Bosh sahifa', href: '#hero' },
+  { label: 'Maktab haqida', href: '#about' },
+  { label: 'Akademik', href: '#academic' },
+  { label: 'Maktab hayoti', href: '#school-life' },
+  { label: 'Ma’muriyat', href: '#administration' },
+  { label: 'Aloqa', href: '#contact' },
+];
+
+const secondaryLinks = [
+  { label: 'Prezident Devoni', href: '#president' },
+  { label: 'Innovatsiya', href: '#innovation' },
+  { label: 'Media', href: '#media' },
+];
 
 export default function Footer() {
   const handleNavClick = (href: string) => {
@@ -21,33 +36,29 @@ export default function Footer() {
               {schoolInfo.name}. 2022-yildan beri sifatli ta'lim berib kelyapmiz.
             </p>
             <div className="mt-5 flex gap-3">
-              <a href={schoolInfo.social.telegram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Send className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.youtube} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Youtube className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Instagram className="h-4 w-4 text-white" />
-              </a>
-              <a href={schoolInfo.social.facebook} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20">
-                <Facebook className="h-4 w-4 text-white" />
-              </a>
+              <a href={schoolInfo.social.telegram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20"><Send className="h-4 w-4 text-white" /></a>
+              <a href={schoolInfo.social.youtube} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20"><Youtube className="h-4 w-4 text-white" /></a>
+              <a href={schoolInfo.social.instagram} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20"><Instagram className="h-4 w-4 text-white" /></a>
+              <a href={schoolInfo.social.facebook} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 transition-colors hover:bg-white/20"><Facebook className="h-4 w-4 text-white" /></a>
             </div>
           </div>
 
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Bo'limlar</h4>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-left text-sm text-white/60 transition-colors hover:text-white"
-                >
-                  {link.label}
-                </button>
-              ))}
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Asosiy</h4>
+              <div className="mt-4 space-y-2">
+                {primaryLinks.map(link => (
+                  <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="block text-left text-sm text-white/60 transition-colors hover:text-white">{link.label}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Yana</h4>
+              <div className="mt-4 space-y-2">
+                {secondaryLinks.map(link => (
+                  <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="block text-left text-sm text-white/60 transition-colors hover:text-white">{link.label}</button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -62,9 +73,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-white/10 pt-6 text-center">
-          <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} {schoolInfo.name}. Barcha huquqlar himoyalangan.
-          </p>
+          <p className="text-xs text-white/40">© {new Date().getFullYear()} {schoolInfo.name}. Barcha huquqlar himoyalangan.</p>
         </div>
       </div>
     </footer>
