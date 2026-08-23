@@ -1,0 +1,470 @@
+/* FINAL MASTER PASS
+   Visual-only overrides for the existing 1-IMI Jizzax public experience.
+   Intentionally layered after the existing design files; no application logic is changed.
+*/
+
+:root {
+  --premium-blue: #007aff;
+  --premium-ink: #0b1220;
+  --premium-muted: #64748b;
+  --premium-surface: #f7f9fc;
+  --premium-line: rgba(15, 23, 42, 0.075);
+  --premium-glass: rgba(255, 255, 255, 0.68);
+  --premium-glass-strong: rgba(255, 255, 255, 0.82);
+  --premium-shadow: 0 14px 42px rgba(15, 23, 42, 0.065);
+  --premium-shadow-hover: 0 20px 52px rgba(15, 23, 42, 0.095);
+  --premium-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Shared section rhythm and editorial heading hierarchy. */
+.apple-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.apple-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(0, 122, 255, 0.035), transparent 28%),
+    radial-gradient(circle at 92% 84%, rgba(99, 102, 241, 0.025), transparent 30%);
+}
+
+.apple-eyebrow {
+  color: var(--premium-blue) !important;
+  font-size: 0.7rem !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+
+.apple-heading {
+  color: var(--premium-ink) !important;
+  font-size: clamp(2.15rem, 4.3vw, 4rem) !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.048em !important;
+  line-height: 1.02 !important;
+  text-wrap: balance;
+}
+
+.apple-subheading {
+  max-width: 68ch;
+  color: var(--premium-muted) !important;
+  font-size: clamp(1rem, 1.4vw, 1.12rem) !important;
+  line-height: 1.72 !important;
+  text-wrap: pretty;
+}
+
+/* Glass hierarchy: light surfaces first, stronger surfaces only for floating UI. */
+.apple-card {
+  background: rgba(255, 255, 255, 0.76) !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: var(--premium-shadow) !important;
+  backdrop-filter: blur(16px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(145%) !important;
+}
+
+.apple-card:hover {
+  background: rgba(255, 255, 255, 0.86) !important;
+  box-shadow: var(--premium-shadow-hover) !important;
+  transform: translateY(-3px) !important;
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.68) !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.065) !important;
+  backdrop-filter: blur(22px) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(155%) !important;
+}
+
+/* Hero: preserve the real school photo while keeping the reading column calm. */
+#hero > div:first-child > div:nth-child(2) {
+  background: linear-gradient(
+    90deg,
+    rgba(247, 249, 252, 0.70) 0%,
+    rgba(247, 249, 252, 0.38) 48%,
+    rgba(247, 249, 252, 0.06) 100%
+  ) !important;
+}
+
+#hero > div:first-child > div:nth-child(3) {
+  background: linear-gradient(
+    180deg,
+    rgba(247, 249, 252, 0.04) 0%,
+    rgba(247, 249, 252, 0.20) 56%,
+    rgba(247, 249, 252, 0.70) 100%
+  ) !important;
+}
+
+#hero > div:first-child > div:first-child {
+  background-position: center 34% !important;
+}
+
+#hero h1 {
+  max-width: 12ch;
+  text-wrap: balance;
+}
+
+#hero .max-w-4xl.grid {
+  background: rgba(255, 255, 255, 0.66) !important;
+  border: 1px solid rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 18px 54px rgba(15, 23, 42, 0.075) !important;
+  backdrop-filter: blur(22px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(150%) !important;
+}
+
+#hero .max-w-4xl.grid > div {
+  border-color: rgba(15, 23, 42, 0.055);
+}
+
+#hero .max-w-4xl.grid > div + div {
+  border-left: 1px solid rgba(15, 23, 42, 0.055);
+}
+
+#hero .apple-button,
+#hero button.rounded-full {
+  min-height: 48px;
+}
+
+/* Consistent interactive motion: small, quick, never bouncy. */
+.apple-button,
+.glass-button,
+#hero button,
+#school-life article,
+#administration article,
+#gallery article,
+#academic button.rounded-2xl,
+#president .group,
+#about .group {
+  transition-timing-function: var(--premium-ease) !important;
+}
+
+#school-life article:hover,
+#administration article:hover,
+#gallery article:hover,
+#academic button.rounded-2xl:hover,
+#president .group:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--premium-shadow-hover) !important;
+}
+
+#school-life article img,
+#administration article img,
+#gallery article img,
+#videolessons article img {
+  transform-origin: center;
+  transition: transform 0.48s var(--premium-ease) !important;
+}
+
+#school-life article:hover img,
+#administration article:hover img,
+#gallery article:hover img,
+#videolessons article:hover img {
+  transform: scale(1.03) !important;
+}
+
+/* Goals: Apple-like icon containers without rotation or glow. */
+#about .group > div[class*="h-12"][class*="w-12"] {
+  background: rgba(0, 122, 255, 0.075) !important;
+  box-shadow: none !important;
+  transition: transform 0.25s var(--premium-ease), background-color 0.25s ease !important;
+}
+
+#about .group:hover > div[class*="h-12"][class*="w-12"] {
+  transform: scale(1.04) !important;
+  background: rgba(0, 122, 255, 0.11) !important;
+}
+
+#about .group:hover [class*="group-hover:rotate"],
+#about .group:hover [class*="group-hover:scale-110"] {
+  transform: none !important;
+}
+
+/* Timeline: quiet editorial rail and consistent nodes. */
+#about .relative.mx-auto.max-w-3xl > div[class*="mb-12"] {
+  margin-bottom: 42px !important;
+}
+
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] {
+  width: 30px !important;
+  height: 30px !important;
+  background: rgba(255, 255, 255, 0.84) !important;
+  border: 1px solid rgba(0, 122, 255, 0.16) !important;
+  box-shadow: 0 7px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"] > div {
+  width: 8px !important;
+  height: 8px !important;
+  background: var(--premium-blue) !important;
+  box-shadow: none !important;
+}
+
+#about .relative.mx-auto.max-w-3xl > div > div[class*="rounded-full"]:hover {
+  transform: none !important;
+}
+
+/* Academic: selected state is a tint, not a saturated colored card. */
+#academic .rounded-2xl.border.p-4 {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-radius: 22px !important;
+}
+
+#academic .rounded-2xl.border.p-4[class*="border-[#0071e3]"] {
+  background: rgba(0, 122, 255, 0.055) !important;
+  border-color: rgba(0, 122, 255, 0.28) !important;
+  box-shadow: 0 10px 30px rgba(0, 122, 255, 0.07) !important;
+}
+
+#academic [class*="bg-emerald"],
+#academic [class*="bg-orange"],
+#academic [class*="bg-red"] {
+  background: rgba(0, 122, 255, 0.075) !important;
+  color: var(--premium-blue) !important;
+}
+
+/* Video lessons: quiet Apple-TV-style media surfaces. */
+#videolessons article {
+  background: rgba(255, 255, 255, 0.74) !important;
+  border-color: rgba(255, 255, 255, 0.80) !important;
+  border-radius: 26px !important;
+  box-shadow: var(--premium-shadow) !important;
+  backdrop-filter: blur(16px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(145%) !important;
+}
+
+#videolessons article:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--premium-shadow-hover) !important;
+}
+
+#videolessons article > div:first-child {
+  border-radius: 22px 22px 0 0;
+}
+
+/* School life: one feature surface with a calmer editorial hierarchy. */
+#school-life article:first-child {
+  background: rgba(255, 255, 255, 0.80) !important;
+}
+
+#school-life article:first-child img {
+  min-height: 180px;
+}
+
+#school-life article:nth-child(2) .rounded-2xl,
+#school-life article:nth-child(3) .rounded-2xl {
+  border: 1px solid rgba(15, 23, 42, 0.045);
+}
+
+/* Administration: neutral trust cards; only the role gets school blue. */
+#administration article {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+}
+
+#administration article:nth-child(4n+1) .h-28,
+#administration article:nth-child(4n+2) .h-28,
+#administration article:nth-child(4n+3) .h-28,
+#administration article:nth-child(4n+4) .h-28 {
+  background: #f3f7ff !important;
+}
+
+/* Gallery: consistent editorial rhythm and clean image framing. */
+#gallery article {
+  background: rgba(255, 255, 255, 0.76) !important;
+  border-radius: 26px !important;
+  border-color: rgba(255, 255, 255, 0.80) !important;
+  overflow: hidden;
+}
+
+#gallery article img {
+  will-change: transform;
+}
+
+/* Contact: inputs stay solid/light; only the surrounding surfaces are glass. */
+#contact .group,
+#contact form {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow: var(--premium-shadow) !important;
+}
+
+#contact input,
+#contact textarea {
+  background: rgba(248, 250, 252, 0.94) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#contact input:focus,
+#contact textarea:focus {
+  background: #fff !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.08) !important;
+}
+
+#contact iframe {
+  border-radius: 26px !important;
+}
+
+/* Floating controls: safe, compact iOS controls with clear separation. */
+body > #root button.fixed {
+  min-height: 44px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.11);
+}
+
+body > #root button.fixed:hover {
+  transform: translateY(-2px);
+}
+
+/* Modal backdrop/surface hierarchy. */
+body > #root [role="presentation"] > [role="dialog"] {
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  box-shadow: 0 28px 90px rgba(15, 23, 42, 0.16) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+}
+
+/* Mobile is intentionally composed, not merely shrunk. */
+@media (max-width: 767px) {
+  .apple-section {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  #hero {
+    min-height: 760px !important;
+    padding-top: 104px !important;
+  }
+
+  #hero > div:first-child > div:first-child {
+    background-position: 58% 34% !important;
+  }
+
+  #hero > div:first-child > div:nth-child(2) {
+    background: linear-gradient(
+      90deg,
+      rgba(247, 249, 252, 0.76) 0%,
+      rgba(247, 249, 252, 0.46) 62%,
+      rgba(247, 249, 252, 0.12) 100%
+    ) !important;
+  }
+
+  #hero h1 {
+    max-width: 10ch;
+  }
+
+  #hero .max-w-4xl.grid {
+    margin-top: 38px !important;
+    border-radius: 24px !important;
+    padding: 7px !important;
+  }
+
+  #hero .max-w-4xl.grid > div + div {
+    border-left: 0;
+  }
+
+  #hero .max-w-4xl.grid > div:nth-child(even) {
+    border-left: 1px solid rgba(15, 23, 42, 0.05);
+  }
+
+  #hero .max-w-4xl.grid > div:nth-child(n + 3) {
+    border-top: 1px solid rgba(15, 23, 42, 0.05);
+  }
+
+  #videolessons article,
+  #school-life article,
+  #administration article,
+  #gallery article,
+  #contact .group,
+  #contact form {
+    border-radius: 22px !important;
+  }
+
+  #school-life article:first-child img {
+    min-height: 150px;
+  }
+
+  #contact iframe {
+    min-height: 340px !important;
+  }
+
+  body > #root button.fixed {
+    right: max(16px, env(safe-area-inset-right));
+    left: auto;
+  }
+
+  body > #root button.fixed.bottom-24 {
+    bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 374px) {
+  .apple-section {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  #hero h1 {
+    font-size: clamp(2.4rem, 13vw, 3.35rem) !important;
+  }
+
+  #hero .max-w-4xl.grid > div > div:first-child {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #school-life article:first-child {
+    grid-column: span 1;
+  }
+}
+
+/* Reduced motion is a hard accessibility contract. */
+@media (prefers-reduced-motion: reduce) {
+  #hero > div:first-child > div:first-child,
+  #school-life article img,
+  #administration article img,
+  #gallery article img,
+  #videolessons article img {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  #hero .max-w-4xl.grid,
+  .apple-card,
+  #school-life article,
+  #administration article,
+  #gallery article,
+  #videolessons article,
+  #academic button.rounded-2xl,
+  #president .group,
+  #about .group {
+    transition: none !important;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  #school-life article:hover,
+  #administration article:hover,
+  #gallery article:hover,
+  #videolessons article:hover,
+  #academic button.rounded-2xl:hover,
+  #president .group:hover,
+  #about .group:hover {
+    transform: none !important;
+  }
+
+  #school-life article:hover img,
+  #administration article:hover img,
+  #gallery article:hover img,
+  #videolessons article:hover img {
+    transform: none !important;
+  }
+}
