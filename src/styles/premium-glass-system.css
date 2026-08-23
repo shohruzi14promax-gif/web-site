@@ -1,0 +1,121 @@
+/* Restrained iOS-inspired glass layer: visual-only, no feature changes. */
+:root {
+  --glass-ease: cubic-bezier(.22,1,.36,1);
+  --glass-border: rgba(255,255,255,.68);
+  --glass-surface: rgba(255,255,255,.72);
+}
+
+@keyframes glass-reveal-up {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(.985); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes glass-shine {
+  from { transform: translateX(-130%); opacity: 0; }
+  20% { opacity: .42; }
+  to { transform: translateX(130%); opacity: 0; }
+}
+@keyframes glass-menu-in {
+  from { opacity: 0; transform: translate3d(0,-7px,0) scale(.985); }
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+}
+
+/* General content cards: glass is intentionally subtle on a school site. */
+.apple-card,
+.institutional-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 360ms var(--glass-ease), box-shadow 360ms var(--glass-ease), border-color 300ms ease, background 300ms ease;
+}
+.apple-card::after,
+.institutional-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 28%, rgba(255,255,255,.42) 48%, transparent 66%);
+  transform: translateX(-130%);
+}
+.apple-card:hover::after,
+.institutional-card:hover::after { opacity: 1; animation: glass-shine 650ms var(--glass-ease) both; }
+.apple-card:hover,
+.institutional-card:hover { border-color: rgba(148,163,184,.48); transform: translateY(-3px) scale(1.003); }
+
+/* Images stay inside their frame while receiving a restrained glass hover. */
+.apple-card img,
+.institutional-card img { transition: transform 420ms var(--glass-ease), filter 420ms var(--glass-ease); }
+.apple-card:hover img,
+.institutional-card:hover img { transform: scale(1.025); }
+
+/* Hero: preserve the actual school photograph; glass only sits above it. */
+.hero-background-media { filter: saturate(1.02) contrast(1.02); opacity: .96; }
+.hero-glass-vignette { background: linear-gradient(90deg, rgba(3,12,25,.72) 0%, rgba(4,18,35,.40) 48%, rgba(4,18,35,.08) 100%); }
+.hero-glass-bottom { background: linear-gradient(0deg, rgba(3,12,25,.76) 0%, rgba(3,12,25,.18) 72%, transparent 100%); }
+.hero-glass-badge,
+.hero-glass-stats {
+  border-color: rgba(255,255,255,.20) !important;
+  background: rgba(255,255,255,.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 18px 45px rgba(0,0,0,.16);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+.hero-glass-button { transition: transform 300ms var(--glass-ease), background 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
+.hero-glass-button:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,.18); }
+
+/* Admin / Student / SchoolCoin overlays: visual-only glass treatment. */
+[class*="z-[100]"], [class*="z-[110]"], [class*="z-[120]"] {
+  --panel-glass-bg: rgba(255,255,255,.78);
+  --panel-glass-border: rgba(148,163,184,.24);
+}
+[class*="z-[100]"] > div,
+[class*="z-[110]"] > div,
+[class*="z-[120]"] > div {
+  border-color: var(--panel-glass-border) !important;
+  box-shadow: 0 24px 70px rgba(15,23,42,.13), inset 0 1px 0 rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+}
+[class*="z-[100]"] [class*="rounded"],
+[class*="z-[110]"] [class*="rounded"],
+[class*="z-[120]"] [class*="rounded"] {
+  transition: transform 300ms var(--glass-ease), box-shadow 300ms var(--glass-ease), background 300ms ease, border-color 300ms ease;
+}
+[class*="z-[100]"] button:hover,
+[class*="z-[110]"] button:hover,
+[class*="z-[120]"] button:hover { transform: translateY(-1px); }
+[class*="z-[100]"] button:active,
+[class*="z-[110]"] button:active,
+[class*="z-[120]"] button:active { transform: scale(.985); }
+[class*="z-[100]"] table tbody tr,
+[class*="z-[110]"] table tbody tr,
+[class*="z-[120]"] table tbody tr { transition: background 220ms ease, transform 220ms var(--glass-ease); }
+[class*="z-[100]"] table tbody tr:hover,
+[class*="z-[110]"] table tbody tr:hover,
+[class*="z-[120]"] table tbody tr:hover { background: rgba(37,99,235,.035); }
+
+/* Modal/popover entrance without changing their open/close logic. */
+.ios-popover,
+.ios-mobile-menu,
+[role="dialog"] { transform-origin: top center; }
+.ios-popover { animation: glass-menu-in 300ms var(--glass-ease) both; }
+
+@media (hover: hover) and (pointer: fine) {
+  .ios-nav-link:hover,
+  .ios-coin-button:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.72); }
+}
+
+@media (max-width: 768px) {
+  .hero-background-media { object-position: 58% center !important; }
+  .hero-glass-vignette { background: linear-gradient(90deg, rgba(3,12,25,.68), rgba(4,18,35,.28)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-card,
+  .institutional-card,
+  .apple-card img,
+  .institutional-card img,
+  .hero-glass-button { transition: none !important; }
+  .apple-card:hover::after,
+  .institutional-card:hover::after,
+  .ios-popover { animation: none !important; }
+}
