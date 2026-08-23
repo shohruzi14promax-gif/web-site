@@ -75,9 +75,9 @@
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.68) !important;
+  background: var(--nav-bg, rgba(255, 255, 255, 0.68)) !important;
   border-color: rgba(255, 255, 255, 0.78) !important;
-  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.065) !important;
+  box-shadow: var(--nav-shadow, 0 12px 34px rgba(15, 23, 42, 0.065)) !important;
   backdrop-filter: blur(22px) saturate(155%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(155%) !important;
 }
