@@ -1,0 +1,39 @@
+/* Shared accessibility and responsive guardrails for the ecosystem UI. */
+
+:where(button, a, input, select, textarea, [role='button'], [tabindex]:not([tabindex='-1'])):focus-visible {
+  outline: 3px solid rgb(59 130 246 / 0.85);
+  outline-offset: 3px;
+}
+
+:where(button, [role='button']) {
+  touch-action: manipulation;
+}
+
+:where(dialog, [role='dialog']) {
+  max-width: min(100vw - 1rem, 72rem);
+}
+
+:where(table) {
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  :where(.overflow-x-auto) {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  :where(input, select, textarea) {
+    font-size: 16px;
+  }
+
+  :where(button, [role='button']) {
+    min-height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(*, *::before, *::after) {
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,29 @@
+/* Subtle native-cursor micro-interactions: premium, not gaming-style. */
+@media (hover: hover) and (pointer: fine) {
+  main a, main button, main [role="button"], main input, main textarea, main select {
+    cursor: pointer;
+    transition: transform 180ms cubic-bezier(.22,1,.36,1), box-shadow 220ms cubic-bezier(.22,1,.36,1), background-color 220ms ease, border-color 220ms ease;
+  }
+
+  main input, main textarea, main select { cursor: text; }
+
+  main a:hover, main button:not(:disabled):hover, main [role="button"]:hover {
+    cursor: pointer;
+  }
+
+  main a:active, main button:not(:disabled):active, main [role="button"]:active {
+    transform: scale(.985);
+  }
+
+  main article, .apple-card, .institutional-card {
+    cursor: default;
+  }
+
+  main article a, main article button, .apple-card a, .apple-card button, .institutional-card a, .institutional-card button {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main a, main button, main [role="button"] { transition: none !important; }
+}

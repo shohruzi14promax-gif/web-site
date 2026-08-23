@@ -1,0 +1,32 @@
+/* Final public-page motion layer. Sections reveal once as they enter the viewport. */
+main > section:not(#hero) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 620ms cubic-bezier(.22,1,.36,1), transform 620ms cubic-bezier(.22,1,.36,1);
+}
+
+main > section:not(#hero).premium-section-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Keep the sticky navbar calm while scrolling. */
+.ios-navbar {
+  transition: background-color 420ms cubic-bezier(.22,1,.36,1), border-color 420ms ease, box-shadow 420ms cubic-bezier(.22,1,.36,1), transform 420ms cubic-bezier(.22,1,.36,1);
+}
+
+.ios-nav-link,
+.ios-brand,
+.ios-coin-button,
+.ios-menu-button {
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(.22,1,.36,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main > section:not(#hero) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

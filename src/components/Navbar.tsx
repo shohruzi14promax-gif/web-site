@@ -1,164 +1,200 @@
 import { useEffect, useRef, useState } from 'react';
-import { GraduationCap, Menu, X } from 'lucide-react';
-import { navLinks } from '../lib/data';
+import { ChevronDown, GraduationCap, Menu, X } from 'lucide-react';
+import { useI18n } from '../i18n';
 
-const menuLinks = [
-  { href: '#hero', label: 'Bosh sahifa' },
-  { href: '#about', label: 'Maktab haqida' },
-  { href: '#academic', label: 'Akademik' },
-  { href: '#school-life', label: 'Maktab hayoti' },
-  { href: '#media', label: 'Media' },
-  { href: '#contact', label: 'Aloqa' },
+type SectionKey = 'home' | 'about' | 'academic' | 'life' | 'administration' | 'media' | 'contact' | 'president' | 'innovation';
+type NavLink = { href: string; key: SectionKey };
+
+const links: NavLink[] = [
+  { href: '#hero', key: 'home' },
+  { href: '#about', key: 'about' },
+  { href: '#academic', key: 'academic' },
+  { href: '#school-life', key: 'life' },
+  { href: '#administration', key: 'administration' },
+  { href: '#media', key: 'media' },
 ];
 
+const extraLinks: NavLink[] = [
+  { href: '#innovation', key: 'innovation' },
+  { href: '#president', key: 'president' },
+  { href: '#contact', key: 'contact' },
+];
+
+const sectionIds = [...links, ...extraLinks].map(link => link.href.slice(1));
+const sectionKeyById: Record<string, SectionKey> = {
+  hero: 'home',
+  about: 'about',
+  academic: 'academic',
+  'school-life': 'life',
+  administration: 'administration',
+  media: 'media',
+  president: 'president',
+  innovation: 'innovation',
+  contact: 'contact',
+};
+
 export default function Navbar() {
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<SectionKey>('home');
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 18);
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setMenuOpen(false);
+        setMoreOpen(false);
       }
     };
-
     const onPointerDown = (event: PointerEvent) => {
-      if (
-        menuOpen &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
-        setMenuOpen(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMoreOpen(false);
     };
+    const sections = sectionIds
+      .map(id => document.getElementById(id))
+      .filter((element): element is HTMLElement => Boolean(element));
+    const observer = sections.length
+      ? new IntersectionObserver(entries => {
+          const visible = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          const nextKey = visible?.target.id ? sectionKeyById[visible.target.id] : undefined;
+          if (nextKey) setActiveSection(nextKey);
+        }, { rootMargin: '-24% 0px -62% 0px', threshold: [0.05, 0.2, 0.5] })
+      : null;
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('keydown', onKeyDown);
     document.addEventListener('pointerdown', onPointerDown);
+    sections.forEach(section => observer?.observe(section));
 
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('pointerdown', onPointerDown);
+      observer?.disconnect();
     };
-  }, [menuOpen]);
+  }, []);
 
-  const handleNavClick = (href: string) => {
+  const navigate = (href: string) => {
+    const nextKey = sectionKeyById[href.slice(1)];
+    if (nextKey) setActiveSection(nextKey);
     setMenuOpen(false);
-
+    setMoreOpen(false);
     const element = document.querySelector(href);
-
     if (!element) return;
-
-    const y =
-      element.getBoundingClientRect().top +
-      window.pageYOffset -
-      80;
-
     window.scrollTo({
-      top: y,
+      top: Math.max(0, element.getBoundingClientRect().top + window.scrollY - 86),
       behavior: 'smooth',
     });
   };
 
-  return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 px-0 transition-all duration-300 ${
-        scrolled ? 'sm:px-5' : ''
-      }`}
-    >
-      <nav
-        className={`relative mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 md:px-12 lg:px-16 transition-all duration-300 ${
-          scrolled
-            ? 'mt-3 rounded-2xl border border-white/70 bg-white/75 py-2.5 shadow-lg shadow-slate-900/5 backdrop-blur-2xl'
-            : 'bg-transparent py-3'
-        }`}
-      >
-        {/* Logo */}
-        <button
-          type="button"
-          onClick={() => handleNavClick('#hero')}
-          className="group flex shrink-0 items-center gap-2.5 rounded-xl transition-transform duration-200 hover:scale-[1.02] active:scale-95"
-          aria-label="Bosh sahifaga o'tish"
-        >
-          <span
-            className={`relative flex items-center justify-center rounded-xl bg-[#0071e3] shadow-lg shadow-blue-500/20 transition-all duration-300 ${
-              scrolled ? 'h-8 w-8' : 'h-9 w-9'
-            }`}
-          >
-            <GraduationCap className="h-5 w-5 text-white" />
-          </span>
+  const openSchoolCoin = () => {
+    setMenuOpen(false);
+    setMoreOpen(false);
+    window.dispatchEvent(new CustomEvent('open-schoolcoin'));
+  };
 
-          <span className="text-base font-bold tracking-tight text-[#1d1d1f]">
-            1-IMI Jizzax
-          </span>
+  const openAdmin = () => {
+    setMenuOpen(false);
+    setMoreOpen(false);
+    window.dispatchEvent(new CustomEvent('open-admin'));
+  };
+
+  const navButton = (link: NavLink) => {
+    const active = activeSection === link.key;
+    return (
+      <button
+        key={link.href}
+        type="button"
+        onClick={() => navigate(link.href)}
+        aria-current={active ? 'page' : undefined}
+        className={`ios-nav-link ${active ? 'is-active' : ''}`}
+      >
+        {active && <span className="ios-nav-active-pill" aria-hidden="true" />}
+        <span className="relative z-10">{t(link.key)}</span>
+      </button>
+    );
+  };
+
+  return (
+    <header className="ios-navbar-wrap">
+      <nav ref={menuRef} className={`ios-navbar ${scrolled ? 'is-scrolled' : ''}`}>
+        <button type="button" onClick={() => navigate('#hero')} className="ios-brand" aria-label={t('home')}>
+          <span className="ios-brand-mark"><GraduationCap /></span>
+          <span className="ios-brand-name">1-IMI Jizzax</span>
         </button>
 
-        {/* Desktop Navigation */}
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 lg:flex">
-          {menuLinks.map((link) => (
+        <div className="ios-desktop-nav">
+          {links.map(navButton)}
+          <div className="ios-more-wrap">
             <button
-              key={link.href}
               type="button"
-              onClick={() => handleNavClick(link.href)}
-              className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-white/80 hover:text-[#0071e3] hover:scale-[1.02] active:scale-95"
+              onClick={() => setMoreOpen(value => !value)}
+              aria-expanded={moreOpen}
+              className={`ios-nav-link ${moreOpen ? 'is-open' : ''}`}
             >
-              {link.label}
+              <span>{t('more')}</span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${moreOpen ? 'rotate-180' : ''}`} />
             </button>
-          ))}
+            {moreOpen && (
+              <div className="ios-popover ios-more-menu">
+                <p>{t('digital')}</p>
+                {extraLinks.map(link => (
+                  <button key={link.href} type="button" onClick={() => navigate(link.href)}>
+                    {t(link.key)}
+                  </button>
+                ))}
+                <div className="ios-menu-divider" />
+                <button type="button" onClick={openAdmin} className="ios-menu-strong">⚙️ {t('admin')}</button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div
-          ref={menuRef}
-          className="relative lg:hidden"
-        >
+        <div className="ios-actions">
+          <button type="button" onClick={openSchoolCoin} className="ios-coin-button">
+            <span>🪙</span>{t('schoolCoin')}
+          </button>
+        </div>
+
+        <div className="ios-mobile-actions">
           <button
             type="button"
-            onClick={() => setMenuOpen((value) => !value)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-white/60 backdrop-blur-md transition-all duration-200 hover:border-white hover:bg-white/80 hover:shadow-md active:scale-90"
-            aria-label={
-              menuOpen
-                ? 'Menyuni yopish'
-                : 'Menyuni ochish'
-            }
+            onClick={() => setMenuOpen(value => !value)}
+            className="ios-menu-button"
+            aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
             aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
           >
-            {menuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {menuOpen ? <X /> : <Menu />}
           </button>
+        </div>
 
-          <div
-            id="mobile-navigation"
-            className={`absolute right-0 top-12 w-[min(90vw,360px)] overflow-hidden rounded-3xl border border-white/70 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur-2xl transition-all duration-200 ${
-              menuOpen
-                ? 'visible translate-y-0 opacity-100'
-                : 'invisible -translate-y-2 opacity-0'
-            }`}
-          >
-            <div className="flex flex-col gap-1 p-3">
-              {menuLinks.map((link) => (
+        {menuOpen && (
+          <div className="ios-mobile-menu">
+            <div className="ios-mobile-links">
+              {links.map((link, index) => (
                 <button
                   key={link.href}
                   type="button"
-                  onClick={() => handleNavClick(link.href)}
-                  className="rounded-2xl px-4 py-3.5 text-left text-base font-medium text-[#1d1d1f] transition-all duration-200 hover:bg-blue-50 hover:pl-5 hover:text-[#0071e3]"
+                  onClick={() => navigate(link.href)}
+                  aria-current={activeSection === link.key ? 'page' : undefined}
+                  className={activeSection === link.key ? 'is-active' : ''}
                 >
-                  {link.label}
+                  <span>{String(index + 1).padStart(2, '0')}</span>{t(link.key)}
                 </button>
               ))}
+              <div className="ios-menu-divider" />
+              {extraLinks.map(link => (
+                <button key={link.href} type="button" onClick={() => navigate(link.href)}>{t(link.key)}</button>
+              ))}
             </div>
+            <button type="button" onClick={openSchoolCoin} className="ios-mobile-coin">🪙 {t('schoolCoin')}</button>
+            <button type="button" onClick={openAdmin} className="ios-mobile-admin">⚙️ {t('admin')}</button>
           </div>
-        </div>
+        )}
       </nav>
     </header>
   );

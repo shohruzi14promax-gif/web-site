@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image as ImageIcon, Calendar } from 'lucide-react';
 import { getSiteData, supabaseConfigured } from '../lib/supabase';
+import { useI18n } from '../i18n';
 
 interface GalleryItem { id: number | string; title: string; date: string; description: string; image: string; }
 
@@ -9,18 +10,20 @@ const loadLocalGallery = (): GalleryItem[] => {
     const saved = localStorage.getItem('galleryList');
     const parsed = saved ? JSON.parse(saved) : [];
     return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error('Galereyani yuklashda xatolik:', error);
+  } catch {
     return [];
   }
 };
 
 export default function Gallery() {
+  const { t } = useI18n();
   const [galleryList, setGalleryList] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const load = async () => {
     setLoading(true);
+    setError(false);
     try {
       if (supabaseConfigured) {
         const cloud = await getSiteData<GalleryItem[]>('galleryList', []);
@@ -31,6 +34,9 @@ export default function Gallery() {
         }
       }
       setGalleryList(loadLocalGallery());
+    } catch {
+      setGalleryList([]);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -48,29 +54,37 @@ export default function Gallery() {
   }, []);
 
   return (
-    <section id="gallery" className="apple-section py-16 px-4 max-w-7xl mx-auto">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-3 bg-blue-50 text-[#0071e3] rounded-2xl"><ImageIcon className="h-6 w-6" /></div>
-        <div><h2 className="text-2xl font-bold text-[#1d1d1f]">Galereya</h2><p className="text-sm text-gray-500">Maktab hayotidan foto lavhalar</p></div>
+    <section id="gallery" className="apple-section mx-auto max-w-7xl px-4 py-16 !bg-gradient-to-b !from-[#fafafa] !to-[#f3f6f9] !text-slate-900">
+      <div className="mb-8 flex flex-col items-center text-center">
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#0071e3] shadow-sm"><ImageIcon className="h-6 w-6" aria-hidden="true" /></div>
+        <p className="apple-eyebrow mb-2 !text-[#0071e3]">{t('life')}</p>
+        <h2 className="text-3xl font-bold tracking-tight !text-[#0f172a] sm:text-4xl">{t('gallery')}</h2>
+        <p className="mt-2 max-w-xl text-sm leading-6 !text-slate-500">{t('officialSource')}</p>
       </div>
 
       {loading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Galereya yuklanmoqda">
-          {Array.from({ length: 6 }).map((_, index) => <div key={index} className="aspect-video animate-pulse rounded-3xl bg-white/70 border border-gray-100" />)}
+        <div role="status" aria-label={t('loading')} aria-busy="true" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => <div key={index} className="aspect-video animate-pulse rounded-3xl border border-slate-200 bg-white/80 shadow-sm dark:border-white/10 dark:bg-slate-900/70" />)}
         </div>
+      ) : error ? (
+        <div role="alert" className="rounded-3xl border border-red-200 bg-red-50 py-12 text-center text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-300">{t('error')}</div>
       ) : galleryList.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-3xl border border-gray-100 shadow-sm"><ImageIcon className="h-10 w-10 mx-auto mb-3 text-gray-300" /><p className="text-sm text-gray-500">Hozircha galereyaga rasmlar qo'shilmagan.</p></div>
+        <div className="flex min-h-[260px] flex-col items-center justify-center rounded-[28px] border border-slate-200/80 !bg-white/90 px-6 py-14 text-center shadow-[0_18px_55px_rgba(15,23,42,.07)] backdrop-blur-xl">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400"><ImageIcon className="h-7 w-7" aria-hidden="true" /></div>
+          <p className="text-base font-semibold !text-slate-700">{t('empty')}</p>
+          <p className="mt-1 max-w-md text-sm !text-slate-400">{t('life')}</p>
+        </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {galleryList.map((item) => (
-            <article key={item.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300">
-              <div className="relative aspect-video overflow-hidden bg-gray-100">
-                {item.image ? <img src={item.image} alt={item.title || 'Maktab galereyasi'} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /> : <div className="w-full h-full flex items-center justify-center text-gray-400"><ImageIcon className="h-10 w-10" /></div>}
+            <article key={item.id} className="group apple-card overflow-hidden !bg-white/95 !p-0">
+              <div className="relative aspect-video overflow-hidden bg-slate-100">
+                {item.image ? <img src={item.image} alt={item.title || t('gallery')} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : <div className="flex h-full w-full items-center justify-center text-slate-400"><ImageIcon className="h-10 w-10" aria-hidden="true" /></div>}
               </div>
               <div className="p-5">
-                <h3 className="font-bold text-lg text-[#1d1d1f]">{item.title || 'Maktab tadbiri'}</h3>
-                {item.date && <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-400"><Calendar className="h-3.5 w-3.5" /><span>{item.date}</span></div>}
-                {item.description && <p className="text-sm text-gray-500 mt-3 leading-relaxed">{item.description}</p>}
+                <h3 className="text-lg font-bold !text-[#1d1d1f]">{item.title || t('gallery')}</h3>
+                {item.date && <div className="mt-2 flex items-center gap-1.5 text-xs !text-slate-400"><Calendar className="h-3.5 w-3.5" aria-hidden="true" /><span>{item.date}</span></div>}
+                {item.description && <p className="mt-3 text-sm leading-relaxed !text-slate-500">{item.description}</p>}
               </div>
             </article>
           ))}
