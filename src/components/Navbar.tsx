@@ -47,7 +47,7 @@ export default function Navbar() {
           <span className={`flex items-center justify-center rounded-xl bg-[#0b1424] text-white shadow-sm transition-all duration-300 ${scrolled ? 'h-9 w-9' : 'h-10 w-10'}`}>
             <GraduationCap className="h-5 w-5" />
           </span>
-          <span className="hidden text-sm font750 tracking-tight text-[#0b1424] sm:block">1-IMI Jizzax</span>
+          <span className="hidden text-sm font-bold tracking-tight text-[#0b1424] sm:block">1-IMI Jizzax</span>
         </button>
 
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 lg:flex">
