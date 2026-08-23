@@ -57,7 +57,9 @@ export default function About() {
             <div className={`absolute left-4 top-0 h-full w-px origin-top bg-gradient-to-b from-[#0071e3] via-[#0071e3]/30 to-transparent transition-transform duration-[1500ms] motion-reduce:transition-none sm:left-1/2 sm:-translate-x-1/2 ${timelineVisible ? 'scale-y-100' : 'scale-y-0'}`} aria-hidden="true" />
             {historyTimeline.map((item, index) => (
               <div key={index} className={`relative mb-12 flex flex-col gap-4 pl-12 sm:w-1/2 sm:pl-0 ${index % 2 === 0 ? 'sm:pr-12 sm:text-right' : 'sm:ml-auto sm:pl-12'} transition-all duration-800 motion-reduce:transition-none ${timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: `${index * 150}ms` }}>
-                <div className={`absolute top-1.5 left-0 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-4 ring-[#0071e3]/10 sm:left-auto ${index % 2 === 0 ? 'sm:-right-4' : 'sm:-left-4'}`} aria-hidden="true"><div className="h-2.5 w-2.5 rounded-full bg-[#0071e3]" /></div>
+                <div className={`absolute top-1 left-[-0.75rem] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-white shadow-sm ring-2 ring-[#0071e3]/15 sm:left-auto ${index % 2 === 0 ? 'sm:-right-3' : 'sm:-left-3'}`} aria-hidden="true">
+                  <div className="h-2.5 w-2.5 rounded-full bg-[#0071e3]" />
+                </div>
                 <div className="apple-card group !p-6 transition-all duration-500 hover:-translate-y-2 motion-reduce:transition-none">
                   <div className="mb-1 text-2xl font-bold text-[#0071e3]">{item.year}</div>
                   <h4 className="mb-2 text-lg font-semibold text-[#1d1d1f]">{item.title}</h4>
