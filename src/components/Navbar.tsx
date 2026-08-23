@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { GraduationCap, Menu, X } from 'lucide-react';
+import { ChevronDown, GraduationCap, Menu, X } from 'lucide-react';
 
 const menuLinks = [
   { href: '#hero', label: 'Bosh sahifa' },
@@ -11,16 +11,31 @@ const menuLinks = [
   { href: '#contact', label: 'Aloqa' },
 ];
 
+const sectionLinks = [
+  { href: '#gallery', label: 'Galereya' },
+  { href: '#innovation', label: 'Innovatsiya' },
+  { href: '#president', label: 'Prezident devoni' },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sectionsOpen, setSectionsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const sectionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false); };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        setSectionsOpen(false);
+      }
+    };
     const onPointerDown = (event: PointerEvent) => {
-      if (menuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false);
+      const target = event.target as Node;
+      if (menuOpen && menuRef.current && !menuRef.current.contains(target)) setMenuOpen(false);
+      if (sectionsOpen && sectionsRef.current && !sectionsRef.current.contains(target)) setSectionsOpen(false);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -31,10 +46,11 @@ export default function Navbar() {
       window.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [menuOpen]);
+  }, [menuOpen, sectionsOpen]);
 
   const handleNavClick = (href: string) => {
     setMenuOpen(false);
+    setSectionsOpen(false);
     const element = document.querySelector(href);
     if (!element) return;
     const y = element.getBoundingClientRect().top + window.pageYOffset - 78;
@@ -62,6 +78,27 @@ export default function Navbar() {
               {link.label}
             </button>
           ))}
+
+          <div ref={sectionsRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setSectionsOpen(value => !value)}
+              className="flex items-center gap-1 rounded-full px-3 py-2 text-[13px] font-medium text-slate-600 transition-all duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0b1424] focus-visible:bg-white/60"
+              aria-expanded={sectionsOpen}
+              aria-haspopup="true"
+            >
+              Bo‘limlar
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${sectionsOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <div className={`absolute right-0 top-[calc(100%+8px)] w-52 origin-top-right rounded-2xl border border-white/70 bg-white/80 p-1.5 shadow-xl shadow-slate-900/10 backdrop-blur-xl transition-all duration-200 ${sectionsOpen ? 'visible translate-y-0 scale-100 opacity-100' : 'invisible -translate-y-1 scale-[.98] opacity-0'}`}>
+              {sectionLinks.map(link => (
+                <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-[13px] font-medium text-slate-600 transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
+                  {link.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div ref={menuRef} className="relative lg:hidden">
@@ -75,6 +112,22 @@ export default function Navbar() {
                   {link.label}
                 </button>
               ))}
+
+              <div className="my-1.5 border-t border-slate-200/60 pt-1.5">
+                <button type="button" onClick={() => setSectionsOpen(value => !value)} className="flex min-h-11 w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[15px] font-semibold text-slate-800 transition-colors duration-200 hover:bg-[#0071e3]/[0.07]" aria-expanded={sectionsOpen}>
+                  <span>Bo‘limlar</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${sectionsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <div className={`grid transition-[grid-template-rows,opacity] duration-250 ${sectionsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                  <div className="min-h-0 overflow-hidden px-2 pb-1">
+                    {sectionLinks.map(link => (
+                      <button key={link.href} type="button" onClick={() => handleNavClick(link.href)} className="flex min-h-10 w-full items-center rounded-xl px-3 py-2 text-left text-sm font-medium text-slate-600 transition-colors duration-200 hover:bg-[#0071e3]/[0.07] hover:text-[#0071e3]">
+                        {link.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
