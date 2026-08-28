@@ -1,13 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
-const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim();
+const supabaseAnonKey = (
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)
+  || (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined)
+)?.trim();
 
 const PROJECT_SUPABASE_URL = 'https://tljecpmgfwpwajwkkock.supabase.co';
 const resolvedSupabaseUrl = supabaseUrl || PROJECT_SUPABASE_URL;
 export const supabaseConfigured = Boolean(supabaseAnonKey);
 
-if (!supabaseAnonKey) console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY');
+if (!supabaseAnonKey) console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY (or VITE_SUPABASE_PUBLISHABLE_KEY)');
 
 export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey || 'placeholder-anon-key', { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
@@ -38,8 +41,14 @@ export async function saveSiteData<T>(key: SiteDataKey, value: T) {
 export async function signInAdmin(email: string, password: string) {
   if (!supabaseConfigured) throw new Error('Supabase sozlanmagan.');
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
-  if (data.user?.app_metadata?.role !== 'admin') { await supabase.auth.signOut(); throw new Error('Bu akkaunt admin huquqiga ega emas.'); }
+  if (error) {
+    console.error('Admin authentication failed:', error);
+    throw error;
+  }
+  if (data.user?.app_metadata?.role !== 'admin') {
+    await supabase.auth.signOut();
+    throw new Error('Bu akkaunt admin huquqiga ega emas.');
+  }
   return data;
 }
 
