@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
+import SchoolCoinDeliveryInfo from './components/SchoolCoinDeliveryInfo';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
@@ -96,7 +97,7 @@ export default function App() {
       </button>
 
       {totalNotifications > 0 && (
-        <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex min-h-11 items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-lg shadow-blue-900/15 transition-all duration-200 hover:-translate-y-0.5 active:scale-[.98] sm:left-6 sm:px-5" aria-label={`Yangi bildirishnomalar: ${totalNotifications}`}>
+        <button type="button" onClick={() => setShowNotifModal(true)} className="fixed bottom-5 left-4 z-40 flex min-h-11 items-center gap-2.5 rounded-full bg-[#0071e3] px-4 py-3 text-white shadow-lg shadow-blue-900/15 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[.98] sm:left-6 sm:px-5" aria-label={`Yangi bildirishnomalar: ${totalNotifications}`}>
           <Bell className="h-5 w-5" />
           <span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-[#0071e3]">{totalNotifications}</span>
           <span className="hidden text-sm font-medium sm:inline">E'lonlar va Tadbirlar</span>
@@ -120,6 +121,7 @@ export default function App() {
 
       {isAdminOpen && <CloudAdminPanelPro onClose={() => setIsAdminOpen(false)} />}
       {isSchoolCoinOpen && <SchoolCoinSecure onClose={() => setIsSchoolCoinOpen(false)} initialMode="student" />}
+      <SchoolCoinDeliveryInfo open={isSchoolCoinOpen} />
     </div>
   );
 }
