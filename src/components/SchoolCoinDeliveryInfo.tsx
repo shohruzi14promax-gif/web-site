@@ -3,11 +3,17 @@ import { CalendarDays, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 function nextDeliveryDate(from = new Date()) {
-  const date = new Date(from);
-  const day = date.getDay();
-  const daysUntilFriday = (5 - day + 7) % 7;
-  date.setDate(date.getDate() + (daysUntilFriday || 7));
+  const date = new Date(from.getFullYear(), from.getMonth() + 1, 0);
+  const offset = (date.getDay() - 5 + 7) % 7;
+  date.setDate(date.getDate() - offset);
   date.setHours(0, 0, 0, 0);
+  if (date <= from) {
+    const nextMonth = new Date(from.getFullYear(), from.getMonth() + 2, 0);
+    const nextOffset = (nextMonth.getDay() - 5 + 7) % 7;
+    nextMonth.setDate(nextMonth.getDate() - nextOffset);
+    nextMonth.setHours(0, 0, 0, 0);
+    return nextMonth;
+  }
   return date;
 }
 
