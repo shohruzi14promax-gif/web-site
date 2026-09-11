@@ -27,7 +27,7 @@ export default function Hero() {
 
   const displayStats = stats.map(stat => {
     if (stat.label === "O'quvchilar") return { ...stat, value: 340, suffix: '+' };
-    if (stat.label === "Oliy o'quv muassasalariga kirish") return { ...stat, value: 100, suffix: '%' };
+    if (stat.label === "Oliy o'quv muassasalariga kirish") return { ...stat, value: 95, suffix: '%' };
     return stat;
   });
 
