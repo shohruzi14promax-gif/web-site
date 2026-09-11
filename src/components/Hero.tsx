@@ -25,6 +25,12 @@ export default function Hero() {
 
   const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
 
+  const displayStats = stats.map(stat => {
+    if (stat.label === "O'quvchilar") return { ...stat, value: 340, suffix: '+' };
+    if (stat.label === "Oliy o'quv muassasalariga kirish") return { ...stat, value: 100, suffix: '%' };
+    return stat;
+  });
+
   return (
     <section id="hero" className="relative isolate min-h-[760px] overflow-hidden pt-28 pb-16 sm:min-h-[820px] sm:pt-32 sm:pb-20">
       <div className="absolute inset-0 -z-20" aria-hidden="true">
@@ -63,7 +69,7 @@ export default function Hero() {
           </div>
 
           <div className={`mt-12 grid w-full max-w-6xl grid-cols-2 gap-2 rounded-[26px] border border-white/80 bg-white/82 p-3 shadow-lg shadow-slate-900/8 backdrop-blur-md sm:grid-cols-3 lg:grid-cols-6 lg:gap-0 lg:p-4 transition-all duration-900 ${statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            {stats.map((stat, index) => <StatCard key={`${stat.label}-${index}`} stat={stat} index={index} visible={statsVisible} />)}
+            {displayStats.map((stat, index) => <StatCard key={`${stat.label}-${index}`} stat={stat} index={index} visible={statsVisible} />)}
           </div>
         </div>
       </div>
