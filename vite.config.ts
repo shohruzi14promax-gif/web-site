@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // The repository is published as a GitHub Pages project site.
 export default defineConfig({
-  base: '/web-site/',
+  base: process.env.VERCEL === '1' ? '/' : '/web-site/',
   plugins: [react()],
   resolve: {
     alias: {
