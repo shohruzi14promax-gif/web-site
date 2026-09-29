@@ -1,18 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
-const supabaseAnonKey = (
+const configuredKey = (
   (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)
   || (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined)
 )?.trim();
 
+// Supabase publishable keys are designed for browser use. RLS policies still
+// control which rows anonymous visitors can read or modify.
 const PROJECT_SUPABASE_URL = 'https://tljecpmgfwpwajwkkock.supabase.co';
+const PROJECT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_F2lbYRZlDXr7jpomINo_cw_FpOV8FBZ';
 const resolvedSupabaseUrl = supabaseUrl || PROJECT_SUPABASE_URL;
+const supabaseAnonKey = configuredKey || PROJECT_SUPABASE_PUBLISHABLE_KEY;
 export const supabaseConfigured = Boolean(supabaseAnonKey);
 
-if (!supabaseAnonKey) console.error('Supabase env variable is missing: VITE_SUPABASE_ANON_KEY (or VITE_SUPABASE_PUBLISHABLE_KEY)');
-
-export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey || 'placeholder-anon-key', { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+export const supabase = createClient(resolvedSupabaseUrl, supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 export interface StudentProposal { id: string; ministry: string; full_name: string; class: string; title: string; description: string; status: string; created_at: string; }
 
@@ -33,7 +35,7 @@ export async function getSiteData<T>(key: SiteDataKey, fallback: T): Promise<T> 
 }
 
 export async function saveSiteData<T>(key: SiteDataKey, value: T) {
-  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Netlify environment variablesni tekshiring.');
+  if (!supabaseConfigured) throw new Error('Supabase sozlanmagan. Environment variablesni tekshiring.');
   const { error } = await supabase.from('site_data').upsert({ key, data: value, updated_at: new Date().toISOString() });
   if (error) throw error;
 }
