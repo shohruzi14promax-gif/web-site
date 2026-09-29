@@ -2,8 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
-// https://vitejs.dev/config/
+// The repository is published as a GitHub Pages project site.
 export default defineConfig({
+  base: '/web-site/',
   plugins: [react()],
   resolve: {
     alias: {
