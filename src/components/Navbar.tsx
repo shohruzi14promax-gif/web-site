@@ -5,7 +5,6 @@ const menuLinks = [
   { href: '#hero', label: 'Bosh sahifa' },
   { href: '#about', label: 'Maktab haqida' },
   { href: '#academic', label: 'Akademik' },
-  { href: '#school-life', label: 'Maktab hayoti' },
   { href: '#administration', label: 'Ma’muriyat' },
   { href: '#contact', label: 'Aloqa' },
 ];
@@ -13,7 +12,6 @@ const menuLinks = [
 const sectionLinks = [
   { href: '#president', label: 'Prezident Devoni' },
   { href: '#innovation', label: 'Innovatsiya' },
-  { href: '#media', label: 'Media' },
 ];
 
 export default function Navbar() {
