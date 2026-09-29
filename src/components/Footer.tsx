@@ -66,7 +66,8 @@ export default function Footer() {
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">Aloqa</h4>
             <div className="mt-4 space-y-2 text-sm text-white/60">
               <p>{schoolInfo.address}</p>
-              <p>{schoolInfo.phone}</p>
+              <p><a href={`tel:${schoolInfo.phone.replace(/[^+\d]/g, '')}`} className="transition-colors hover:text-white">{schoolInfo.phone}</a></p>
+              <p><a href={`tel:${schoolInfo.phone2.replace(/[^+\d]/g, '')}`} className="transition-colors hover:text-white">{schoolInfo.phone2}</a></p>
               <p>{schoolInfo.email}</p>
             </div>
           </div>
