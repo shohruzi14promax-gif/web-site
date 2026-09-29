@@ -10,7 +10,6 @@ import Media from './components/Media';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
-import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
@@ -77,11 +76,9 @@ export default function App() {
         <Hero />
         <About />
         <Academic />
-        <SchoolLife />
         <Administration />
         <PresidentOffice />
         <Innovation />
-        <Media />
         <Contact />
       </main>
       <Footer />
