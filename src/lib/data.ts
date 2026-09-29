@@ -3,16 +3,16 @@ export const schoolInfo = {
   shortName: "1-IMI Jizzax",
   founded: 2022,
   address: "Jizzax shahri, A. Temur ko'chasi, 12-uy",
-  phone: "+998 (72) 226-45-67",
-  phone2: "+998 (72) 226-45-68",
+  phone: "+998 72 223-86-17",
+  phone2: "+998 72 223-86-14",
   email: "info@jizzax1-maktab.uz",
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Jizzax+shahar+1+ixtisoslashtirilgan+maktab",
   mapEmbed: "https://www.google.com/maps?q=Jizzakh%20Uzbekistan&output=embed",
   social: {
-    telegram: "https://t.me/jizzax1_maktab",
+    telegram: "https://t.me/Jizzax_1_son_IMI",
     youtube: "https://youtube.com/@jizzax1maktab",
-    instagram: "https://instagram.com/jizzax1_maktab",
-    facebook: "https://facebook.com/jizzax1maktab",
+    instagram: "https://www.instagram.com/1_imi_official?stkn=YXhxZndtYngydW5v",
+    facebook: "http://cc.uz/168hf",
   },
 };
 
