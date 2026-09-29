@@ -33,6 +33,7 @@ export default function App() {
   const [announcements, setAnnouncements] = useState<NotificationItem[]>([]);
   const [birthdays, setBirthdays] = useState<NotificationItem[]>([]);
   const [showNotifModal, setShowNotifModal] = useState(false);
+  const [showSchoolCoinAnnouncement, setShowSchoolCoinAnnouncement] = useState(true);
 
   useEffect(() => {
     let alive = true;
@@ -101,6 +102,24 @@ export default function App() {
           <span className="rounded-full bg-white px-2 py-0.5 text-xs font-bold text-[#0071e3]">{totalNotifications}</span>
           <span className="hidden text-sm font-medium sm:inline">E'lonlar va Tadbirlar</span>
         </button>
+      )}
+
+      {showSchoolCoinAnnouncement && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0b1424]/70 p-4 backdrop-blur-md" role="presentation">
+          <section className="relative w-full max-w-xl overflow-hidden rounded-[28px] border border-white/70 bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="schoolcoin-announcement-title">
+            <div className="bg-gradient-to-br from-[#0b1424] to-[#17447a] px-6 py-8 text-white sm:px-8">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15"><Megaphone className="h-7 w-7" /></div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-200">Muhim e’lon</p>
+              <h2 id="schoolcoin-announcement-title" className="mt-2 text-2xl font-bold sm:text-3xl">SchoolCoin tizimi yangilandi!</h2>
+            </div>
+            <div className="space-y-4 px-6 py-6 text-sm leading-6 text-slate-600 sm:px-8 sm:py-8">
+              <p>Diqqat, aziz o‘quvchilar! SchoolCoin tizimi yangilanishi munosabati bilan barcha o‘quvchilarning balanslari 0 ga tushirildi. Oldingi tranzaksiyalar, buyurtmalar va so‘rovlar tozalandi.</p>
+              <p className="rounded-2xl border border-blue-100 bg-blue-50 p-4 font-semibold text-slate-800">Iltimos, tizimga qaytadan kirib, kerakli buyurtma va so‘rovlaringizni yangidan kiriting.</p>
+              <p>Barcha o‘quvchilarning akkauntlari saqlab qolingan. Tizimdan avvalgidek foydalanishingiz mumkin.</p>
+              <button type="button" onClick={() => setShowSchoolCoinAnnouncement(false)} className="flex min-h-12 w-full items-center justify-center rounded-xl bg-[#0071e3] px-5 py-3 font-semibold text-white shadow-lg shadow-blue-900/15 transition hover:bg-blue-700">Tushundim, davom etish</button>
+            </div>
+          </section>
+        </div>
       )}
 
       {showNotifModal && (
