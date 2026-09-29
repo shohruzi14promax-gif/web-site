@@ -12,7 +12,8 @@ import Footer from './components/Footer';
 import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
-import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
+import MinistryTasksPortal from './components/MinistryTasksPortal';
+import { Settings, Bell, X, Cake, Megaphone, Coins, ClipboardList } from 'lucide-react';
 import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
 
 type NotificationKey = 'announcements' | 'birthdays';
@@ -30,6 +31,7 @@ const readArray = <T,>(key: string): T[] => {
 export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isSchoolCoinOpen, setIsSchoolCoinOpen] = useState(false);
+  const [isMinistryTasksOpen, setIsMinistryTasksOpen] = useState(false);
   const [announcements, setAnnouncements] = useState<NotificationItem[]>([]);
   const [birthdays, setBirthdays] = useState<NotificationItem[]>([]);
   const [showNotifModal, setShowNotifModal] = useState(false);
@@ -91,6 +93,11 @@ export default function App() {
         <span className="hidden text-sm font-semibold sm:inline">SchoolCoin</span>
       </button>
 
+      <button type="button" onClick={() => setIsMinistryTasksOpen(true)} className="fixed bottom-40 right-4 z-40 flex min-h-11 items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-3 text-blue-700 shadow-lg shadow-slate-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[.98] sm:right-6 sm:px-5" title="Vazirlik topshiriqlari" aria-label="Vazirlik topshiriqlari">
+        <ClipboardList className="h-5 w-5" />
+        <span className="hidden text-sm font-semibold sm:inline">Vazirlik topshiriqlari</span>
+      </button>
+
       <button type="button" onClick={() => setIsAdminOpen(true)} className="fixed bottom-5 right-4 z-50 flex min-h-11 items-center gap-2 rounded-full border border-slate-800/10 bg-[#0b1424] px-4 py-3 text-white shadow-xl shadow-slate-900/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#111d31] active:scale-[.98] sm:right-6 sm:px-5" title="Admin Panel" aria-label="Admin Panel">
         <Settings className="h-5 w-5" />
         <span className="hidden text-sm font-semibold sm:inline">Admin Panel</span>
@@ -137,6 +144,7 @@ export default function App() {
         </div>
       )}
 
+      {isMinistryTasksOpen && <MinistryTasksPortal onClose={() => setIsMinistryTasksOpen(false)} />}
       {isAdminOpen && <CloudAdminPanelPro onClose={() => setIsAdminOpen(false)} />}
       {isSchoolCoinOpen && <SchoolCoinSecure onClose={() => setIsSchoolCoinOpen(false)} initialMode="student" />}
     </div>
