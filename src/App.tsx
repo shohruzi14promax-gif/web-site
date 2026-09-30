@@ -13,7 +13,7 @@ import CloudAdminPanelPro from './components/CloudAdminPanelPro';
 import SchoolLife from './components/SchoolLife';
 import SchoolCoinSecure from './components/SchoolCoinSecure';
 import { Settings, Bell, X, Cake, Megaphone, Coins } from 'lucide-react';
-import { supabase, supabaseConfigured, getSiteData } from './lib/supabase';
+import { supabase, supabaseConfigured, getSiteData, trackAnalyticsEvent } from './lib/supabase';
 
 type NotificationKey = 'announcements' | 'birthdays';
 type NotificationItem = Record<string, unknown> & { id?: string | number; name?: string; class?: string; title?: string; content?: string; description?: string; message?: string; date?: string };
@@ -66,6 +66,10 @@ export default function App() {
       window.removeEventListener('storage', loadNotifications);
     };
   }, []);
+
+  useEffect(() => { void trackAnalyticsEvent('site_visit'); }, []);
+
+  useEffect(() => { if (isSchoolCoinOpen) void trackAnalyticsEvent('schoolcoin_visit'); }, [isSchoolCoinOpen]);
 
   const totalNotifications = announcements.length + birthdays.length;
 
