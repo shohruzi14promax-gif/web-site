@@ -55,3 +55,20 @@ export async function signInAdmin(email: string, password: string) {
 }
 
 export async function signOutAdmin() { await supabase.auth.signOut(); }
+
+export async function trackAnalyticsEvent(eventType: 'site_visit' | 'schoolcoin_visit') {
+  if (!supabaseConfigured || typeof window === 'undefined') return;
+  try {
+    const storageKey = 'school_analytics_visitor_id';
+    let visitorId = window.localStorage.getItem(storageKey);
+    if (!visitorId) {
+      visitorId = typeof crypto?.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `v-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      window.localStorage.setItem(storageKey, visitorId);
+    }
+    await supabase.from('site_analytics_events').insert({ event_type: eventType, visitor_id: visitorId });
+  } catch (error) {
+    console.warn('Analytics event failed:', error);
+  }
+}
