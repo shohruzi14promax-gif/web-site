@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Activity, CheckCircle2, Coins, FileText, Gift, History, LayoutDashboard, LogOut, Plus, Search, ShoppingBag, SlidersHorizontal, Trophy, UploadCloud, Users, X, XCircle } from 'lucide-react';
+import { Activity, Backpack, BookOpen, CheckCircle2, Coins, FileText, Gift, History, LayoutDashboard, Leaf, Lightbulb, LogOut, Palette, Pencil, Plus, Search, ShoppingBag, Shirt, SlidersHorizontal, Star, Trophy, UploadCloud, Users, X, XCircle } from 'lucide-react';
 import { signOutAdmin, supabase } from '../lib/supabase';
 
 interface Props { onClose: () => void; initialMode?: 'student' | 'admin'; adminSession?: { user?: { email?: string; app_metadata?: { role?: string; ministry?: string } } } | null; }
@@ -37,7 +37,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   const [orders, setOrders] = useState<Order[]>([]); const [studentTransactions, setStudentTransactions] = useState<StudentTransaction[]>([]); const [studentRequests, setStudentRequests] = useState<StudentRequest[]>([]); const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
   const [adminState, setAdminState] = useState(adminSession); const [students, setStudents] = useState<Student[]>([]); const [requests, setRequests] = useState<RequestItem[]>([]); const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [adminEmail, setAdminEmail] = useState(''); const [adminPassword, setAdminPassword] = useState(''); const [tab, setTab] = useState<AdminTab>('dashboard');
-  const [search, setSearch] = useState(''); const [category, setCategory] = useState('All'); const [approvalFilter, setApprovalFilter] = useState<'new' | 'approved' | 'rejected'>('new'); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
+  const [search, setSearch] = useState(''); const [category, setCategory] = useState('All'); const [marketCategory, setMarketCategory] = useState('Barchasi'); const [approvalFilter, setApprovalFilter] = useState<'new' | 'approved' | 'rejected'>('new'); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
   const [activityName, setActivityName] = useState(''); const [activityCategory, setActivityCategory] = useState('Sport'); const [activityReward, setActivityReward] = useState('10'); const [activityLimit, setActivityLimit] = useState(''); const [activityEvidence, setActivityEvidence] = useState(false);
   const [adjustingStudent, setAdjustingStudent] = useState<Student | null>(null); const [adjustAmount, setAdjustAmount] = useState(''); const [adjustReason, setAdjustReason] = useState('');
   const [evidenceActivity, setEvidenceActivity] = useState<ActivityItem | null>(null); const [evidenceFile, setEvidenceFile] = useState<File | null>(null); const [evidencePreview, setEvidencePreview] = useState(''); const [evidenceNote, setEvidenceNote] = useState('');
@@ -169,6 +169,30 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
 
   const categories = ['All', ...Array.from(new Set(activities.map(item => item.category).filter(Boolean)))];
   const filteredActivities = category === 'All' ? activities : activities.filter(item => item.category === category);
+  const getMarketCategory = (item: Reward) => {
+    const text = `${item.title} ${item.description} ${item.category}`.toLowerCase();
+    if (/futbol|voleybol|basketbol|badminton|frisbee|arqon|sport|medal/.test(text)) return 'Sport';
+    if (/kitob|daftar|bloknot|planner|zaklad|qalam|ruchka|o‘chirg|ochirg|lineyka|penal|kanselyar/.test(text)) return 'Ta’lim';
+    if (/lego|lamp|quloqchin|coding|ai|texnolog|tech|elektron/.test(text)) return 'Innovatsiya';
+    if (/akvarel|guash|flomaster|rangli|skretch|ijod|stiker/.test(text)) return 'Ijod';
+    if (/ryukzak|lunch|suv shisha|water|maktab/.test(text)) return 'Maktab';
+    if (/eco|eko|ekolog|yashil/.test(text)) return 'Ekologiya';
+    if (/hoodie|futbolka|kepka|merch|badge/.test(text)) return 'School Merch';
+    if (/premium|vip|bundle|maxsus|sertifikat|privilege/.test(text)) return 'Premium';
+    return 'Boshqa';
+  };
+  const marketCatalogs = [
+    { id: 'Barchasi', label: 'Barchasi', Icon: Gift },
+    { id: 'Sport', label: 'Sport', Icon: Activity },
+    { id: 'Ta’lim', label: 'Ta’lim', Icon: BookOpen },
+    { id: 'Innovatsiya', label: 'Innovatsiya', Icon: Lightbulb },
+    { id: 'Ijod', label: 'Ijod', Icon: Palette },
+    { id: 'Maktab', label: 'Maktab', Icon: Backpack },
+    { id: 'Ekologiya', label: 'Ekologiya', Icon: Leaf },
+    { id: 'School Merch', label: 'School Merch', Icon: Shirt },
+    { id: 'Premium', label: 'Premium', Icon: Star },
+  ];
+  const filteredRewards = marketCategory === 'Barchasi' ? rewards : rewards.filter(item => getMarketCategory(item) === marketCategory);
   const filteredStudents = useMemo(() => { const q = search.trim().toLowerCase(); return q ? students.filter(item => `${item.full_name} ${item.student_code} ${item.class_name}`.toLowerCase().includes(q)) : students; }, [students, search]);
   const totalCoins = students.reduce((sum, item) => sum + item.balance, 0);
 
@@ -193,7 +217,23 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
             </div>)}</div> : <p className="text-sm text-slate-500">Hozircha reyting mavjud emas.</p>}
           </section>
           <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex gap-2 overflow-x-auto pb-1">{categories.map(item => <button type="button" key={item} onClick={() => setCategory(item)} className={`min-h-10 shrink-0 rounded-full px-3 py-2 text-xs font-semibold ${category === item ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200'}`}>{item}</button>)}</div><div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{filteredActivities.length ? filteredActivities.map(item => { const pending = studentRequests.some(req => req.activity_name === item.name && req.status === 'pending'); return <article key={item.id} className="rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none"><div className="flex items-start justify-between gap-3"><h3 className="font-bold">{item.name}</h3><span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">+{item.coin_reward}</span></div><p className="mt-2 text-sm text-slate-500">{item.description || 'Faoliyat uchun SchoolCoin oling.'}</p>{item.requires_evidence && <p className="mt-2 text-xs font-semibold text-slate-500">Evidence: JPG, PNG, WEBP yoki PDF · max 5 MB</p>}<button disabled={busy || pending} type="button" onClick={() => handleActivityClick(item)} className="mt-4 min-h-11 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white transition active:scale-[.98] disabled:opacity-40">{pending ? 'Kutilmoqda…' : item.requires_evidence ? 'Evidence bilan yuborish' : 'So‘rov yuborish'}</button></article>; }) : <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">Bu kategoriyada faoliyat yo‘q.</p>}</div></section>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="mb-4 flex items-center gap-2"><Gift className="h-5 w-5 text-amber-600" /><h3 className="font-bold">Market</h3></div><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{rewards.length ? rewards.map(item => <article key={item.id} className="rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none"><div className="flex items-center justify-between gap-3"><h4 className="font-bold">{item.title}</h4><span className="font-bold text-amber-600">{item.price}</span></div><p className="mt-2 text-sm text-slate-500">{item.description}</p><div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-xs"><span className="font-semibold text-slate-600">📦 Qoldiq</span><span className={`font-black ${item.stock === 0 ? 'text-red-600' : item.stock <= 3 ? 'text-amber-600' : 'text-emerald-600'}`}>{item.stock === 0 ? 'Tugagan' : `${item.stock} dona`}</span></div><button disabled={busy || item.stock < 1 || student.balance < item.price} type="button" onClick={() => void redeem(item)} className="mt-4 min-h-11 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white disabled:opacity-40">{item.stock < 1 ? 'Tugagan' : student.balance < item.price ? 'Coin yetarli emas' : 'Sotib olish'}</button></article>) : <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">Hozircha reward yo‘q.</p>}</div></section>
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div><div className="flex items-center gap-2"><Gift className="h-5 w-5 text-amber-600" /><h3 className="font-bold">SchoolCoin Market</h3></div><p className="mt-1 text-xs text-slate-500">SchoolCoinlaringizni kerakli rewardlarga almashtiring.</p></div>
+              <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">{filteredRewards.length} ta reward</span>
+            </div>
+            <div className="flex gap-2 overflow-x-auto border-b border-slate-100 pb-3">
+              {marketCatalogs.map(({ id, label, Icon }) => <button type="button" key={id} onClick={() => setMarketCategory(id)} className={`flex min-h-10 shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition ${marketCategory === id ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}><Icon className="h-4 w-4" />{label}</button>)}
+            </div>
+            <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filteredRewards.length ? filteredRewards.map(item => <article key={item.id} className="rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none">
+                <div className="mb-2 flex items-start justify-between gap-3"><div><span className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{getMarketCategory(item)}</span><h4 className="mt-1 font-bold">{item.title}</h4></div><span className="shrink-0 rounded-lg bg-amber-50 px-2 py-1 text-sm font-black text-amber-700">{item.price} 🪙</span></div>
+                <p className="mt-2 text-sm text-slate-500">{item.description}</p>
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-xs"><span className="font-semibold text-slate-600">📦 Qoldiq</span><span className={`font-black ${item.stock === 0 ? 'text-red-600' : item.stock <= 3 ? 'text-amber-600' : 'text-emerald-600'}`}>{item.stock === 0 ? 'Tugagan' : `${item.stock} dona`}</span></div>
+                <button disabled={busy || item.stock < 1 || student.balance < item.price} type="button" onClick={() => void redeem(item)} className="mt-4 min-h-11 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white disabled:opacity-40">{item.stock < 1 ? 'Tugagan' : student.balance < item.price ? 'Coin yetarli emas' : 'Sotib olish'}</button>
+              </article>) : <div className="rounded-2xl bg-slate-50 p-5 text-center md:col-span-2 lg:col-span-3"><p className="font-semibold text-slate-700">Bu katalogda hozircha reward yo‘q.</p><p className="mt-1 text-xs text-slate-500">Boshqa kataloglarni ko‘rib chiqing.</p></div>}
+            </div>
+          </section>
           <div className="grid gap-6 lg:grid-cols-2"><section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="mb-4 flex items-center gap-2 font-bold"><History className="h-5 w-5" />Coin tarixi</h3>{studentTransactions.length ? <div className="space-y-2">{studentTransactions.slice(0, 20).map((item, index) => <div key={`${item.created_at}-${index}`} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-3"><div><b>{item.transaction_type}</b><p className="text-xs text-slate-500">{item.note || 'SchoolCoin transaction'}</p></div><span className={item.amount >= 0 ? 'font-black text-emerald-600' : 'font-black text-red-600'}>{item.amount > 0 ? '+' : ''}{item.amount}</span></div>)}</div> : <p className="text-sm text-slate-500">Hozircha transaction yo‘q.</p>}</section><section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="mb-4 font-bold">Faoliyat so‘rovlari</h3>{studentRequests.length ? <div className="space-y-2">{studentRequests.slice(0, 20).map((item, index) => <div key={`${item.created_at}-${index}`} className="rounded-2xl bg-slate-50 p-3"><div className="flex items-center justify-between gap-3"><b>{item.activity_name}</b><span className="text-xs font-semibold">{item.status}</span></div><p className="mt-1 text-xs text-slate-500">{new Date(item.created_at).toLocaleString()}</p>{item.evidence_url && <p className="mt-1 text-xs font-semibold text-emerald-700">Evidence biriktirilgan</p>}</div>)}</div> : <p className="text-sm text-slate-500">Hozircha so‘rov yo‘q.</p>}</section></div>
           <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="mb-4 flex items-center gap-2 font-bold"><ShoppingBag className="h-5 w-5" />Buyurtmalar tarixi</h3>{orders.length ? <div className="space-y-2">{orders.map(item => <div key={item.id} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-3"><div><b>{item.reward_title}</b><p className="text-xs text-slate-500">{new Date(item.created_at).toLocaleString()}</p></div><div className="text-right"><b>{item.price}</b><p className="text-xs text-slate-500">{item.status}</p></div></div>)}</div> : <p className="text-sm text-slate-500">Hozircha buyurtma yo‘q.</p>}</section>
         </section>}
