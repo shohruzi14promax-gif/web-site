@@ -12,6 +12,7 @@ type Transaction = { id: string; student_id: string; amount: number; transaction
 type StudentTransaction = { amount: number; transaction_type: string; note?: string; created_at: string };
 type TopStudent = { rank: number; student_id: string; full_name: string; class_name: string; balance: number };
 type StudentRequest = { activity_name: string; status: string; created_at: string; evidence_url?: string | null; note?: string | null; reviewed_at?: string | null };
+type PersonalMessage = { id: string; message: string; sender_label: string; created_at: string };
 type AdminTab = 'dashboard' | 'students' | 'activities' | 'approvals' | 'market' | 'orders' | 'transactions';
 
 const EVIDENCE_BUCKET = 'schoolcoin-evidence';
@@ -35,7 +36,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   const [student, setStudent] = useState<Student | null>(null);
   const [code, setCode] = useState(''); const [pin, setPin] = useState('');
   const [activities, setActivities] = useState<ActivityItem[]>([]); const [rewards, setRewards] = useState<Reward[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]); const [studentTransactions, setStudentTransactions] = useState<StudentTransaction[]>([]); const [studentRequests, setStudentRequests] = useState<StudentRequest[]>([]); const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]); const [studentTransactions, setStudentTransactions] = useState<StudentTransaction[]>([]); const [studentRequests, setStudentRequests] = useState<StudentRequest[]>([]); const [topStudents, setTopStudents] = useState<TopStudent[]>([]); const [personalMessages, setPersonalMessages] = useState<PersonalMessage[]>([]);
   const [adminState, setAdminState] = useState(adminSession); const [students, setStudents] = useState<Student[]>([]); const [requests, setRequests] = useState<RequestItem[]>([]); const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [adminEmail, setAdminEmail] = useState(''); const [adminPassword, setAdminPassword] = useState(''); const [tab, setTab] = useState<AdminTab>('dashboard');
   const [search, setSearch] = useState(''); const [category, setCategory] = useState('All'); const [marketCategory, setMarketCategory] = useState('Barchasi'); const [approvalFilter, setApprovalFilter] = useState<'new' | 'approved' | 'rejected'>('new'); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
@@ -62,9 +63,9 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   }, []);
 
   const loadStudentHistory = useCallback(async () => {
-    const [o, t, q, leaderboard] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_top_students', { p_limit: 10 })]);
-    if (o.error) throw o.error; if (t.error) throw t.error; if (q.error) throw q.error; if (leaderboard.error) throw leaderboard.error;
-    setOrders((o.data || []) as Order[]); setStudentTransactions((t.data || []) as StudentTransaction[]); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]);
+    const [o, t, q, leaderboard, messages] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_top_students', { p_limit: 10 }), supabase.rpc('schoolcoin_student_messages')]);
+    if (o.error) throw o.error; if (t.error) throw t.error; if (q.error) throw q.error; if (leaderboard.error) throw leaderboard.error; if (messages.error) throw messages.error;
+    setOrders((o.data || []) as Order[]); setStudentTransactions((t.data || []) as StudentTransaction[]); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]); setPersonalMessages((messages.data || []) as PersonalMessage[]);
   }, []);
 
   const loadMinistryApprovals = useCallback(async () => {
@@ -112,7 +113,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
       setStudent(current.data as Student); setMarketCategory('Barchasi'); await loadCatalog(); await loadStudentHistory(); flash('SchoolCoin hisobingiz ochildi ✓');
     } catch (err) { fail(err, 'Kirishda xatolik'); } finally { setBusy(false); }
   };
-  const studentLogout = async () => { await supabase.auth.signOut(); setStudent(null); setOrders([]); setStudentTransactions([]); setStudentRequests([]); setCode(''); setPin(''); flash('SchoolCoin sessiyasi yopildi'); };
+  const studentLogout = async () => { await supabase.auth.signOut(); setStudent(null); setOrders([]); setStudentTransactions([]); setStudentRequests([]); setPersonalMessages([]); setCode(''); setPin(''); flash('SchoolCoin sessiyasi yopildi'); };
 
   const validateEvidence = (file: File | null) => {
     if (!file) return 'Evidence faylini tanlang.';
@@ -214,6 +215,16 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
         </section>}
         {mode === 'student' && !student && <section className="mx-auto max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-sm"><div className="mb-6 text-center"><Coins className="mx-auto h-10 w-10 text-amber-500" /><h2 className="mt-3 text-2xl font-black">Student Login</h2><p className="mt-1 text-sm text-slate-500">Student kodi va PIN orqali xavfsiz kirish</p></div><form onSubmit={studentLogin} className="space-y-3"><label className="block text-sm font-semibold">Student code<input required value={code} onChange={e => setCode(e.target.value)} placeholder="Student code" autoComplete="username" className="mt-1 w-full rounded-2xl border border-slate-200 p-3.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200" /></label><label className="block text-sm font-semibold">PIN<input required value={pin} onChange={e => setPin(e.target.value)} placeholder="PIN" type="password" inputMode="numeric" autoComplete="current-password" className="mt-1 w-full rounded-2xl border border-slate-200 p-3.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200" /></label><button disabled={busy} className="min-h-11 w-full rounded-2xl bg-slate-900 p-3.5 font-semibold text-white transition active:scale-[.98] disabled:opacity-50">{busy ? 'Tekshirilmoqda…' : 'Kirish'}</button></form></section>}
         {mode === 'student' && student && <section className="space-y-6">
+          {personalMessages.length > 0 && <section className="rounded-3xl border border-rose-100 bg-gradient-to-br from-rose-50 via-white to-pink-50 p-5 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-rose-100 text-rose-600">❤️</div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-rose-500">Siz uchun maxsus xabar</p>
+                <p className="mt-2 text-base font-semibold leading-7 text-slate-800">{personalMessages[0].message}</p>
+                <p className="mt-2 text-xs text-slate-400">— {personalMessages[0].sender_label}</p>
+              </div>
+            </div>
+          </section>
           <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900 shadow-sm">
             <p className="font-bold">📢 Yangi o‘quv yili boshlandi!</p>
             <p className="mt-1">SchoolCoin’da tasklar <b>2026-yil 2-sentabrdan</b> boshlab hisoblanadi. O‘tgan o‘quv yilidagi tasklar bu yilgi natijalarga qo‘shilmaydi.</p>
