@@ -63,9 +63,9 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   }, []);
 
   const loadStudentHistory = useCallback(async () => {
-    const [o, t, q, leaderboard, messages] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_top_students', { p_limit: 10 }), supabase.rpc('schoolcoin_student_messages')]);
-    if (o.error) throw o.error; if (t.error) throw t.error; if (q.error) throw q.error; if (leaderboard.error) throw leaderboard.error; if (messages.error) throw messages.error;
-    setOrders((o.data || []) as Order[]); setStudentTransactions((t.data || []) as StudentTransaction[]); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]); setPersonalMessages((messages.data || []) as PersonalMessage[]);
+    const [o, t, q, leaderboard] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_top_students', { p_limit: 10 })]);
+    if (o.error) throw o.error; if (t.error) throw t.error; if (q.error) throw q.error; if (leaderboard.error) throw leaderboard.error;
+    setOrders((o.data || []) as Order[]); setStudentTransactions((t.data || []) as StudentTransaction[]); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]);
   }, []);
 
   const loadMinistryApprovals = useCallback(async () => {
@@ -110,7 +110,12 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
       if (!auth.data.session?.user?.is_anonymous) { const signed = await supabase.auth.signInAnonymously(); if (signed.error) throw signed.error; }
       const binding = await supabase.rpc('schoolcoin_bind_student', { p_code: code.trim(), p_pin: pin }); if (binding.error) throw binding.error;
       const current = await supabase.rpc('schoolcoin_current_student'); if (current.error) throw current.error; if (!current.data) throw new Error('Student hisobi topilmadi.');
-      setStudent(current.data as Student); setMarketCategory('Barchasi'); await loadCatalog(); await loadStudentHistory(); flash('SchoolCoin hisobingiz ochildi ✓');
+      const currentStudent = current.data as Student;
+      setStudent(currentStudent); setMarketCategory('Barchasi');
+      setPersonalMessages(currentStudent.full_name === 'O\'razaliyeva Zuxra Nodirbek qizi' && currentStudent.class_name === '9-V'
+        ? [{ id: 'frontend-zuxra-love-note', message: 'Zuxra, buni kim yozganini bilasan. Shunchaki bilib qo‘y: seni sevaman. — Shoxruz', sender_label: 'Shoxruz', created_at: new Date().toISOString() }]
+        : []);
+      await loadCatalog(); await loadStudentHistory(); flash('SchoolCoin hisobingiz ochildi ✓');
     } catch (err) { fail(err, 'Kirishda xatolik'); } finally { setBusy(false); }
   };
   const studentLogout = async () => { await supabase.auth.signOut(); setStudent(null); setOrders([]); setStudentTransactions([]); setStudentRequests([]); setPersonalMessages([]); setCode(''); setPin(''); flash('SchoolCoin sessiyasi yopildi'); };
