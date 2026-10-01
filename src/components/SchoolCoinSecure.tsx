@@ -109,7 +109,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
       if (!auth.data.session?.user?.is_anonymous) { const signed = await supabase.auth.signInAnonymously(); if (signed.error) throw signed.error; }
       const binding = await supabase.rpc('schoolcoin_bind_student', { p_code: code.trim(), p_pin: pin }); if (binding.error) throw binding.error;
       const current = await supabase.rpc('schoolcoin_current_student'); if (current.error) throw current.error; if (!current.data) throw new Error('Student hisobi topilmadi.');
-      setStudent(current.data as Student); await loadStudentHistory(); flash('SchoolCoin hisobingiz ochildi ✓');
+      setStudent(current.data as Student); setMarketCategory('Barchasi'); await loadCatalog(); await loadStudentHistory(); flash('SchoolCoin hisobingiz ochildi ✓');
     } catch (err) { fail(err, 'Kirishda xatolik'); } finally { setBusy(false); }
   };
   const studentLogout = async () => { await supabase.auth.signOut(); setStudent(null); setOrders([]); setStudentTransactions([]); setStudentRequests([]); setCode(''); setPin(''); flash('SchoolCoin sessiyasi yopildi'); };
