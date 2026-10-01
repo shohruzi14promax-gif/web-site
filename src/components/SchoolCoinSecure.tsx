@@ -15,6 +15,7 @@ type StudentRequest = { activity_name: string; status: string; created_at: strin
 type AdminTab = 'dashboard' | 'students' | 'activities' | 'approvals' | 'market' | 'orders' | 'transactions';
 
 const EVIDENCE_BUCKET = 'schoolcoin-evidence';
+const SCHOOL_YEAR_START = '2026-09-02T00:00:00+05:00';
 const MAX_EVIDENCE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_EVIDENCE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] as const;
 const ACCEPTED_EVIDENCE = ALLOWED_EVIDENCE_TYPES.join(',');
