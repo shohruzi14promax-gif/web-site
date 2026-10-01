@@ -171,29 +171,25 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
 
   const categories = ['All', ...Array.from(new Set(activities.map(item => item.category).filter(Boolean)))];
   const filteredActivities = category === 'All' ? activities : activities.filter(item => item.category === category);
-  const getMarketCategory = (item: Reward) => {
-    const text = `${item.title} ${item.description} ${item.category}`.toLowerCase();
-    if (/futbol|voleybol|basketbol|badminton|frisbee|arqon|sport|medal/.test(text)) return 'Sport';
-    if (/kitob|daftar|bloknot|planner|zaklad|qalam|ruchka|o‘chirg|ochirg|lineyka|penal|kanselyar/.test(text)) return 'Ta’lim';
-    if (/lego|lamp|quloqchin|coding|ai|texnolog|tech|elektron/.test(text)) return 'Innovatsiya';
-    if (/akvarel|guash|flomaster|rangli|skretch|ijod|stiker/.test(text)) return 'Ijod';
-    if (/ryukzak|lunch|suv shisha|water|maktab/.test(text)) return 'Maktab';
-    if (/eco|eko|ekolog|yashil/.test(text)) return 'Ekologiya';
-    if (/hoodie|futbolka|kepka|merch|badge/.test(text)) return 'School Merch';
-    if (/premium|vip|bundle|maxsus|sertifikat|privilege/.test(text)) return 'Premium';
-    return 'Boshqa';
-  };
-  const marketCatalogs = [
-    { id: 'Barchasi', label: 'Barchasi', Icon: Gift },
-    { id: 'Sport', label: 'Sport', Icon: Activity },
-    { id: 'Ta’lim', label: 'Ta’lim', Icon: BookOpen },
-    { id: 'Innovatsiya', label: 'Innovatsiya', Icon: Lightbulb },
-    { id: 'Ijod', label: 'Ijod', Icon: Palette },
-    { id: 'Maktab', label: 'Maktab', Icon: Backpack },
-    { id: 'Ekologiya', label: 'Ekologiya', Icon: Leaf },
-    { id: 'School Merch', label: 'School Merch', Icon: Shirt },
-    { id: 'Premium', label: 'Premium', Icon: Star },
+  const ministryCatalogs = [
+    { id: 'Sport vazirligi', label: 'Sport vazirligi', Icon: Activity },
+    { id: 'Ta’lim vazirligi', label: 'Ta’lim vazirligi', Icon: BookOpen },
+    { id: 'Innovatsiya va IT vazirligi', label: 'Innovatsiya va IT vazirligi', Icon: Lightbulb },
+    { id: 'Madaniyat vazirligi', label: 'Madaniyat vazirligi', Icon: Palette },
+    { id: 'Ekologiya vazirligi', label: 'Ekologiya vazirligi', Icon: Leaf },
+    { id: 'Yoshlar va ijtimoiy ishlar vazirligi', label: 'Yoshlar va ijtimoiy ishlar vazirligi', Icon: Users },
   ];
+  const getMarketCategory = (reward: Reward) => {
+    if (ministryCatalogs.some(ministry => ministry.id === reward.category)) return reward.category;
+    const textValue = (reward.title + ' ' + reward.description + ' ' + reward.category).toLowerCase();
+    if (/futbol|voleybol|basketbol|badminton|frisbee|arqon|sport|medal/.test(textValue)) return 'Sport vazirligi';
+    if (/lego|lamp|quloqchin|coding|arduino|stem|ai|texnolog|tech|elektron/.test(textValue)) return 'Innovatsiya va IT vazirligi';
+    if (/akvarel|guash|flomaster|rangli|skretch|ijod|stiker|art|creative|dizayn|marker/.test(textValue)) return 'Madaniyat vazirligi';
+    if (/eco|eko|ekolog|yashil|tote|bottle/.test(textValue)) return 'Ekologiya vazirligi';
+    if (/hoodie|futbolka|kepka|merch|badge|wristband|ryukzak|premium|vip|bundle|experience|achievement/.test(textValue)) return 'Yoshlar va ijtimoiy ishlar vazirligi';
+    return 'Ta’lim vazirligi';
+  };
+  const marketCatalogs = [{ id: 'Barchasi', label: 'Barchasi', Icon: Gift }, ...ministryCatalogs];
   const filteredRewards = marketCategory === 'Barchasi' ? rewards : rewards.filter(item => getMarketCategory(item) === marketCategory);
   const filteredStudents = useMemo(() => { const q = search.trim().toLowerCase(); return q ? students.filter(item => `${item.full_name} ${item.student_code} ${item.class_name}`.toLowerCase().includes(q)) : students; }, [students, search]);
   const totalCoins = students.reduce((sum, item) => sum + item.balance, 0);
