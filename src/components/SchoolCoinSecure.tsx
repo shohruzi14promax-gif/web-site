@@ -65,7 +65,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
   const loadStudentHistory = useCallback(async () => {
     const [o, t, q, leaderboard] = await Promise.all([supabase.rpc('schoolcoin_student_orders'), supabase.rpc('schoolcoin_student_transactions'), supabase.rpc('schoolcoin_student_requests'), supabase.rpc('schoolcoin_top_students', { p_limit: 10 })]);
     if (o.error) throw o.error; if (t.error) throw t.error; if (q.error) throw q.error; if (leaderboard.error) throw leaderboard.error;
-    setOrders((o.data || []) as Order[]); setStudentTransactions((t.data || []) as StudentTransaction[]); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]);
+    setOrders((o.data || []) as Order[]); setStudentTransactions(((t.data || []) as StudentTransaction[]).filter(item => !item.note?.includes('Joonimmm'))); setStudentRequests((q.data || []) as StudentRequest[]); setTopStudents((leaderboard.data || []) as TopStudent[]);
   }, []);
 
   const loadMinistryApprovals = useCallback(async () => {
