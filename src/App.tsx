@@ -33,6 +33,12 @@ export default function App() {
   const [announcements, setAnnouncements] = useState<NotificationItem[]>([]);
   const [birthdays, setBirthdays] = useState<NotificationItem[]>([]);
   const [showNotifModal, setShowNotifModal] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [recoveryPassword, setRecoveryPassword] = useState('');
+  const [recoveryConfirm, setRecoveryConfirm] = useState('');
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const [recoveryError, setRecoveryError] = useState('');
+  const [recoverySuccess, setRecoverySuccess] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -67,6 +73,40 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    if (hash.get('type') === 'recovery') setRecoveryMode(true);
+    const { data } = supabase.auth.onAuthStateChange(event => {
+      if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true);
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  const submitPasswordRecovery = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setRecoveryError('');
+    if (recoveryPassword.length < 8) {
+      setRecoveryError('Parol kamida 8 ta belgidan iborat bo‘lsin.');
+      return;
+    }
+    if (recoveryPassword !== recoveryConfirm) {
+      setRecoveryError('Parollar bir xil emas.');
+      return;
+    }
+    setRecoveryBusy(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: recoveryPassword });
+      if (error) throw error;
+      setRecoverySuccess(true);
+      await supabase.auth.signOut();
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    } catch (error) {
+      setRecoveryError(error instanceof Error ? error.message : 'Parolni almashtirib bo‘lmadi.');
+    } finally {
+      setRecoveryBusy(false);
+    }
+  };
+
   useEffect(() => { void trackAnalyticsEvent('site_visit'); }, []);
 
   useEffect(() => { if (isSchoolCoinOpen) void trackAnalyticsEvent('schoolcoin_visit'); }, [isSchoolCoinOpen]);
@@ -75,6 +115,30 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-[#0071e3]/15 selection:text-[#0b1424]">
+      {recoveryMode && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+            {recoverySuccess ? (
+              <div className="text-center">
+                <h2 className="text-2xl font-black text-slate-900">Parol yangilandi ✓</h2>
+                <p className="mt-2 text-sm text-slate-500">Endi SchoolCoin Admin'ga yangi parol bilan kiring.</p>
+                <button type="button" onClick={() => setRecoveryMode(false)} className="mt-6 min-h-11 w-full rounded-2xl bg-slate-900 px-4 py-3 font-semibold text-white">Davom etish</button>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-2xl font-black text-slate-900">Yangi parol</h2>
+                <p className="mt-2 text-sm text-slate-500">Admin akkauntingiz uchun yangi parol o‘rnating.</p>
+                <form onSubmit={submitPasswordRecovery} className="mt-5 space-y-3">
+                  <input required minLength={8} type="password" value={recoveryPassword} onChange={event => setRecoveryPassword(event.target.value)} placeholder="Yangi parol" autoComplete="new-password" className="w-full rounded-2xl border border-slate-200 p-3.5" />
+                  <input required minLength={8} type="password" value={recoveryConfirm} onChange={event => setRecoveryConfirm(event.target.value)} placeholder="Parolni tasdiqlang" autoComplete="new-password" className="w-full rounded-2xl border border-slate-200 p-3.5" />
+                  {recoveryError && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{recoveryError}</p>}
+                  <button disabled={recoveryBusy} className="min-h-11 w-full rounded-2xl bg-slate-900 p-3.5 font-semibold text-white disabled:opacity-50">{recoveryBusy ? 'Saqlanmoqda…' : 'Parolni saqlash'}</button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       <Navbar />
       <main className="relative z-10 pb-10">
         <Hero />
