@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 import {
-  Activity, AlertTriangle, BarChart3, Boxes, Coins, CreditCard, Gauge,
+  Activity, AlertTriangle, BarChart3, Coins, CreditCard, Gauge,
   Package, RefreshCw, ShoppingCart, ShieldAlert, TrendingDown, TrendingUp, Users
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -25,7 +26,7 @@ const money = (n: number) => new Intl.NumberFormat('uz-UZ').format(Math.round(n)
 const dateLabel = (value: string) => new Date(value).toLocaleDateString('uz-UZ', { day: '2-digit', month: 'short' });
 const pct = (n: number) => `${n.toFixed(1)}%`;
 
-function Card({ icon, title, value, hint, tone = 'blue' }: { icon: React.ReactNode; title: string; value: string; hint?: string; tone?: 'blue'|'green'|'amber'|'violet'|'red' }) {
+function Card({ icon, title, value, hint, tone = 'blue' }: { icon: ReactNode; title: string; value: string; hint?: string; tone?: 'blue'|'green'|'amber'|'violet'|'red' }) {
   const tones = {
     blue: 'bg-blue-50 text-blue-700 border-blue-100',
     green: 'bg-emerald-50 text-emerald-700 border-emerald-100',
