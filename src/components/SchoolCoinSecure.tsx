@@ -247,7 +247,30 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
               <span className="shrink-0 font-black text-amber-600">{item.balance} 🪙</span>
             </div>)}</div> : <p className="text-sm text-slate-500">Hozircha reyting mavjud emas.</p>}
           </section>
-          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex gap-2 overflow-x-auto pb-1">{categories.map(item => <button type="button" key={item} onClick={() => setCategory(item)} className={`min-h-10 shrink-0 rounded-full px-3 py-2 text-xs font-semibold ${category === item ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200'}`}>{item}</button>)}</div><div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{filteredActivities.length ? filteredActivities.map(item => { const pending = studentRequests.some(req => req.activity_name === item.name && req.status === 'pending'); return <article key={item.id} className="rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none"><div className="flex items-start justify-between gap-3"><h3 className="font-bold">{item.name}</h3><span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">+{item.coin_reward}</span></div><p className="mt-2 text-sm text-slate-500">{item.description || 'Faoliyat uchun SchoolCoin oling.'}</p>{item.requires_evidence && <p className="mt-2 text-xs font-semibold text-slate-500">Evidence: JPG, PNG, WEBP yoki PDF · max 5 MB</p>}<button disabled={busy || pending} type="button" onClick={() => handleActivityClick(item)} className="mt-4 min-h-11 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white transition active:scale-[.98] disabled:opacity-40">{pending ? 'Kutilmoqda…' : item.requires_evidence ? 'Evidence bilan yuborish' : 'So‘rov yuborish'}</button></article>; }) : <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">Bu kategoriyada faoliyat yo‘q.</p>}</div></div></section>
+          <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {categories.map(item => (
+                <button type="button" key={item} onClick={() => setCategory(item)} className={`min-h-10 shrink-0 rounded-full px-3 py-2 text-xs font-semibold ${category === item ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200'}`}>
+                  {item}
+                </button>
+              ))}
+            </div>
+            <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filteredActivities.length ? filteredActivities.map(item => (
+                <article key={item.id} className="rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="font-bold">{item.name}</h3>
+                    <span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">+{item.coin_reward}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-500">{item.description || 'Faoliyat uchun SchoolCoin oling.'}</p>
+                  {item.requires_evidence && <p className="mt-2 text-xs font-semibold text-slate-500">Evidence: JPG, PNG, WEBP yoki PDF · max 5 MB</p>}
+                  <button disabled={busy || studentRequests.some(req => req.activity_name === item.name && req.status === 'pending')} type="button" onClick={() => handleActivityClick(item)} className="mt-4 min-h-11 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white transition active:scale-[.98] disabled:opacity-40">
+                    {studentRequests.some(req => req.activity_name === item.name && req.status === 'pending') ? 'Kutilmoqda…' : item.requires_evidence ? 'Evidence bilan yuborish' : 'So‘rov yuborish'}
+                  </button>
+                </article>
+              )) : <p className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">Bu kategoriyada faoliyat yo‘q.</p>}
+            </div>
+          </section>
           <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div><div className="flex items-center gap-2"><Gift className="h-5 w-5 text-amber-600" /><h3 className="font-bold">SchoolCoin Market</h3></div><p className="mt-1 text-xs text-slate-500">SchoolCoinlaringizni kerakli rewardlarga almashtiring.</p></div>
