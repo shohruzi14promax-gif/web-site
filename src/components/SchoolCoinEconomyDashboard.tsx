@@ -50,17 +50,19 @@ export default function SchoolCoinEconomyDashboard() {
 
   const load = useCallback(async () => {
     setLoading(true); setError('');
+    const queries = [
+      ['O‘quvchilar', supabase.from('schoolcoin_students').select('id,full_name,class_name,active')],
+      ['Transactionlar', supabase.from('schoolcoin_transactions').select('id,student_id,amount,transaction_type,note,created_at').order('created_at', { ascending: false })],
+      ['Market rewardlar', supabase.from('schoolcoin_market_rewards').select('id,title,category,price,stock,active')],
+      ['So‘rovlar', supabase.from('schoolcoin_requests').select('id,student_id,activity_id,status,created_at').order('created_at', { ascending: false })],
+      ['Buyurtmalar', supabase.from('schoolcoin_orders').select('id,student_id,reward_id,price,status,created_at').order('created_at', { ascending: false })],
+      ['Redemptionlar', supabase.from('schoolcoin_redemptions').select('id,student_id,reward_id,cost,status,created_at').order('created_at', { ascending: false })],
+    ] as const;
+
     try {
-      const [students, transactions, rewards, requests, orders, redemptions] = await Promise.all([
-        supabase.from('schoolcoin_students').select('id,full_name,class_name,active'),
-        supabase.from('schoolcoin_transactions').select('id,student_id,amount,transaction_type,note,created_at').order('created_at', { ascending: false }),
-        supabase.from('schoolcoin_market_rewards').select('id,title,category,price,stock,active'),
-        supabase.from('schoolcoin_requests').select('id,student_id,activity_id,status,created_at').order('created_at', { ascending: false }),
-        supabase.from('schoolcoin_orders').select('id,student_id,reward_id,price,status,created_at').order('created_at', { ascending: false }),
-        supabase.from('schoolcoin_redemptions').select('id,student_id,reward_id,cost,status,created_at').order('created_at', { ascending: false }),
-      ]);
-      const result = [students, transactions, rewards, requests, orders, redemptions].find(x => x.error);
-      if (result?.error) throw result.error;
+      const results = await Promise.all(queries.map(async ([label, query]) => ({ label, result: await query })));
+      const [students, transactions, rewards, requests, orders, redemptions] = results.map(x => x.result);
+      const errors = results.filter(x => x.result.error);
       setData({
         students: (students.data || []) as Student[],
         transactions: (transactions.data || []) as Transaction[],
@@ -69,6 +71,9 @@ export default function SchoolCoinEconomyDashboard() {
         orders: (orders.data || []) as Order[],
         redemptions: (redemptions.data || []) as Redemption[],
       });
+      if (errors.length) {
+        setError(errors.map(x => `${x.label}: ${x.result.error?.message || 'yuklashda xatolik'}`).join(' · '));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'SchoolCoin ma’lumotlari yuklanmadi.');
     } finally { setLoading(false); }
