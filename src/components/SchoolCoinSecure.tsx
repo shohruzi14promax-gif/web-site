@@ -229,7 +229,7 @@ export default function SchoolCoinSecure({ onClose, initialMode = 'student', adm
                 <p className="mt-2 text-xs text-slate-400">— {personalMessages[0].sender_label}</p>
               </div>
             </div>
-          </section>
+          </section>}
           <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900 shadow-sm">
             <p className="font-bold">📢 Yangi o‘quv yili boshlandi!</p>
             <p className="mt-1">SchoolCoin’da tasklar <b>2026-yil 2-sentabrdan</b> boshlab hisoblanadi. O‘tgan o‘quv yilidagi tasklar bu yilgi natijalarga qo‘shilmaydi.</p>
