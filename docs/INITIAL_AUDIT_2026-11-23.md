@@ -11,13 +11,25 @@ Base: `main`
 - `src/components/SchoolCoinSecure.tsx`
 - Supabase migration directory and `supabase/MIGRATION_DRIFT.md`
 - Recent commit history
+- Vercel project, domain records, preview deployment and build output
 
 ## Verified architecture
 - Frontend: React 18 + TypeScript + Vite
 - Styling: Tailwind CSS
 - Backend client: Supabase JS
-- Major application modules include school information pages, admin dashboard, SchoolCoin student/admin interface, analytics, and school content data.
+- Major modules include school information pages, admin dashboard, SchoolCoin student/admin interface, analytics, and school content data.
 - The repository includes Supabase SQL migrations and migration-drift documentation.
+
+## Deployment verification
+- Vercel project: `web-site`
+- Production aliases include `web-site-rosy-pi.vercel.app`, `jizzax1imi.uz`, and `www.jizzax1imi.uz`.
+- Both custom domains are marked verified in Vercel; apex domain redirects to `www`.
+- Existing production deployment inspected: `READY`.
+- Audit branch preview deployment: `READY`, URL `web-site-git-audit-school-website-schoolcoin-2026-11-23-aha7.vercel.app`.
+- The preview build transformed 1,566 modules and completed successfully.
+- Build warning: JavaScript chunk is 503.69 kB after minification (over Vite's 500 kB warning threshold); code splitting/manual chunks are recommended.
+- Build also reported outdated Browserslist data and an npm install-script approval warning for esbuild.
+- This preview build verifies the Vite production build only; it does not prove browser workflows, Supabase connectivity, RLS, or typecheck/lint success.
 
 ## Findings
 
@@ -52,30 +64,29 @@ Action:
 - Keep only publishable client keys in browser code; never place service-role keys in frontend code.
 
 ### P1 — Add automated verification
-The package scripts currently include `build`, `lint`, and `typecheck`, but no dedicated test script was found in `package.json`. These checks have not yet been executed in a local runtime.
+The package scripts currently include `build`, `lint`, and `typecheck`, but no dedicated test script was found in `package.json`.
 
 Action:
 - Run install, typecheck, lint, and production build in a controlled local environment.
 - Add focused tests for student authentication, balance/transaction integrity, request approval, market redemption, order access, and admin authorization.
 - Verify RLS and RPC behavior against a safe development database.
 
-### P2 — Verify deployment and domain
-A Vercel deployment URL and custom domain were recorded in earlier project notes, but current deployment status and DNS resolution have not been verified in this audit.
-
-Action:
-- Inspect Vercel project linkage, latest deployment, build logs, environment variables, and domain configuration.
-- Validate mobile layouts and the main user flows after deployment.
+### P2 — Performance and deployment polish
+- Split large JavaScript chunks and lazy-load major sections where appropriate.
+- Refresh Browserslist data after reviewing lockfile impact.
+- Review the esbuild install-script approval warning and dependency supply-chain policy.
+- Verify mobile layouts and the main user flows.
 
 ## Audit limitations
-- This was a read-only source review using the connected GitHub integration.
-- No local dependency installation, build, lint, typecheck, browser test, or video/device test was run.
+- This was a source review using the connected GitHub integration plus Vercel metadata/build logs.
+- No local dependency installation, standalone lint, typecheck, browser test, or mobile-device test was run.
 - No live Supabase schema, data, or logs were inspected because the referenced project was not present in the connected Supabase project list.
-- No production code or database data was modified.
+- No production code or database data was modified. Only this audit document was committed to a separate Git branch.
 
 ## Next execution order
 1. Confirm access to the referenced Supabase project.
-2. Run local build, lint, and typecheck.
-3. Inspect the remaining SchoolCoin component flows and all migration SQL.
+2. Run local lint and typecheck; add focused tests.
+3. Inspect remaining SchoolCoin flows and all migration SQL.
 4. Reconcile schema/migration history safely.
-5. Implement and test fixes on a non-production branch.
-6. Review Vercel deployment and production readiness.
+5. Implement fixes on the non-production branch.
+6. Validate preview workflows, then review production readiness.
